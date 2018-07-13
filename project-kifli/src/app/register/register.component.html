@@ -1,0 +1,29 @@
+<p>
+  <input [(ngModel)]="accountName" placeholder="Account name"/>
+</p>
+<p>
+  <input [(ngModel)]="email" placeholder="E-mail"/>
+</p>
+<p>
+  <input [(ngModel)]="password" placeholder="Password"/>
+</p>
+<p>
+  <input [(ngModel)]="confirmPassword" placeholder="Confirm password"
+    (keyup)="checkPasswordMatch()"/>
+</p>
+<p *ngIf="passwordMessage">
+  {{ passwordMessage }}
+</p>
+<p>
+  <input [(ngModel)]="firstName" placeholder="First name"/>
+</p>
+<p>
+  <input [(ngModel)]="lastName" placeholder="Last name"/>
+</p>
+<p *ngIf="message">
+  {{ message }}
+</p>
+<p>
+  <button (click)="register()">Register</button>
+  <button>Back</button>
+</p>
