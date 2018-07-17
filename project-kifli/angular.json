@@ -50,7 +50,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "project-kifli:build"
+            "browserTarget": "project-kifli:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {

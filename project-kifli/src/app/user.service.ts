@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './user';
 
-const URL = 'http://localhost:8080/';
+const URL = '/api/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -22,6 +22,10 @@ export class UserService {
     return this.http.post(URL + 'login', data, httpOptions);
   }
 
+  public logout(): Observable<any> {
+    return this.http.get(URL + 'logout');
+  }
+
   public register(
       accountName: string,
       email: string,
@@ -38,5 +42,9 @@ export class UserService {
     };
     console.log(data);
     return this.http.post<User>(URL + 'register', data, httpOptions);
+  }
+
+  public getUsers(): Observable<any> {
+    return this.http.get(URL + 'users');
   }
 }
