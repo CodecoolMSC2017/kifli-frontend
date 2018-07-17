@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './user';
+import { catchError } from 'rxjs/operators';
 
 const URL = '/api/';
 
@@ -18,8 +19,14 @@ export class UserService {
 
   public login(accountName: string, password: string): Observable<any> {
     const data = {'accountName': accountName, 'password': password};
-    console.log(data);
-    return this.http.post(URL + 'login', data, httpOptions);
+    return this.http.post(URL + 'login', data, httpOptions)
+      .pipe(
+        catchError(this.onLoginError)
+      );
+  }
+
+  private onLoginError(): Observable<any> {
+    return of({id: -1});
   }
 
   public logout(): Observable<any> {

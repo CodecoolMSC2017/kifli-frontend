@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
 
   public accountName: string;
   public password: string;
+  public errorMessage: string;
 
   constructor(
     private userService: UserService,
@@ -25,8 +26,13 @@ export class LoginComponent implements OnInit {
   }
 
   private onLoginResponse(user) {
-    console.log(user);
-    this.router.navigate(['/']);
+    if (user.id > 0) {
+      localStorage.setItem('user', user);
+      this.router.navigate(['/']);
+    } else {
+      this.password = '';
+      this.errorMessage = 'Invalid username or password!';
+    }
   }
 
 }

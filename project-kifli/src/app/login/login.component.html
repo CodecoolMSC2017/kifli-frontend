@@ -1,5 +1,8 @@
 <h1>Login</h1>
-<input [(ngModel)]="accountName" placeholder="Username"/>
-<input [(ngModel)]="password" placeholder="Password" type="password"/>
-<button (click)="login()">Login</button>
-<button routerLink="../register">Register</button>
+<form (submit)="login()">
+    <input [(ngModel)]="accountName" name="accountName" placeholder="Username"/>
+    <input [(ngModel)]="password" name="password" placeholder="Password" type="password"/>
+    <button type="submit">Login</button>
+    <button routerLink="../register">Register</button>
+</form>
+<p *ngIf="errorMessage">{{ errorMessage }}</p>
