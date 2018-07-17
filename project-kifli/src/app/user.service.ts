@@ -23,7 +23,7 @@ export class UserService {
   }
 
   public logout(): Observable<any> {
-    return this.http.get(URL + 'logout');
+    return this.http.delete(URL + 'logout');
   }
 
   public register(
