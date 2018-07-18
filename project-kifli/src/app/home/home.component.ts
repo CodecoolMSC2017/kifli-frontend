@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
+import { ProductService } from '../product.service';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,9 @@ import { UserService } from '../user.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private productService: ProductService) { }
 
   ngOnInit() {
   }
@@ -19,6 +22,10 @@ export class HomeComponent implements OnInit {
 
   logout(): void {
     this.userService.logout().subscribe(() => console.log('logged out'));
+  }
+
+  getAds(): void {
+    this.productService.getAds().subscribe(console.log);
   }
 
 }
