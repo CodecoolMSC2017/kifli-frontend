@@ -1,0 +1,16 @@
+.container {
+    padding: 0%;
+    border: 0px
+}
+
+.left {
+    display: inline-block;
+    text-align: left;
+    width: 50%
+}
+
+.right {
+    display: inline-block;
+    text-align: right;
+    width: 50%
+}
