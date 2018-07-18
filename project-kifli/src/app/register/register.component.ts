@@ -11,6 +11,8 @@ export class RegisterComponent implements OnInit {
 
   public message: string;
   public passwordMessage: string;
+  public emailMessage: string;
+  public accountMessage: string;
 
   public accountName: string;
   public email: string;
@@ -26,13 +28,41 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
+  checkAccountnameSpace(): void {
+    if (this.accountName.includes(" ")) {
+      this.accountMessage = 'Invalid account name!';
+    } else {
+      this.accountMessage = null;
+    }
+  }
+
   checkPasswordMatch(): void {
     if (this.password === this.confirmPassword) {
       this.passwordMessage = null;
+      if (this.password != this.password.toLowerCase()) {
+        this.passwordMessage = null;
+        if (this.password.match(/\d+/g)) {
+          this.passwordMessage = null;
+        } else {
+          this.passwordMessage = 'Password should contain a number!';
+        }
+      } else {
+        this.passwordMessage = 'Password should contain a capital letter!';
+      }
     } else {
-      this.passwordMessage = 'Passwords do not match!';
+      this.passwordMessage = 'Password not match!';
     }
   }
+
+  checkValidEmail(): void {
+    if (this.email.includes("@")) {
+      this.emailMessage = null;
+    } else {
+      this.emailMessage = 'Invalid e-mail(missing @)';
+    }
+  }
+
+  
 
   register(): void {
     if (!this.accountName
@@ -45,6 +75,9 @@ export class RegisterComponent implements OnInit {
         return;
     }
     if (this.passwordMessage) {
+      return;
+    }
+    if (this.emailMessage) {
       return;
     }
     this.userService.register(

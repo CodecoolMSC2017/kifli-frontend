@@ -1,8 +1,14 @@
 <p>
-  <input [(ngModel)]="accountName" placeholder="Account name"/>
+  <input [(ngModel)]="accountName" placeholder="Account name"(keyup)="checkAccountnameSpace()"/>
+</p>
+<p *ngIf="accountMessage">
+  {{ accountMessage }}
 </p>
 <p>
-  <input [(ngModel)]="email" placeholder="E-mail"/>
+  <input [(ngModel)]="email" placeholder="E-mail"(keyup)="checkValidEmail()"/>
+</p>
+<p *ngIf="emailMessage">
+  {{ emailMessage }}
 </p>
 <p>
   <input [(ngModel)]="password" placeholder="Password"/>
@@ -25,5 +31,5 @@
 </p>
 <p>
   <button (click)="register()">Register</button>
-  <button>Back</button>
+  <button routerLink="../login"> Back</button>
 </p>
