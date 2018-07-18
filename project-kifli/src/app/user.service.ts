@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './user';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 const URL = '/api/';
 
@@ -30,7 +30,17 @@ export class UserService {
   }
 
   public logout(): Observable<any> {
-    return this.http.delete(URL + 'logout');
+    return this.http.delete(URL + 'logout').pipe(
+      tap(() => localStorage.removeItem('user')),
+      catchError(error => this.onLogoutError(error))
+    );
+  }
+
+  private onLogoutError(error): Observable<any> {
+    if (error.status >= 500) {
+      return of('Server error')
+    }
+    return of(error);
   }
 
   public register(
@@ -53,5 +63,12 @@ export class UserService {
 
   public getUsers(): Observable<any> {
     return this.http.get(URL + 'users');
+  }
+
+  public isLoggedIn(): boolean {
+    if (localStorage.getItem('user')) {
+      return true;
+    }
+    return false;
   }
 }
