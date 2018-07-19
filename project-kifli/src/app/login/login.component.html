@@ -1,9 +1,20 @@
 <app-top-menu-bar></app-top-menu-bar>
-<h1>Login</h1>
-<form (submit)="login()">
-    <input [(ngModel)]="accountName" name="accountName" placeholder="Username"/>
-    <input [(ngModel)]="password" name="password" placeholder="Password" type="password"/>
-    <button type="submit">Login</button>
-    <button routerLink="../register">Register</button>
-</form>
-<p *ngIf="errorMessage">{{ errorMessage }}</p>
+<div class='login'>
+    <h1>Login</h1>
+    <form  class="modal-content animate" action="/action_page.php" (submit)="login()">
+        <div class="imgcontainer">
+            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <img src="assets/img/avatar.jpeg" alt="Avatar" class="avatar">
+        </div>
+        <div class="container">
+            <input [(ngModel)]="accountName" name="accountName" placeholder="Username" type="accountName"/>
+            <input [(ngModel)]="password" name="password" placeholder="Password" type="password"/>
+            <button type="submit">Login</button>
+            <button routerLink="../register">Register</button>
+        </div>
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+        </div>
+    </form>
+    <p *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>
