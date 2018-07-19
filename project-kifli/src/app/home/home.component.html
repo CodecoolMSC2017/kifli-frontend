@@ -4,4 +4,12 @@
     <button (click)="getUsers()">users</button>
     <button (click)="getAds()">ads</button>
   </p>
+  <ul class="products">
+      <li *ngFor="let product of products">
+        <a>    {{product.id}}  |</a>
+        <a>    {{product.title}}  |</a>
+        <a>    {{product.price}}  |</a>
+        <a>    {{product.type}}  </a>
+      </li>
+  </ul>
 </div>

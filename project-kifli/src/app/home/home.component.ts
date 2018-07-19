@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { ProductService } from '../product.service';
 
+import { Product } from '../product';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -9,11 +11,14 @@ import { ProductService } from '../product.service';
 })
 export class HomeComponent implements OnInit {
 
+  products: Product[] = [];
+
   constructor(
     private userService: UserService,
     private productService: ProductService) { }
 
   ngOnInit() {
+    this.getAds();
   }
 
   getUsers(): void {
@@ -25,7 +30,7 @@ export class HomeComponent implements OnInit {
   }
 
   getAds(): void {
-    this.productService.getAds().subscribe(console.log);
+    this.productService.getAds().subscribe(products => this.products = products);
   }
 
 }
