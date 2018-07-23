@@ -5,10 +5,10 @@
     <button (click)="getAds()">ads</button>
   </p>
   <div *ngFor="let product of products" class="products">
-    <h1>{{product.title}}</h1>
+    <h2>{{product.title}}</h2>
     <img src="assets/img/vegetable.jpeg" alt="Image" class="image">
-    <h3>Price: {{product.price}} $</h3>
-    <h3>{{product.type}}</h3>
+    <h4>Price: {{product.price}} $</h4>
+    <h4>{{product.type}}</h4>
      
   </div>
 </div>
