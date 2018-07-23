@@ -1,3 +1,39 @@
 .home {
     margin-top: 12%;
 }
+
+img {
+    position: relative;
+    width: 150px;
+    height: auto;
+    float: left;
+}
+
+.products {
+    margin: auto;
+    width: 50%;
+    height: 280px;
+    border: 10px solid green;
+    padding: 25px;
+    margin-bottom: 5%;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+    transition: box-shadow 500ms, width 500ms, height 500ms;
+    border-radius: 5px;
+}
+
+.products:hover {
+    width: 51%;
+    height: 290px;
+    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    position: relative;
+    text-align: center;
+}
+
+h3 {
+    text-align: right;
+    position: relative;
+    margin: 10px 0px 20px 400px;
+}
