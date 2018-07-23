@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../product.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Product } from '../product';
 
@@ -27,11 +27,23 @@ export class ProductComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     this.productService.getProductById(id)
     .pipe(
+      tap(console.log),
       catchError(err => this.onProductError(err))
     ).subscribe(product => this.product = product);
   }
 
   private onProductError(err): Observable<any> {
+    console.log(err);
+    return of();
+  }
+
+  private getPic(): void {
+    this.productService.getPictureById(1).pipe(
+      catchError(err => this.onPictureError(err))
+    ).subscribe(console.log);
+  }
+
+  private onPictureError(err): Observable<any> {
     console.log(err);
     return of();
   }

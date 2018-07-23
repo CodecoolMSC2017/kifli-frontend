@@ -18,4 +18,8 @@ export class ProductService {
     return this.http.get<Product>('/api/products/' + id);
   }
 
+  public getPictureById(id): Observable<any> {
+    return this.http.get('/api/images/' + id);
+  }
+
 }

@@ -3,4 +3,7 @@
   <p>
     {{ product.title }}
   </p>
+  <div *ngFor="let id of product.pictureIds">
+    <img src="http://localhost:4200/api/images/{{ id }}">
+  </div>
 </div>
