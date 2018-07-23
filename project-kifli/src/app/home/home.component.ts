@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
     private productService: ProductService) { }
 
   ngOnInit() {
-    this.getAds();
+    //this.getAds();
   }
 
   getUsers(): void {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,17 +16,20 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router) { }
+    private router: Router,
+    private authService: AuthService) { }
 
   ngOnInit() {
   }
 
   login(): void {
-    this.userService.login(this.accountName, this.password)
+    console.log('logging in');
+    this.authService.getAuth(this.accountName, this.password)
       .subscribe(user => this.onLoginResponse(user));
   }
 
   private onLoginResponse(user) {
+    console.log(user);
     if (user.id > 0) {
       localStorage.setItem('user', user);
       this.router.navigate(['/']);

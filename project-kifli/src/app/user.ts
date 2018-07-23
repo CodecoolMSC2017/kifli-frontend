@@ -1,8 +1,9 @@
 export class User {
     id: number;
-    accountName: string;
+    username: string;
     email: string;
+    enabled: boolean;
     firstName: string;
     lastName: string;
-    type: string;
+    authorities: Array<string>;
 }

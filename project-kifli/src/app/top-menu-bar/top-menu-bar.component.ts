@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-top-menu-bar',
@@ -12,12 +13,12 @@ export class TopMenuBarComponent implements OnInit {
   public logOption: string;
 
   constructor(
-    private userService: UserService,
+    private authService: AuthService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    if (this.userService.isLoggedIn()) {
+    if (this.authService.isLoggedIn()) {
       this.logOption = 'Logout';
     } else {
       this.logOption = 'Login';
@@ -26,7 +27,7 @@ export class TopMenuBarComponent implements OnInit {
 
   public auth(): void {
     if (this.logOption === 'Logout') {
-      this.userService.logout().subscribe(resp => this.onLogoutResponse(resp));
+      this.authService.deleteAuth().subscribe(resp => this.onLogoutResponse(resp));
     } else if (this.logOption === 'Login') {
       this.router.navigate(['/login']);
     }

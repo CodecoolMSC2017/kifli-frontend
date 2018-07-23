@@ -10,6 +10,8 @@ import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { TopMenuBarComponent } from './top-menu-bar/top-menu-bar.component';
 
+import { httpInterceptorProviders } from './http-interceptors';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +26,9 @@ import { TopMenuBarComponent } from './top-menu-bar/top-menu-bar.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    httpInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
