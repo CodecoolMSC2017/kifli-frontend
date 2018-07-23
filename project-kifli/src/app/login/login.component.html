@@ -9,6 +9,7 @@
         <div class="container">
             <input [(ngModel)]="accountName" name="accountName" placeholder="Username" type="accountName"/>
             <input [(ngModel)]="password" name="password" placeholder="Password" type="password"/>
+            <p *ngIf="errorMessage">{{ errorMessage }}</p>
             <button type="submit">Login</button>
             <button routerLink="../register">Register</button>
         </div>
@@ -16,5 +17,4 @@
             <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
         </div>
     </form>
-    <p *ngIf="errorMessage">{{ errorMessage }}</p>
 </div>
