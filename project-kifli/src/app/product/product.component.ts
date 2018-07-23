@@ -1,0 +1,39 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ProductService } from '../product.service';
+import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { Product } from '../product';
+
+@Component({
+  selector: 'app-product',
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.css']
+})
+export class ProductComponent implements OnInit {
+
+  public product: Product;
+
+  constructor(
+    private route: ActivatedRoute,
+    private productService: ProductService
+  ) { }
+
+  ngOnInit() {
+    this.getProduct();
+  }
+
+  private getProduct(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.productService.getProductById(id)
+    .pipe(
+      catchError(err => this.onProductError(err))
+    ).subscribe(product => this.product = product);
+  }
+
+  private onProductError(err): Observable<any> {
+    console.log(err);
+    return of();
+  }
+
+}

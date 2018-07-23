@@ -3,6 +3,8 @@ import { UserService } from '../user.service';
 import { ProductService } from '../product.service';
 
 import { Product } from '../product';
+import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +32,14 @@ export class HomeComponent implements OnInit {
   }
 
   getAds(): void {
-    this.productService.getAds().subscribe(products => this.products = products);
+    this.productService.getAds().pipe(
+      catchError(err => this.onAdsError(err))
+    ).subscribe(products => this.products = products);
+  }
+
+  private onAdsError(err): Observable<any> {
+    console.log(err);
+    return of();
   }
 
 }

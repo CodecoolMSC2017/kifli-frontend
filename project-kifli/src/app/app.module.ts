@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { TopMenuBarComponent } from './top-menu-bar/top-menu-bar.component';
 
 import { httpInterceptorProviders } from './http-interceptors';
+import { ProductComponent } from './product/product.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { httpInterceptorProviders } from './http-interceptors';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    TopMenuBarComponent
+    TopMenuBarComponent,
+    ProductComponent
   ],
   imports: [
     BrowserModule,
