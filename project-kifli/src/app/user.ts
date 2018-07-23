@@ -1,3 +1,5 @@
+import { Credentials } from "./credentials";
+
 export class User {
     id: number;
     username: string;
@@ -6,4 +8,5 @@ export class User {
     firstName: string;
     lastName: string;
     authorities: Array<string>;
+    credentials: Credentials;
 }

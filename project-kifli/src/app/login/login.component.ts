@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -23,20 +25,25 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    console.log('logging in');
-    this.authService.getAuth(this.accountName, this.password)
-      .subscribe(user => this.onLoginResponse(user));
+    this.authService.getAuth(this.accountName, this.password).pipe(
+      catchError(err => this.onLoginError(err))
+    ).subscribe(user => this.onLoginResponse(user));
   }
 
   private onLoginResponse(user) {
     console.log(user);
-    if (user.id > 0) {
-      localStorage.setItem('user', user);
-      this.router.navigate(['/']);
-    } else {
+    localStorage.setItem('user', user);
+    this.router.navigate(['/']);
+  }
+
+  private onLoginError(err): Observable<any> {
+    if (err.status >= 500) {
+      this.errorMessage = 'Server error';
+    } else if (err.status === 401) {
       this.password = '';
       this.errorMessage = 'Invalid username or password!';
     }
+    return of();
   }
 
 }

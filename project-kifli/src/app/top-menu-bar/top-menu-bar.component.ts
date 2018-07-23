@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { catchError } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-top-menu-bar',
@@ -27,19 +28,27 @@ export class TopMenuBarComponent implements OnInit {
 
   public auth(): void {
     if (this.logOption === 'Logout') {
-      this.authService.deleteAuth().subscribe(resp => this.onLogoutResponse(resp));
+      this.authService.deleteAuth()
+      .pipe(
+        catchError(err => this.onLogoutError(err))
+      ).subscribe(() => this.onLogoutResponse());
     } else if (this.logOption === 'Login') {
       this.router.navigate(['/login']);
     }
   }
 
-  private onLogoutResponse(response): void {
-    if (response) {
-      console.log(response);
-      return;
+  private onLogoutError(err): Observable<any> {
+    if (err.status === 401) {
+      this.onLogoutResponse();
+    } else {
+      console.log(err);
     }
+    return of();
+  }
+
+  private onLogoutResponse(): void {
     this.logOption = 'Login';
-    this.router.navigate(['/'])
+    this.router.navigate(['/']);
   }
 
 }
