@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
@@ -17,7 +16,6 @@ export class LoginComponent implements OnInit {
   public errorMessage: string;
 
   constructor(
-    private userService: UserService,
     private router: Router,
     private authService: AuthService) { }
 
@@ -31,14 +29,13 @@ export class LoginComponent implements OnInit {
   }
 
   private onLoginResponse(user) {
-    console.log(user);
-    localStorage.setItem('user', user);
+    localStorage.setItem('user', JSON.stringify(user));
     this.router.navigate(['/']);
   }
 
   private onLoginError(err): Observable<any> {
     if (err.status >= 500) {
-      this.errorMessage = 'Server error';
+      this.errorMessage = 'Server error, try again later!';
     } else if (err.status === 401) {
       this.password = '';
       this.errorMessage = 'Invalid username or password!';

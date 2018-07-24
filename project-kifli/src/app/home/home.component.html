@@ -2,7 +2,8 @@
 <div class='home'>
   <p>
     <button (click)="getUsers()">users</button>
-    <button (click)="getAds()">ads</button>
+    <button (click)="getOneUser()">user 5</button>
+    <button (click)="getOwnUser()">get own user</button>
   </p>
   <div *ngFor="let product of products" class="products" routerLink="/products/{{product.id}}">
     <h2>{{ product.title }}</h2>

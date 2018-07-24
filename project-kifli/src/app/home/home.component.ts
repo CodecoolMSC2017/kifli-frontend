@@ -42,4 +42,19 @@ export class HomeComponent implements OnInit {
     return of();
   }
 
+  getOneUser(): void {
+    this.userService.getUserById('5').pipe(
+      catchError(err => this.onAdsError(err))
+    ).subscribe(console.log);
+  }
+
+  getOwnUser(): void {
+    console.log(this.userService.isLoggedIn());
+    console.log(localStorage.getItem('user'));
+    const id = JSON.parse(localStorage.getItem('user')).id;
+    this.userService.getUserById(id).pipe(
+      catchError(err => this.onAdsError(err))
+    ).subscribe(console.log);
+  }
+
 }

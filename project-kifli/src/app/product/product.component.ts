@@ -37,12 +37,6 @@ export class ProductComponent implements OnInit {
     return of();
   }
 
-  private getPic(): void {
-    this.productService.getPictureById(1).pipe(
-      catchError(err => this.onPictureError(err))
-    ).subscribe(console.log);
-  }
-
   private onPictureError(err): Observable<any> {
     console.log(err);
     return of();
