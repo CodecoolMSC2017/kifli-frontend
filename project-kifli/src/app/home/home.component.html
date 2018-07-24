@@ -1,9 +1,14 @@
 <app-top-menu-bar></app-top-menu-bar>
-<div class='home'>
+<div class="home">
+  <!-- these 3 buttons are for testing only and they
+    can be deleted later along with the methods they call -->
   <p>
     <button (click)="getUsers()">users</button>
     <button (click)="getOneUser()">user 5</button>
     <button (click)="getOwnUser()">get own user</button>
+  </p>
+  <p *ngIf="errorMessage">
+    {{ errorMessage }}
   </p>
   <div *ngFor="let product of products" class="products" routerLink="/products/{{product.id}}">
     <h2>{{ product.title }}</h2>

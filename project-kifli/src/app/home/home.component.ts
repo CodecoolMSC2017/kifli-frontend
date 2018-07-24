@@ -14,37 +14,43 @@ import { Observable, of } from 'rxjs';
 export class HomeComponent implements OnInit {
 
   products: Product[] = [];
+  errorMessage: string;
 
   constructor(
     private userService: UserService,
     private productService: ProductService) { }
 
   ngOnInit() {
-    this.getAds();
+    this.getProducts();
   }
 
   getUsers(): void {
     this.userService.getUsers().subscribe(console.log);
   }
 
-  logout(): void {
-    this.userService.logout().subscribe(() => console.log('logged out'));
+  getProducts(): void {
+    this.productService.getProducts().pipe(
+      catchError(err => this.onProductsError(err))
+    ).subscribe(products => this.onProductsReceived(products));
   }
 
-  getAds(): void {
-    this.productService.getAds().pipe(
-      catchError(err => this.onAdsError(err))
-    ).subscribe(products => this.products = products);
+  private onProductsReceived(products): void {
+    this.errorMessage = null;
+    this.products = products;
   }
 
-  private onAdsError(err): Observable<any> {
-    console.log(err);
+  private onProductsError(err): Observable<any> {
+    if (err.status >= 500) {
+      this.errorMessage = 'Server error, please try again later';
+    } else {
+      this.errorMessage = 'Error loading page, please try again later';
+    }
     return of();
   }
 
   getOneUser(): void {
     this.userService.getUserById('5').pipe(
-      catchError(err => this.onAdsError(err))
+      catchError(err => this.onProductsError(err))
     ).subscribe(console.log);
   }
 
@@ -53,7 +59,7 @@ export class HomeComponent implements OnInit {
     console.log(localStorage.getItem('user'));
     const id = JSON.parse(localStorage.getItem('user')).id;
     this.userService.getUserById(id).pipe(
-      catchError(err => this.onAdsError(err))
+      catchError(err => this.onProductsError(err))
     ).subscribe(console.log);
   }
 

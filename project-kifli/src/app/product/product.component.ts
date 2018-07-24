@@ -13,6 +13,7 @@ import { Product } from '../product';
 export class ProductComponent implements OnInit {
 
   public product: Product;
+  public errorMessage: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,16 +30,20 @@ export class ProductComponent implements OnInit {
     .pipe(
       tap(console.log),
       catchError(err => this.onProductError(err))
-    ).subscribe(product => this.product = product);
+    ).subscribe(product => this.onProductReceived(product));
+  }
+
+  private onProductReceived(product: Product) {
+    this.errorMessage = null;
+    this.product = product;
   }
 
   private onProductError(err): Observable<any> {
-    console.log(err);
-    return of();
-  }
-
-  private onPictureError(err): Observable<any> {
-    console.log(err);
+    if (err.status >= 500) {
+      this.errorMessage = 'Server error, please try again later';
+    } else {
+      this.errorMessage = 'Error loading page, please try again later';
+    }
     return of();
   }
 

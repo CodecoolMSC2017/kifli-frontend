@@ -1,9 +1,20 @@
 <app-top-menu-bar></app-top-menu-bar>
+<p *ngIf="errorMessage" class="container">
+  {{ errorMessage }}
+</p>
 <div *ngIf="product" class="container">
-  <p>
+  <h2>
     {{ product.title }}
+  </h2>
+  <h3>
+    ${{ product.price }}
+  </h3>
+  <p>
+    {{ product.description }}
   </p>
   <div *ngFor="let id of product.pictureIds">
-    <img src="http://localhost:4200/api/images/{{ id }}">
+    <div class="picture-container">
+      <img class="product-picture" src="http://localhost:4200/api/images/{{ id }}">
+    </div>
   </div>
 </div>

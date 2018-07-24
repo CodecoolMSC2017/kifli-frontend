@@ -16,15 +16,6 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  public login(accountName: string, password: string): Observable<any> {
-    const data = {'accountName': accountName, 'password': password};
-    return this.http.post(URL + 'login', data, httpOptions);
-  }
-
-  public logout(): Observable<any> {
-    return this.http.delete(URL + 'logout');
-  }
-
   public register(
       accountName: string,
       email: string,
