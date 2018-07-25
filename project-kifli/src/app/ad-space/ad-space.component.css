@@ -1,0 +1,17 @@
+img {
+    position: relative;
+    width: 150px;
+    height: auto;
+    float: left;
+}
+
+h2 {
+    position: relative;
+    text-align: center;
+}
+
+h4 {
+    text-align: right;
+    position: relative;
+    margin: 10px 0px 20px 200px;
+}

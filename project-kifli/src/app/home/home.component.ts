@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user.service';
 import { ProductService } from '../product.service';
 
 import { Product } from '../product';
@@ -17,15 +16,10 @@ export class HomeComponent implements OnInit {
   errorMessage: string;
 
   constructor(
-    private userService: UserService,
     private productService: ProductService) { }
 
   ngOnInit() {
     this.getProducts();
-  }
-
-  getUsers(): void {
-    this.userService.getUsers().subscribe(console.log);
   }
 
   getProducts(): void {
@@ -47,20 +41,4 @@ export class HomeComponent implements OnInit {
     }
     return of();
   }
-
-  getOneUser(): void {
-    this.userService.getUserById('5').pipe(
-      catchError(err => this.onProductsError(err))
-    ).subscribe(console.log);
-  }
-
-  getOwnUser(): void {
-    console.log(this.userService.isLoggedIn());
-    console.log(localStorage.getItem('user'));
-    const id = JSON.parse(localStorage.getItem('user')).id;
-    this.userService.getUserById(id).pipe(
-      catchError(err => this.onProductsError(err))
-    ).subscribe(console.log);
-  }
-
 }
