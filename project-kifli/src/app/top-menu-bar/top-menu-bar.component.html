@@ -12,7 +12,13 @@
     </form>
   </div>
   <div class="right">
-    <button>Profile</button>
+    <div class="dropdown">
+      <button class="dropbtn">My account</button>
+      <div class="dropdown-content">
+        <a href="#">My Profile</a>
+        <a href="#">My ads</a>
+      </div>
+    </div> 
     <button (click)="auth()">{{ logOption }}</button>
   </div>
 </div>

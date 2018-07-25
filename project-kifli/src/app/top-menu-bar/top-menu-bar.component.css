@@ -2,7 +2,7 @@
     display: flex;
     border: 0px;
     background-color: green;
-    overflow: hidden;
+    overflow: visible;
     position: sticky;
     top: 0px;
     left: 0px;
@@ -23,7 +23,7 @@
     display: inline-block;
     text-align: right;
     width: 33%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 button {
@@ -50,7 +50,7 @@ button:hover {
     background-color: rgb(83, 224, 88);
     color: white;
 }
-
+ 
 input {
     width: auto;
     padding: 8px 22px;
@@ -90,3 +90,46 @@ hr {
     height: 80px;
     width: 100%;
 }
+
+ /* Dropdown Button */
+ .dropbtn {
+    background-color: rgb(56, 190, 3)   ;
+    color: black;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: rgb(56, 190, 3);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 10px 22px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: rgb(83, 224, 88);}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color:rgb(83, 224, 88);} 
