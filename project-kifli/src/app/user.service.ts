@@ -45,6 +45,21 @@ export class UserService {
     return false;
   }
 
+  public getUserId(): number {
+    if (localStorage.getItem('user')) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      return Number(user.id);
+    }
+  }
+
+  public isAdmin(): boolean {
+    if (!localStorage.getItem('user')) {
+      return false;
+    }
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user.authorities.includes('ROLE_ADMIN');
+  }
+
   public getUserById(id): Observable<any> {
     return this.http.get(URL + 'users/' + id);
   }

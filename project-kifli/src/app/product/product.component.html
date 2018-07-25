@@ -2,6 +2,8 @@
 <p *ngIf="errorMessage" class="container">
   {{ errorMessage }}
 </p>
+<button (click)="deleteProduct()" *ngIf="isAdmin && !isOwnProduct">Remove</button>
+<button (click)="editProduct()" *ngIf="isOwnProduct">Edit</button>
 <div *ngIf="product" class="container">
   <h2>
     {{ product.title }}
