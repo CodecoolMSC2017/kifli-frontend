@@ -11,3 +11,23 @@
     cursor: pointer;
     text-align: center;
 }
+
+button {
+    background-color: rgb(56, 190, 3);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 4px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(83, 224, 88);
+    color: white;
+}

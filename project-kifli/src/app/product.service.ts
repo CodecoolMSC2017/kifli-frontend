@@ -22,4 +22,8 @@ export class ProductService {
     return this.http.get('/api/images/' + id);
   }
 
+  public deleteProduct(id): Observable<any> {
+    return this.http.delete('/api/products/' + id);
+  }
+
 }
