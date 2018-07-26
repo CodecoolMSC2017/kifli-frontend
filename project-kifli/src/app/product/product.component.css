@@ -3,13 +3,48 @@
     max-height: 300px;
 }
 
-.picture-container {
+.picture-frame {
+    box-sizing: border-box;
     border: 5px solid green;
-    height: 300px;
-    width: 300px;
     background-color: darkgray;
     cursor: pointer;
     text-align: center;
+    height: 150px;
+    width: 12.5%;
+    overflow: hidden;
+    float: left;
+    transition-duration: 500ms;
+}
+
+.picture-frame:hover {
+    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 1);
+    border: 5px solid #2fbc50;
+}
+
+#pictures-container {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#dark {
+    position: absolute;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+#large-picture {
+    margin-bottom: 160px;
+    max-height: 65%;
+}
+
+#help-text {
+    margin-top: 85px;
+    margin-bottom: 5px;
 }
 
 button {

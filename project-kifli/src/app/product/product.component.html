@@ -14,8 +14,14 @@
   <p>
     {{ product.description }}
   </p>
-  <div *ngFor="let id of product.pictureIds">
-    <div class="picture-container">
+  <div *ngIf="selectedPictureSrc" id="dark" (click)="selectedPictureSrc = null;">
+    <p id="help-text">Click here to dismiss</p>
+    <img id="large-picture" src="{{ selectedPictureSrc }}">
+  </div>
+  <div id="pictures-container">
+    <div class="picture-frame"
+        *ngFor="let id of product.pictureIds"
+        (click)="selectedPictureSrc = 'http://localhost:4200/api/images/' + id">
       <img class="product-picture" src="http://localhost:4200/api/images/{{ id }}">
     </div>
   </div>

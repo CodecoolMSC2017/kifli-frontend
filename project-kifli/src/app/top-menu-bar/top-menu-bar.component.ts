@@ -28,8 +28,7 @@ export class TopMenuBarComponent implements OnInit {
 
   public auth(): void {
     if (this.logOption === 'Logout') {
-      this.authService.deleteAuth()
-      .pipe(
+      this.authService.deleteAuth().pipe(
         catchError(err => this.onLogoutError(err))
       ).subscribe(() => this.onLogoutResponse());
     } else if (this.logOption === 'Login') {
@@ -38,15 +37,12 @@ export class TopMenuBarComponent implements OnInit {
   }
 
   private onLogoutError(err): Observable<any> {
-    if (err.status === 401) {
-      this.onLogoutResponse();
-    } else {
-      console.log(err);
-    }
+    this.onLogoutResponse();
     return of();
   }
 
   private onLogoutResponse(): void {
+    localStorage.removeItem('user');
     this.logOption = 'Login';
     this.router.navigate(['/']);
   }

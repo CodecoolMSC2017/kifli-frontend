@@ -17,6 +17,7 @@ export class ProductComponent implements OnInit {
   public errorMessage: string;
   public isOwnProduct: boolean = false;
   public isAdmin: boolean = false;
+  public selectedPictureSrc: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,6 +69,10 @@ export class ProductComponent implements OnInit {
   private onDeleteError(err): Observable<any> {
     console.log(err);
     return of();
+  }
+
+  logPic(): void {
+    console.log(this.selectedPictureSrc);
   }
 
 }
