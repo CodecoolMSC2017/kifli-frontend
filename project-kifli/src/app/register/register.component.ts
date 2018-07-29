@@ -19,11 +19,15 @@ export class RegisterComponent implements OnInit {
   public firstName: string;
   public lastName: string;
 
+  public logVisibility: boolean = true;
+
   constructor(
     private userService: UserService,
     private router: Router) { }
 
   ngOnInit() {
+    this.someWhereClick();
+    this.visibility();
   }
 
   checkPasswordMatch(): void {
@@ -61,4 +65,24 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/'])
   }
 
+  someWhereClick() {
+    // Get the modal
+    const modal = document.getElementById('id01');
+    const navigate = this.router;
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {         
+            navigate.navigate(['/']);
+        }    
+    }
+  }
+
+  public visibility() {
+    if (this.logVisibility) {
+      document.getElementById('id01').style.display='block';
+    } else {
+      document.getElementById('id01').style.display='none';
+    }
+  }
 }

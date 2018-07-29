@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
@@ -14,12 +14,15 @@ export class LoginComponent implements OnInit {
   public accountName: string;
   public password: string;
   public errorMessage: string;
+  public logVisibility: boolean = true;
 
   constructor(
     private router: Router,
-    private authService: AuthService) { }
+    private authService: AuthService) {}
 
   ngOnInit() {
+    this.someWhereClick();
+    this.visibility();
   }
 
   login(): void {
@@ -43,4 +46,24 @@ export class LoginComponent implements OnInit {
     return of();
   }
 
+  someWhereClick() {
+    // Get the modal
+    const modal = document.getElementById('id01');
+    const navigate = this.router;
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {         
+            navigate.navigate(['/']);
+        }    
+    }
+  }
+
+  public visibility() {
+    if (this.logVisibility) {
+      document.getElementById('id01').style.display='block';
+    } else {
+      document.getElementById('id01').style.display='none';
+    }
+  }
 }

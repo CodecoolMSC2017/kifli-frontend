@@ -46,5 +46,4 @@ export class TopMenuBarComponent implements OnInit {
     this.logOption = 'Login';
     this.router.navigate(['/']);
   }
-
 }

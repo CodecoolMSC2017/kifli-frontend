@@ -1,36 +1,28 @@
-<app-top-menu-bar></app-top-menu-bar>
-<div class='register'>
+<app-home></app-home>
+<div id='id01' class='modal'>
   <div class="modal-content animate" action="/action_page.php">
     <div class='container'> 
-      <p>
-        <input [(ngModel)]="accountName" placeholder="Account name" type='accountName'/>
-      </p>
-      <p>
-        <input [(ngModel)]="email" placeholder="E-mail" type='email'/>
-      </p>
-      <p>
-        <input [(ngModel)]="password" placeholder="Password" type='password'/>
-      </p>
-      <p>
-        <input [(ngModel)]="confirmPassword" placeholder="Confirm password"
-          (keyup)="checkPasswordMatch()" type='confirmPassword'/>
-      </p>
+      
+      <input [(ngModel)]="accountName" placeholder="Account name" type='accountName'/>
+      <input [(ngModel)]="email" placeholder="E-mail" type='email'/>  
+      <input [(ngModel)]="password" placeholder="Password" type='password'/>  
+      <input [(ngModel)]="confirmPassword" placeholder="Confirm password"
+        (keyup)="checkPasswordMatch()" type='confirmPassword'/>
+      
       <p *ngIf="passwordMessage">
         {{ passwordMessage }}
       </p>
-      <p>
-        <input [(ngModel)]="firstName" placeholder="First name" type='firstName'/>
-      </p>
-      <p>
-        <input [(ngModel)]="lastName" placeholder="Last name" type='lastName'/>
-      </p>
+    
+      <input [(ngModel)]="firstName" placeholder="First name" type='firstName'/> 
+      <input [(ngModel)]="lastName" placeholder="Last name" type='lastName'/>
+    
       <p *ngIf="message">
         {{ message }}
       </p>
-      <p>
-        <button (click)="register()">Register</button>
-        <button>Back</button>
-      </p>
+      
+      <button (click)="register()">Register</button>
+      <button>Back</button>
+      
     </div>
   </div>
 </div>
