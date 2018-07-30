@@ -18,6 +18,14 @@
     <p id="help-text">Click here to dismiss</p>
     <img id="large-picture" src="{{ selectedPictureSrc }}">
   </div>
+  <hr>
+  <div>
+    <button id="contact-button" (click)="contact()">{{ contactButtonText }} contact</button>
+    <div *ngIf="contactButtonText == 'Hide'">
+      <p>E-mail: {{ owner.email }}</p>
+      <p *ngIf="owner.credentials">Phone: {{ owner.credentials.phone }}</p>
+    </div>
+  </div>
   <div id="pictures-container">
     <div class="picture-frame"
         *ngFor="let id of product.pictureIds"
