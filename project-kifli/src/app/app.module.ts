@@ -14,6 +14,7 @@ import { httpInterceptorProviders } from './http-interceptors';
 import { ProductComponent } from './product/product.component';
 import { AdSpaceComponent } from './ad-space/ad-space.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AdPlacementComponent } from './ad-placement/ad-placement.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ProfileComponent } from './profile/profile.component';
     TopMenuBarComponent,
     ProductComponent,
     AdSpaceComponent,
-    ProfileComponent
+    ProfileComponent,
+    AdPlacementComponent
   ],
   imports: [
     BrowserModule,
