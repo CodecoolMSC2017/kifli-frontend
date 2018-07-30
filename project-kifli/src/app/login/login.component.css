@@ -1,5 +1,5 @@
 /* Full-width input fields */
-input[type=accountName], input[type=password] {
+.login-input[type=accountName], input[type=password] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -9,7 +9,7 @@ input[type=accountName], input[type=password] {
 }
 
 /* Set a style for all buttons */
-button {
+.login-button {
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
@@ -19,7 +19,21 @@ button {
     width: 100%;
 }
 
-button:hover {
+.login-button:hover {
+    opacity: 0.8;
+}
+
+.login-span {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.login-span:hover {
     opacity: 0.8;
 }
 
@@ -42,7 +56,7 @@ img.avatar {
     border-radius: 50%;
 }
 
-.container {
+.login-container {
     padding: 16px;
 }
 

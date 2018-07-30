@@ -26,4 +26,8 @@ export class ProductService {
     return this.http.delete('/api/products/' + id);
   }
 
+  public getProductBySearchTitle(searchTitle): Observable<Product[]> {
+    return this.http.get<Product[]>('/api/products/' + searchTitle);
+  }
+
 }
