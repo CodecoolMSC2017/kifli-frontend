@@ -24,6 +24,8 @@ export class TopMenuBarComponent implements OnInit {
     } else {
       this.logOption = 'Login';
     }
+
+    this.someWhereClickInLogin();
   }
 
   public auth(): void {
@@ -32,7 +34,8 @@ export class TopMenuBarComponent implements OnInit {
         catchError(err => this.onLogoutError(err))
       ).subscribe(() => this.onLogoutResponse());
     } else if (this.logOption === 'Login') {
-      this.router.navigate(['/login']);
+      document.getElementById('id02').style.display='none';
+      document.getElementById('id01').style.display='block';
     }
   }
 
@@ -45,5 +48,20 @@ export class TopMenuBarComponent implements OnInit {
     localStorage.removeItem('user');
     this.logOption = 'Login';
     this.router.navigate(['/']);
+  }
+
+  private someWhereClickInLogin() {
+    // Get the modal
+    const logModal = document.getElementById('id01');
+    const regModal = document.getElementById('id02');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == logModal) {         
+          logModal.style.display='none';
+        } else if(event.target == regModal) {
+          regModal.style.display='none';
+        }
+    }
   }
 }

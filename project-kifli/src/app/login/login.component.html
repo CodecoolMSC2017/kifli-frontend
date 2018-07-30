@@ -1,15 +1,15 @@
-<app-home></app-home>
+
 <div id='id01' class='modal'>
     <form  class="modal-content animate" action="/action_page.php" (submit)="login()">
         <div class="imgcontainer">
             <img src="assets/img/avatar.jpeg" alt="Avatar" class="avatar">
         </div>
-        <div class="container">
-            <input [(ngModel)]="accountName" name="accountName" placeholder="Username" type="accountName"/>
-            <input [(ngModel)]="password" name="password" placeholder="Password" type="password"/>
+        <div class="login-container">
+            <input class="login-input" [(ngModel)]="accountName" name="accountName" placeholder="Username" type="accountName"/>
+            <input class="login-input" [(ngModel)]="password" name="password" placeholder="Password" type="password"/>
             <p *ngIf="errorMessage">{{ errorMessage }}</p>
-            <button type="submit">Login</button>
-            <button routerLink="../register">Register</button>
+            <button class="login-button" type="submit">Login</button>
+            <span class="login-span" (click)="regStyle()">Register</span>
         </div>
     </form>
 </div>
