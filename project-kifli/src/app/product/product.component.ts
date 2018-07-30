@@ -5,7 +5,6 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Product } from '../product';
 import { UserService } from '../user.service';
-import { User } from '../user';
 
 @Component({
   selector: 'app-product',
@@ -14,12 +13,11 @@ import { User } from '../user';
 })
 export class ProductComponent implements OnInit {
 
-  public product: Product;
+  public product;
   public errorMessage: string;
   public isOwnProduct: boolean = false;
   public isAdmin: boolean = false;
   public selectedPictureSrc: string;
-  public owner: User;
   public contactButtonText: string = 'Show';
 
   constructor(
@@ -42,27 +40,12 @@ export class ProductComponent implements OnInit {
   }
 
   private onProductReceived(product: Product) {
+    console.log(product);
     if (this.userService.getUserId() === product.userId) {
       this.isOwnProduct = true;
     }
     this.errorMessage = null;
     this.product = product;
-    this.getOwner(product.userId);
-  }
-
-  private getOwner(userId): void {
-    this.userService.getUserById(userId).pipe(
-      catchError(err => this.onGetOwnerError(err))
-    ).subscribe(user => this.setOwner(user));
-  }
-
-  private setOwner(user: User): void {
-    this.owner = user;
-  }
-
-  private onGetOwnerError(err): Observable<any> {
-    console.log(err);
-    return of();
   }
 
   private onProductError(err): Observable<any> {
