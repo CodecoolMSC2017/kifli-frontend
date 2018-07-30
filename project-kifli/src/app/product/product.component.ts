@@ -5,7 +5,6 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Product } from '../product';
 import { UserService } from '../user.service';
-import { User } from '../user';
 
 @Component({
   selector: 'app-product',
