@@ -13,6 +13,7 @@ import { TopMenuBarComponent } from './top-menu-bar/top-menu-bar.component';
 import { httpInterceptorProviders } from './http-interceptors';
 import { ProductComponent } from './product/product.component';
 import { AdSpaceComponent } from './ad-space/ad-space.component';
+import { AdPlacementComponent } from './ad-placement/ad-placement.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AdSpaceComponent } from './ad-space/ad-space.component';
     HomeComponent,
     TopMenuBarComponent,
     ProductComponent,
-    AdSpaceComponent
+    AdSpaceComponent,
+    AdPlacementComponent
   ],
   imports: [
     BrowserModule,
