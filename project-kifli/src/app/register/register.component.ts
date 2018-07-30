@@ -60,4 +60,10 @@ export class RegisterComponent implements OnInit {
     console.log(user);
     this.router.navigate(['/'])
   }
+
+  private regStyle() {
+    document.getElementById('id02').style.display='none';
+    document.getElementById('id01').style.display='block';
+    
+  }
 }
