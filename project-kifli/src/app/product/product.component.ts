@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Product } from '../product';
 import { UserService } from '../user.service';
+import { User } from '../user';
 
 @Component({
   selector: 'app-product',
@@ -18,6 +19,8 @@ export class ProductComponent implements OnInit {
   public isOwnProduct: boolean = false;
   public isAdmin: boolean = false;
   public selectedPictureSrc: string;
+  public owner: User;
+  public contactButtonText: string = 'Show';
 
   constructor(
     private route: ActivatedRoute,
@@ -44,6 +47,22 @@ export class ProductComponent implements OnInit {
     }
     this.errorMessage = null;
     this.product = product;
+    this.getOwner(product.userId);
+  }
+
+  private getOwner(userId): void {
+    this.userService.getUserById(userId).pipe(
+      catchError(err => this.onGetOwnerError(err))
+    ).subscribe(user => this.setOwner(user));
+  }
+
+  private setOwner(user: User): void {
+    this.owner = user;
+  }
+
+  private onGetOwnerError(err): Observable<any> {
+    console.log(err);
+    return of();
   }
 
   private onProductError(err): Observable<any> {
@@ -56,7 +75,6 @@ export class ProductComponent implements OnInit {
   }
 
   deleteProduct(): void {
-    console.log('delete button clicked');
     this.productService.deleteProduct(this.product.id).pipe(
       catchError(err => this.onDeleteError(err))
     ).subscribe(() => this.router.navigate(['/']))
@@ -71,8 +89,12 @@ export class ProductComponent implements OnInit {
     return of();
   }
 
-  logPic(): void {
-    console.log(this.selectedPictureSrc);
+  contact(): void {
+    if (this.contactButtonText === 'Show') {
+      this.contactButtonText = 'Hide';
+    } else {
+      this.contactButtonText = 'Show';
+    }
   }
 
 }
