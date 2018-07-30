@@ -16,7 +16,8 @@ export class HomeComponent implements OnInit {
   errorMessage: string;
 
   constructor(
-    private productService: ProductService) { }
+    private productService: ProductService
+  ) { }
 
   ngOnInit() {
     this.getProducts();

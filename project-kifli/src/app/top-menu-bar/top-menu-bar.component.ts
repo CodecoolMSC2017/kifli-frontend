@@ -12,6 +12,7 @@ import { of, Observable } from 'rxjs';
 export class TopMenuBarComponent implements OnInit {
 
   public logOption: string;
+  public searchTitle: string;
 
   constructor(
     private authService: AuthService,
