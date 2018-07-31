@@ -23,14 +23,12 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.getProfile();
     this.getUser();
   }
 
   public getUser() {
      
     let userString = localStorage.getItem("user");
-    console.log(userString);
     let userObject = JSON.parse(userString);
     this.userName = userObject.username;
     this.userEmail = userObject.email;
@@ -42,7 +40,6 @@ export class ProfileComponent implements OnInit {
     this.state = credentials.state;
     this.city = credentials.city;
     this.street = credentials.street;
-
   }
 
 }
