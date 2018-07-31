@@ -30,4 +30,12 @@ export class ProductService {
     return this.http.get<Product[]>('/api/products/' + searchTitle);
   }
 
+  public getAllCategories(): Observable<any> {
+    return this.http.get('/api/categories');
+  }
+
+  public postProduct(product: {}): Observable<any> {
+    return this.http.post('/api/products', product);
+  }
+
 }

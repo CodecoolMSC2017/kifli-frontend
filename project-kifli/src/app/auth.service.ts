@@ -20,7 +20,9 @@ export class AuthService {
   }
 
   deleteAuth(): Observable<void> {
-    return this.http.delete<void>('/api/auth');
+    return this.http.delete<void>('/api/auth').pipe(
+      tap(() => localStorage.removeItem('user'))
+    );
   }
 
   public isLoggedIn(): boolean {
