@@ -67,7 +67,7 @@ export class AdPlacementComponent implements OnInit {
     const nodes = document.querySelectorAll('.attribute-input');
     for (let i = 0; i < nodes.length; i++) {
       const attribute = this.selectedCategory.attributes[i];
-      const node = nodes[i];
+      const node: any = nodes[i];
       let value;
       if (node.tagName === 'TD') {
         value = this.getRadioInputValue(node);
@@ -88,7 +88,7 @@ export class AdPlacementComponent implements OnInit {
     } else {
       this.inputErrorMessage = null;
     }
-    const product = {};
+    const product: any = {};
     product.title = this.title;
     product.description = this.description;
     product.price = this.price;
@@ -99,6 +99,7 @@ export class AdPlacementComponent implements OnInit {
       this.categoryInputErrorMessage = null;
     }
     product.attributes = attributes;
+    product.categoryId = this.selectedCategory.id; 
 
     console.log(product);
 
