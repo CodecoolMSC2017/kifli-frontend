@@ -1,14 +1,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="container">
   <div class="left">
-      <button routerLink="/">Home</button>
+      <button (click)="activateGetProduct()" routerLink="/">Home</button>
       <button routerLink="/place-ad">Place ad</button>
       <button class="middle">BUY PREMIUM</button>
   </div>
   <div class="search-container">
     <form action="">
-      <input [(ngModel)]="searchTitle" type="text" placeholder="Search.." name="searchTitle">
-      <button type="submit"><i class="fa fa-search"></i></button>
+      <input [(ngModel)]="searchTitle" type="searchTitle" placeholder="Search.." name="searchTitle">
+      <button (click)="search()"><i class="fa fa-search"></i></button>
     </form>
   </div>
   <div class="right">
