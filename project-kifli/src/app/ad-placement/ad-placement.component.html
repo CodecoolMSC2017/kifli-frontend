@@ -1,3 +1,49 @@
-<p>
-  ad-placement works!
-</p>
+<div *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>
+<div *ngIf="!errorMessage">
+  <table>
+    <tr>
+      <td>Title:</td>
+      <td><input [(ngModel)]="title"></td>
+    </tr>
+    <tr>
+      <td>Description:</td>
+      <td><textarea [(ngModel)]="description"></textarea></td>
+    </tr>
+    <tr>
+      <td>Price:</td>
+      <td><input [(ngModel)]="price" type="number"></td>
+    </tr>
+  </table>
+  <p *ngIf="inputErrorMessage">
+    {{ inputErrorMessage }}
+  </p>
+  <p>
+    Choose a category:
+    <select [(ngModel)]="selectedCategoryString" (change)="setSelectedCategory()">
+      <option *ngFor="let category of categories" value="{{ category | json }}">{{ category.name }}</option>
+    </select>
+  </p>
+  <div *ngIf="selectedCategory">
+    <table>
+      <tr *ngFor="let attribute of selectedCategory.attributes">
+        <td>{{ attribute.name }}: </td>
+        <td *ngIf="attribute.type === 'STRING'">
+          <input class="attribute-input">
+        </td>
+        <td *ngIf="attribute.type === 'NUMBER'">
+          <input class="attribute-input" type="number">
+        </td>
+        <td *ngIf="attribute.type === 'BOOL'" class="attribute-input">
+          <input name="{{ attribute.name }}" type="radio" value="true" checked>Yes
+          <input name="{{ attribute.name }}" type="radio" value="false">No
+        </td>
+      </tr>
+    </table>
+    <p *ngIf="categoryInputErrorMessage">
+      {{ categoryInputErrorMessage }}
+    </p>
+    <button (click)="placeAd()">Place ad</button>
+  </div>
+</div>
