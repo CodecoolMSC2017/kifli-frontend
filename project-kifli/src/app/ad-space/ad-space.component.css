@@ -7,10 +7,15 @@ img {
 
 h2 {
     position: relative;
-    margin-left: 200px;
+    margin: 0 0 0 170px;
 }
 
 h4 {
     position: relative;
-    margin: 10px 0px 20px 200px;
+    margin: 10px 0px 10px 170px;
+}
+
+p {
+    position: relative;
+    margin-left: 170px;
 }

@@ -50,7 +50,6 @@ export class AdPlacementComponent implements OnInit {
   private onCategoriesError(err): Observable<any> {
     console.log(err);
     if (err.status === 401) {
-      this.authService.deleteAuth();
       this.errorMessage = 'You must login first!';
     } else if (err.status >= 500) {
       this.errorMessage = 'Server error, please try again later';

@@ -42,4 +42,8 @@ export class ProductService {
     return this.http.get<Product[]>('/api/products/user/' + id);
   }
 
+  public findAllByCategoryId(id): Observable<any> {
+    return this.http.get('/api/products/category/' + id);
+  }
+
 }

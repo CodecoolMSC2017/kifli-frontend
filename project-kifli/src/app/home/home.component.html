@@ -2,7 +2,15 @@
   <p *ngIf="errorMessage">
     {{ errorMessage }}
   </p>
-  <div *ngFor="let product of products" class="products" routerLink="/products/{{ product.id }}">
-     <app-ad-space [product]="product"></app-ad-space>
+  <div *ngIf="!errorMessage">
+    <div id="filter-inputs">
+      <select *ngIf="categories" [(ngModel)]="selectedCategoryId">
+        <option *ngFor="let category of categories" value="{{ category.id }}">{{ category.name }}</option>
+      </select>
+      <button (click)="categoryFilter()">Filter</button>
+    </div>
+    <div *ngFor="let product of products" class="products" routerLink="/products/{{ product.id }}">
+      <app-ad-space [product]="product"></app-ad-space>
+    </div>
   </div>
 </div>

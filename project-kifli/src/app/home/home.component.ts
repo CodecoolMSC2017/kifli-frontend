@@ -5,6 +5,7 @@ import { SearchService } from '../search.service';
 import { Product } from '../product';
 import { catchError } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
+import { Category } from '../model/category';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,8 @@ export class HomeComponent implements OnInit {
   errorMessage: string;
   subscription: Subscription;
   activateGetProdact: boolean;
+  categories: Category[];
+  selectedCategoryId: string;
 
   constructor(
     private productService: ProductService,
@@ -26,6 +29,21 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.subscribeSearch();
     this.loadInitialProducts();
+    this.loadCategories();
+  }
+
+  private loadCategories(): void {
+    this.productService.getAllCategories().pipe(
+      catchError(err => this.onCategoriesError(err))
+    ).subscribe(categories => {
+      this.categories = categories;
+      this.selectedCategoryId = categories[0].id;
+    });
+  }
+
+  private onCategoriesError(err): Observable<any> {
+    console.log(err);
+    return of();
   }
 
   private loadInitialProducts(): void {
@@ -66,5 +84,11 @@ export class HomeComponent implements OnInit {
     this.productService.getProductBySearchTitle(searchString).pipe(
       catchError(err => this.onProductsError(err))
     ).subscribe(products => this.onProductsReceived(products));
+  }
+
+  private categoryFilter(): void {
+    this.productService.findAllByCategoryId(this.selectedCategoryId).pipe(
+      catchError(err => this.onProductsError(err))
+    ).subscribe(products => this.products = products);
   }
 }
