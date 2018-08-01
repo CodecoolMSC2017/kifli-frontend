@@ -37,6 +37,7 @@ export class ProfileComponent implements OnInit {
   street: String;
   newPassword: String;
   public errorMessage: string;
+  products;
 
   constructor(
     private http: HttpClient,
@@ -49,7 +50,6 @@ export class ProfileComponent implements OnInit {
   }
 
   
-
   public getUser() {
      
     let userString = localStorage.getItem("user");
@@ -83,6 +83,7 @@ export class ProfileComponent implements OnInit {
 
   onProductReceived(product: Product) {
     console.log(product);
+    this.products = product; 
   }
 
   onProductError(err): Observable<any> {
