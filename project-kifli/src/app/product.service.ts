@@ -27,7 +27,7 @@ export class ProductService {
   }
 
   public getProductBySearchTitle(searchTitle): Observable<Product[]> {
-    return this.http.get<Product[]>('/api/products/' + searchTitle);
+    return this.http.get<Product[]>('/api/products/search/' + searchTitle);
   }
 
   public getAllCategories(): Observable<any> {
