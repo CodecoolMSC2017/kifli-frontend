@@ -5,10 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-import { Product } from '../product';
-import { ProductService } from '../product.service';
+import { Observable } from 'rxjs';
+
+
 
 @Component({
   selector: 'app-profile',
@@ -36,16 +35,12 @@ export class ProfileComponent implements OnInit {
   city: String;
   street: String;
   newPassword: String;
-  public errorMessage: string;
-  products;
 
   constructor(
-    private http: HttpClient,
-    private productService: ProductService) {}
+    private http: HttpClient) {}
 
   ngOnInit() {
     this.getUser();
-    this.getProducts(this.userId);
     console.log(this.newPassword);
   }
 
@@ -73,26 +68,6 @@ export class ProfileComponent implements OnInit {
     } else {
       console.log("New pass not the same")
     }
-  }
-
-  getProducts(userId) {
-    this.productService.getUserProducts(userId).
-    pipe(catchError(err => this.onProductError(err))
-  ).subscribe(product => this.onProductReceived(product))
-  }
-
-  onProductReceived(product: Product) {
-    console.log(product);
-    this.products = product; 
-  }
-
-  onProductError(err): Observable<any> {
-    if(err.status >= 500) {
-      this.errorMessage = 'Server error, please try again later';
-    } else {
-      this.errorMessage = 'Error loading page, please try again later';
-    }
-    return of();
   }
 
   /*addHero (hero: Hero): Observable<Hero> {

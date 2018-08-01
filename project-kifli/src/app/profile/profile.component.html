@@ -45,14 +45,3 @@
   <button (click)="submit(newPassword1, newPassword2)">Submmit</button>
 
 </div>
-
-<div>
-  <br/>
-  <h2 class="center">Your Products</h2>
-  <p *ngIf="errorMessage">
-    {{ errorMessage }}
-  </p>
-  <div *ngFor="let product of products" class="products" routerLink="/products/{{ product.id }}">
-     <app-ad-space [product]="product"></app-ad-space>
-  </div>
-</div>
