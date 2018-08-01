@@ -13,10 +13,12 @@
   <p>
     {{ product.description }}
   </p>
-  <div *ngIf="selectedPictureSrc" id="dark" (click)="selectedPictureSrc = null;">
-    <p id="help-text">Click here to dismiss</p>
-    <img id="large-picture" src="{{ selectedPictureSrc }}">
-  </div>
+  <table>
+    <tr *ngFor="let attribute of productAttributes">
+      <td>{{ attribute }}:</td>
+      <td>{{ product.attributes[attribute] }}</td>
+    </tr>
+  </table>
   <hr>
   <div>
     <button id="contact-button" (click)="contact()">{{ contactButtonText }} contact</button>
@@ -24,6 +26,10 @@
       <p>E-mail: {{ product.ownerEmail }}</p>
       <p>Phone: {{ product.ownerPhone }}</p>
     </div>
+  </div>
+  <div *ngIf="selectedPictureSrc" id="dark" (click)="selectedPictureSrc = null;">
+    <p id="help-text">Click here to dismiss</p>
+    <img id="large-picture" src="{{ selectedPictureSrc }}">
   </div>
   <div id="pictures-container">
     <div class="picture-frame"

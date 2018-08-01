@@ -19,6 +19,7 @@ export class ProductComponent implements OnInit {
   public isAdmin: boolean = false;
   public selectedPictureSrc: string;
   public contactButtonText: string = 'Show';
+  public productAttributes = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -41,10 +42,12 @@ export class ProductComponent implements OnInit {
 
   private onProductReceived(product: Product) {
     console.log(product);
-    if (this.userService.getUserId() === product.userId) {
+    if (this.userService.getUserId() === product.ownerId) {
       this.isOwnProduct = true;
     }
     this.errorMessage = null;
+
+    this.productAttributes = Object.keys(product.attributes);
     this.product = product;
   }
 
