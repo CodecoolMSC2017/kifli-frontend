@@ -16,6 +16,5 @@ export class SearchService {
   searchTitleApply(search: string) {
     this.lastValue = search;
     this.searchTitleInput.next(search);
-    console.log('searchservice: ' + search);
   }
 }

@@ -39,7 +39,7 @@ export class ProductService {
   }
 
   public getUserProducts(id): Observable<Product[]> {
-    return this.http.get<Product[]>('/api/products/user-products/' + id);
+    return this.http.get<Product[]>('/api/products/user/' + id);
   }
 
 }

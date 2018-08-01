@@ -60,7 +60,6 @@ export class HomeComponent implements OnInit {
   }
 
   getSearchProducts(searchString: string): void {
-    console.log('home: ' + searchString);
     if (!searchString) {
       this.getProducts();
     }
