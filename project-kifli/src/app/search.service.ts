@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable }    from 'rxjs';
-import { Product } from './product';
+import { Subject }    from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,19 +7,15 @@ import { Product } from './product';
 export class SearchService {
 
   private searchTitleInput = new Subject<string>();
-  private getAllProduct = new Subject<boolean>();
+  public lastValue: string;
 
   constructor() { }
 
   searchTitle$ = this.searchTitleInput.asObservable();
-  getProductAds$ = this.getAllProduct.asObservable();
 
   searchTitleApply(search: string) {
+    this.lastValue = search;
     this.searchTitleInput.next(search);
-    console.log(search);
-  }
-
-  getAllProductClick(activate: boolean) {
-    this.getAllProduct.next(activate);
+    console.log('searchservice: ' + search);
   }
 }

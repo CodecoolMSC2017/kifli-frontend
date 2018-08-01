@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
@@ -18,7 +18,8 @@ export class TopMenuBarComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -27,8 +28,14 @@ export class TopMenuBarComponent implements OnInit {
     } else {
       this.logOption = 'Login';
     }
+    this.route.queryParams.subscribe(params => this.sendSearchRequest(params));
+    this.subscribeToSearch();
 
     this.someWhereClickInLogin();
+  }
+
+  private subscribeToSearch(): void {
+    this.searchService.searchTitle$.subscribe(string => this.searchTitle = string);
   }
 
   public auth(): void {
@@ -69,15 +76,15 @@ export class TopMenuBarComponent implements OnInit {
   }
 
   search() {
-    if (this.searchTitle == null) {
-      console.log("neeeeeeeeeem jjóóóóóóó");
+    if (this.searchTitle !== '' && this.searchTitle) {
+      this.router.navigate(['/'], {queryParams: {search: this.searchTitle}});
     } else {
-      console.log(this.searchTitle); 
-      this.searchService.searchTitleApply(this.searchTitle);
+      this.router.navigate(['']);
     }
   }
 
-  activateGetProduct() {
-    this.searchService.getAllProductClick(true);
+  private sendSearchRequest(params) {
+    const search = params.search;
+    this.searchService.searchTitleApply(search);
   }
 }

@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit {
   products: Product[] = [];
   errorMessage: string;
   subscription: Subscription;
-  searchTitle: string;
   activateGetProdact: boolean;
 
   constructor(
@@ -25,9 +24,13 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getProducts();
     this.subscribeSearch();
-    this.activateGetProductMethod();
+    this.loadInitialProducts();
+  }
+
+  private loadInitialProducts(): void {
+    const searchString = this.searchService.lastValue;
+    this.getSearchProducts(searchString);
   }
 
   getProducts(): void {
@@ -52,27 +55,17 @@ export class HomeComponent implements OnInit {
 
   subscribeSearch(): void {
     this.subscription = this.searchService.searchTitle$.subscribe(
-      searchString => {
-        this.searchTitle = searchString;
-        this.getSearchProducts();
-      }   
+      searchString => this.getSearchProducts(searchString)
     )
   }
 
-  getSearchProducts(): void {
-    this.productService.getProductBySearchTitle(this.searchTitle).pipe(
+  getSearchProducts(searchString: string): void {
+    console.log('home: ' + searchString);
+    if (!searchString) {
+      this.getProducts();
+    }
+    this.productService.getProductBySearchTitle(searchString).pipe(
       catchError(err => this.onProductsError(err))
     ).subscribe(products => this.onProductsReceived(products));
-  }
-
-  activateGetProductMethod(): void {
-    this.subscription = this.searchService.getProductAds$.subscribe(
-      activateGetProdact => {
-        this.activateGetProdact = activateGetProdact;
-        if (activateGetProdact) {
-          this.getProducts();
-        }
-      }
-    )
   }
 }
