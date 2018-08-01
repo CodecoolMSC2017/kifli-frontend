@@ -15,6 +15,7 @@ import { ProductComponent } from './product/product.component';
 import { AdSpaceComponent } from './ad-space/ad-space.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AdPlacementComponent } from './ad-placement/ad-placement.component';
+import { MyadsComponent } from './myads/myads.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AdPlacementComponent } from './ad-placement/ad-placement.component';
     ProductComponent,
     AdSpaceComponent,
     ProfileComponent,
-    AdPlacementComponent
+    AdPlacementComponent,
+    MyadsComponent
   ],
   imports: [
     BrowserModule,

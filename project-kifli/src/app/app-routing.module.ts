@@ -8,7 +8,7 @@ import { ProductComponent } from './product/product.component';
 import { ProfileComponent } from './profile/profile.component';
 
 import { AdPlacementComponent } from './ad-placement/ad-placement.component';
-
+import { MyadsComponent } from './myads/myads.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,7 +16,8 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products/:id', component: ProductComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'place-ad', component: AdPlacementComponent }
+  { path: 'place-ad', component: AdPlacementComponent },
+  { path: 'myads', component: MyadsComponent }
 ];
 
 @NgModule({

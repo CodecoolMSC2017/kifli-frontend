@@ -52,7 +52,7 @@
   <p *ngIf="errorMessage">
     {{ errorMessage }}
   </p>
-  <div *ngFor="let product of products" class="products">
+  <div *ngFor="let product of products" class="products" routerLink="/products/{{ product.id }}">
      <app-ad-space [product]="product"></app-ad-space>
   </div>
 </div>
