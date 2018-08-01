@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
+import { SearchService } from '../search.service';
 
 @Component({
   selector: 'app-top-menu-bar',
@@ -16,7 +17,8 @@ export class TopMenuBarComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private searchService: SearchService
   ) { }
 
   ngOnInit() {
@@ -64,5 +66,18 @@ export class TopMenuBarComponent implements OnInit {
           regModal.style.display='none';
         }
     }
+  }
+
+  search() {
+    if (this.searchTitle == null) {
+      console.log("neeeeeeeeeem jjóóóóóóó");
+    } else {
+      console.log(this.searchTitle); 
+      this.searchService.searchTitleApply(this.searchTitle);
+    }
+  }
+
+  activateGetProduct() {
+    this.searchService.getAllProductClick(true);
   }
 }
