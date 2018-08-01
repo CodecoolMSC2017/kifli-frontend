@@ -38,4 +38,8 @@ export class ProductService {
     return this.http.post('/api/products', product);
   }
 
+  public getUserProducts(id): Observable<Product[]> {
+    return this.http.get<Product[]>('/api/products/user-products/' + id);
+  }
+
 }
