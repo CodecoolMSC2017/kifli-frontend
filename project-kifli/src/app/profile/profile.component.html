@@ -38,4 +38,21 @@
     Street: {{ street }}
   </p>
 
+  <h3>Change your password</h3>
+  <input placeholder="new password 1" #newPassword1>
+  <br/>
+  <input placeholder="new password 2" #newPassword2>
+  <button (click)="submit(newPassword1, newPassword2)">Submmit</button>
+
+</div>
+
+<div>
+  <br/>
+  <h2 class="center">Your Products</h2>
+  <p *ngIf="errorMessage">
+    {{ errorMessage }}
+  </p>
+  <div *ngFor="let product of products" class="products">
+     <app-ad-space [product]="product"></app-ad-space>
+  </div>
 </div>
