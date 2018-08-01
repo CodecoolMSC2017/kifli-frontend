@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { TopMenuBarComponent } from '../top-menu-bar/top-menu-bar.component';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private topMenuBar: TopMenuBarComponent
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
   private onLoginResponse(user) {
     localStorage.setItem('user', JSON.stringify(user));
     document.getElementById('id01').style.display='none';
-    this.topMenuBar.logOption = 'Logout';
+    this.userService.modifyLogOption('Logout');
   }
 
   private onLoginError(err): Observable<any> {

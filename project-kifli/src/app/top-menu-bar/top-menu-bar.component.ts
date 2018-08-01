@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { of, Observable, Subscription } from 'rxjs';
 import { SearchService } from '../search.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-top-menu-bar',
@@ -14,12 +15,14 @@ export class TopMenuBarComponent implements OnInit {
 
   public logOption: string;
   public searchTitle: string;
+  public subscription: Subscription;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private searchService: SearchService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -32,6 +35,7 @@ export class TopMenuBarComponent implements OnInit {
     this.subscribeToSearch();
 
     this.someWhereClickInLogin();
+    this.modifyLogOption();
   }
 
   private subscribeToSearch(): void {
@@ -86,5 +90,13 @@ export class TopMenuBarComponent implements OnInit {
   private sendSearchRequest(params) {
     const search = params.search;
     this.searchService.searchTitleApply(search);
+  }
+
+  modifyLogOption(): void {
+    this.subscription = this.userService.logOption$.subscribe(
+      logOption => {
+        this.logOption = logOption;
+      }
+    )
   }
 }

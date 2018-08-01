@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Subject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './user';
 
@@ -14,7 +14,11 @@ const httpOptions = {
 })
 export class UserService {
 
+  private logOptionSub = new Subject<string>();
+
   constructor(private http: HttpClient) { }
+
+  logOption$ = this.logOptionSub.asObservable();
 
   public register(
       accountName: string,
@@ -62,5 +66,9 @@ export class UserService {
 
   public getUserById(id): Observable<any> {
     return this.http.get(URL + 'users/' + id);
+  }
+
+  modifyLogOption(logOption: string) {
+    this.logOptionSub.next(logOption);
   }
 }
