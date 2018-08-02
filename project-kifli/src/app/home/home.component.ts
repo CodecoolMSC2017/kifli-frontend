@@ -19,9 +19,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   categories: Category[];
   selectedCategoryId: string = '0';
+  selectedCategoryName: string = 'All';
   minimumPrice: number = 0;
   maximumPrice: number = 9999999999;
   priceError: string;
+  showCategories: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -116,6 +118,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       return false;
     }
     return true;
+  }
+
+  private onCategoryClick(category: Category): void {
+    if (!category) {
+      this.selectedCategoryId = '0';
+      this.selectedCategoryName = 'All';
+      return;
+    }
+    this.selectedCategoryId = category.id.toString();
+    this.selectedCategoryName = category.name;
   }
 
 }
