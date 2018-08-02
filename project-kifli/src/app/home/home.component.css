@@ -19,4 +19,9 @@
 
 #filter-inputs {
     position: fixed;
+    width: 20%;
+}
+
+input {
+    max-width: 100px;
 }

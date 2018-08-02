@@ -19,6 +19,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   categories: Category[];
   selectedCategoryId: string = '0';
+  minimumPrice: number = 0;
+  maximumPrice: number = 9999999999;
+  priceError: string;
 
   constructor(
     private productService: ProductService,
@@ -83,7 +86,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!searchString) {
       searchString = '';
     }
-    this.productService.search(searchString, this.selectedCategoryId).pipe(
+    if (!this.checkIfPriceIsValid()) {
+      return;
+    }
+    this.priceError = null;
+    this.productService.search(
+      searchString,
+      this.selectedCategoryId,
+      this.minimumPrice.toString(),
+      this.maximumPrice.toString()
+    ).pipe(
       catchError(err => this.onProductsError(err))
     ).subscribe(products => this.onProductsReceived(products));
   }
@@ -92,6 +104,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.productService.findAllByCategoryId(this.selectedCategoryId).pipe(
       catchError(err => this.onProductsError(err))
     ).subscribe(products => this.products = products);
+  }
+
+  private checkIfPriceIsValid(): boolean {
+    if (this.minimumPrice < 0) {
+      this.priceError = 'Minimum price must be bigger than 0!';
+      return false;
+    }
+    if (this.maximumPrice <= this.minimumPrice) {
+      this.priceError = 'Maximum price must be bigger than minimum price!';
+      return false;
+    }
+    return true;
   }
 
 }
