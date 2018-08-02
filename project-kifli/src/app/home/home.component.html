@@ -4,10 +4,11 @@
   </p>
   <div *ngIf="!errorMessage">
     <div id="filter-inputs">
+      Category: 
       <select *ngIf="categories" [(ngModel)]="selectedCategoryId">
+        <option value="0" selected>All</option>
         <option *ngFor="let category of categories" value="{{ category.id }}">{{ category.name }}</option>
       </select>
-      <button (click)="categoryFilter()">Filter</button>
     </div>
     <div *ngFor="let product of products" class="products" routerLink="/products/{{ product.id }}">
       <app-ad-space [product]="product"></app-ad-space>

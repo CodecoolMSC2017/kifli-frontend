@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { UserService } from '../user.service';
   templateUrl: './top-menu-bar.component.html',
   styleUrls: ['./top-menu-bar.component.css']
 })
-export class TopMenuBarComponent implements OnInit {
+export class TopMenuBarComponent implements OnInit, OnDestroy {
 
   public logOption: string;
   public searchTitle: string;
@@ -31,15 +31,21 @@ export class TopMenuBarComponent implements OnInit {
     } else {
       this.logOption = 'Login';
     }
-    this.route.queryParams.subscribe(params => this.sendSearchRequest(params));
+    this.route.queryParams.subscribe(params => this.sendSearchRequest(params.search));
     this.subscribeToSearch();
 
     this.someWhereClickInLogin();
     this.modifyLogOption();
   }
 
+  ngOnDestroy() {
+
+  }
+
   private subscribeToSearch(): void {
-    this.searchService.searchTitle$.subscribe(string => this.searchTitle = string);
+    this.searchService.searchTitle$.subscribe(string => {
+      this.searchTitle = string;
+    });
   }
 
   public auth(): void {
@@ -80,6 +86,10 @@ export class TopMenuBarComponent implements OnInit {
   }
 
   search() {
+    if (this.searchTitle === this.route.snapshot.queryParams.search) {
+      this.sendSearchRequest(this.searchTitle);
+      return;
+    }
     if (this.searchTitle !== '' && this.searchTitle) {
       this.router.navigate(['/'], {queryParams: {search: this.searchTitle}});
     } else {
@@ -87,9 +97,8 @@ export class TopMenuBarComponent implements OnInit {
     }
   }
 
-  private sendSearchRequest(params) {
-    const search = params.search;
-    this.searchService.searchTitleApply(search);
+  private sendSearchRequest(searchString: string) {
+    this.searchService.searchTitleApply(searchString);
   }
 
   modifyLogOption(): void {
