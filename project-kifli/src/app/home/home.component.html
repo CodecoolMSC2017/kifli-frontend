@@ -9,6 +9,18 @@
         <option value="0" selected>All</option>
         <option *ngFor="let category of categories" value="{{ category.id }}">{{ category.name }}</option>
       </select>
+      <hr>
+      <table>
+        <tr>
+          <td>Minimum price:</td>
+          <td><input type="number" [(ngModel)]="minimumPrice"></td>
+        </tr>
+        <tr>
+          <td>Maximum price:</td>
+          <td><input type="number" [(ngModel)]="maximumPrice"></td>
+        </tr>
+      </table>
+      <p *ngIf="priceError">{{ priceError }}</p>
     </div>
     <div *ngFor="let product of products" class="products" routerLink="/products/{{ product.id }}">
       <app-ad-space [product]="product"></app-ad-space>

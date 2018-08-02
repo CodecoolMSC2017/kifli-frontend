@@ -51,6 +51,7 @@ export class RegisterComponent implements OnInit {
       this.userName,
       this.email,
       this.password,
+      this.confirmPassword,
       this.firstName,
       this.lastName
     ).subscribe(user => this.onRegisterResponse(user));

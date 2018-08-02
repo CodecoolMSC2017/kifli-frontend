@@ -26,10 +26,22 @@ export class ProductService {
     return this.http.delete('/api/products/' + id);
   }
 
-  public search(searchTitle: string, categoryId: string): Observable<Product[]> {
+  public search(
+    searchTitle: string,
+    categoryId: string,
+    minimumPrice: string,
+    maximumPrice: string
+  ): Observable<Product[]> {
     return this.http.get<Product[]>(
       '/api/products/search',
-      {params: {search: searchTitle, categoryId: categoryId}}
+      {
+        params: {
+          search: searchTitle,
+          categoryId: categoryId,
+          minimumPrice: minimumPrice,
+          maximumPrice: maximumPrice
+        }
+      }
     );
   }
 
