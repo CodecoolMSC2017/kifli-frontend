@@ -73,4 +73,11 @@ export class UserService {
   modifyLogOption(logOption: string) {
     this.logOptionSub.next(logOption);
   }
+
+  public changePassword(newPassword1Value) {
+    this.http.post(URL + 'change-password' , newPassword1Value).subscribe(response => {
+      console.log("Response " + response);
+      
+  });
+  }
 }

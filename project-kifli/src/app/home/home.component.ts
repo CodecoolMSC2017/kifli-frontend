@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductService } from '../product.service';
 import { SearchService } from '../search.service';
 
@@ -12,14 +12,13 @@ import { Category } from '../model/category';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   products: Product[] = [];
   errorMessage: string;
   subscription: Subscription;
-  activateGetProdact: boolean;
   categories: Category[];
-  selectedCategoryId: string;
+  selectedCategoryId: string = '0';
 
   constructor(
     private productService: ProductService,
@@ -32,12 +31,15 @@ export class HomeComponent implements OnInit {
     this.loadCategories();
   }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   private loadCategories(): void {
     this.productService.getAllCategories().pipe(
       catchError(err => this.onCategoriesError(err))
     ).subscribe(categories => {
       this.categories = categories;
-      this.selectedCategoryId = categories[0].id;
     });
   }
 
@@ -51,7 +53,7 @@ export class HomeComponent implements OnInit {
     this.getSearchProducts(searchString);
   }
 
-  getProducts(): void {
+  getAllProducts(): void {
     this.productService.getProducts().pipe(
       catchError(err => this.onProductsError(err))
     ).subscribe(products => this.onProductsReceived(products));
@@ -79,9 +81,9 @@ export class HomeComponent implements OnInit {
 
   getSearchProducts(searchString: string): void {
     if (!searchString) {
-      this.getProducts();
+      searchString = '';
     }
-    this.productService.getProductBySearchTitle(searchString).pipe(
+    this.productService.search(searchString, this.selectedCategoryId).pipe(
       catchError(err => this.onProductsError(err))
     ).subscribe(products => this.onProductsReceived(products));
   }
@@ -91,4 +93,5 @@ export class HomeComponent implements OnInit {
       catchError(err => this.onProductsError(err))
     ).subscribe(products => this.products = products);
   }
+
 }
