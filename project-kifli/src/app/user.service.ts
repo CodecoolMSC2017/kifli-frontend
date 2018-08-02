@@ -24,6 +24,7 @@ export class UserService {
       userName: string,
       email: string,
       password: string,
+      confirmPassword: string,
       firstName: string,
       lastName: string
     ): Observable<User> {
@@ -31,6 +32,7 @@ export class UserService {
       'userName': userName,
       'email': email,
       'password': password,
+      'confirmPassword': confirmPassword,
       'firstName': firstName,
       'lastName': lastName
     };
