@@ -2,11 +2,11 @@
   <div class="modal-content animate" action="/action_page.php">
     <div class='container'> 
       
-      <input [(ngModel)]="accountName" placeholder="Account name" type='accountName'/>
+      <input [(ngModel)]="userName" placeholder="Account name" type='userName'/>
       <input [(ngModel)]="email" placeholder="E-mail" type='email'/>  
       <input [(ngModel)]="password" placeholder="Password" type='password'/>  
       <input [(ngModel)]="confirmPassword" placeholder="Confirm password"
-        (keyup)="checkPasswordMatch()" type='confirmPassword'/>
+        (keyup)="checkPasswordMatch()" type='password'/>
       
       <p *ngIf="passwordMessage">
         {{ passwordMessage }}
