@@ -10,6 +10,7 @@
     transition: box-shadow 500ms, width 500ms, height 500ms;
     transition: border 200ms;
     border-radius: 5px;
+    background: white;
 }
 
 .products:hover {
