@@ -72,10 +72,7 @@ export class UserService {
     this.logOptionSub.next(logOption);
   }
 
-  public changePassword(newPassword1Value) {
-    this.http.post(URL + 'change-password' , newPassword1Value).subscribe(response => {
-      console.log("Response " + response);
-      
-  });
+  public changePassword(newPassword1Value): Observable<any>{
+   return this.http.post(URL + 'users/change-password' , newPassword1Value);
   }
 }
