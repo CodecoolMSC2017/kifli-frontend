@@ -1,7 +1,7 @@
 body {font-family: Arial, Helvetica, sans-serif;}
 
 /* Full-width input fields */
-input[type=accountName], input[type=email], input[type=password], input[type=confirmPassword], input[type=firstName], input[type=lastName] {
+input[type=userName], input[type=email], input[type=password], input[type=confirmPassword], input[type=firstName], input[type=lastName] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;

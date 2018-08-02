@@ -1,5 +1,5 @@
 /* Full-width input fields */
-.login-input[type=accountName], input[type=password] {
+.login-input[type=userName], input[type=password] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
