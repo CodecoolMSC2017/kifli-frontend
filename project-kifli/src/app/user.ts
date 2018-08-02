@@ -2,7 +2,7 @@ import { Credentials } from "./credentials";
 
 export class User {
     id: number;
-    username: string;
+    userName: string;
     email: string;
     enabled: boolean;
     firstName: string;

@@ -12,7 +12,7 @@ export class RegisterComponent implements OnInit {
   public message: string;
   public passwordMessage: string;
 
-  public accountName: string;
+  public userName: string;
   public email: string;
   public password: string;
   public confirmPassword: string;
@@ -35,7 +35,7 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
-    if (!this.accountName
+    if (!this.userName
       || !this.email
       || !this.password
       || !this.confirmPassword
@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
       return;
     }
     this.userService.register(
-      this.accountName,
+      this.userName,
       this.email,
       this.password,
       this.firstName,

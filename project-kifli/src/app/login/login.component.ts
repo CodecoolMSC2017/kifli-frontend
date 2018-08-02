@@ -12,7 +12,7 @@ import { UserService } from '../user.service';
 })
 export class LoginComponent implements OnInit {
 
-  public accountName: string;
+  public userName: string;
   public password: string;
   public errorMessage: string;
 
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.authService.getAuth(this.accountName, this.password).pipe(
+    this.authService.getAuth(this.userName, this.password).pipe(
       catchError(err => this.onLoginError(err))
     ).subscribe(user => this.onLoginResponse(user));
   }
