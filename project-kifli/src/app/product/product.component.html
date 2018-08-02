@@ -4,25 +4,27 @@
 <button (click)="deleteProduct()" *ngIf="isAdmin && !isOwnProduct">Remove</button>
 <button (click)="editProduct()" *ngIf="isOwnProduct">Edit</button>
 <div *ngIf="product" class="container">
-  <h2>
-    {{ product.title }}
-  </h2>
-  <h3>
-    ${{ product.price }}
-  </h3>
-  <p>
-    {{ product.description }}
-  </p>
-  <table>
-    <tr *ngFor="let attribute of productAttributes">
-      <td>{{ attribute }}:</td>
-      <td>{{ product.attributes[attribute] }}</td>
-    </tr>
-  </table>
+  <div class="text-container">
+    <h2>
+      {{ product.title }}
+    </h2>
+    <h3>
+      ${{ product.price }}
+    </h3>
+    <p>
+      {{ product.description }}
+    </p>
+    <table>
+      <tr *ngFor="let attribute of productAttributes">
+        <td>{{ attribute }}:</td>
+        <td>{{ product.attributes[attribute] }}</td>
+      </tr>
+    </table>
+  </div>
   <hr>
   <div>
     <button id="contact-button" (click)="contact()">{{ contactButtonText }} contact</button>
-    <div *ngIf="contactButtonText == 'Hide'">
+    <div class="contact-container" *ngIf="contactButtonText == 'Hide'">
       <p>E-mail: {{ product.ownerEmail }}</p>
       <p>Phone: {{ product.ownerPhone }}</p>
     </div>

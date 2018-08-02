@@ -66,3 +66,22 @@ button:hover {
     background-color: rgb(83, 224, 88);
     color: white;
 }
+
+.text-container {
+    background: white;
+    margin: auto;
+    width: 50%;
+    border: 10px solid green;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.contact-container {
+    background: white;
+    margin: auto;
+    width: 30%;
+    border: 5px solid green;
+    padding: 10px;
+    border-radius: 5px;
+    float: right;
+}
