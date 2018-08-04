@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { Product } from '../product';
+import { Product } from '../model/product';
 import { ProductService } from '../product.service';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';

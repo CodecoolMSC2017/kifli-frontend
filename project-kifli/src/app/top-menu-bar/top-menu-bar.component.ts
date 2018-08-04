@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { of, Observable, Subscription } from 'rxjs';
 import { SearchService } from '../search.service';
 import { UserService } from '../user.service';
+import { SearchParams } from '../model/searchParams';
 
 @Component({
   selector: 'app-top-menu-bar',
@@ -31,7 +32,7 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     } else {
       this.logOption = 'Login';
     }
-    this.route.queryParams.subscribe(params => this.sendSearchRequest(params.search));
+    this.route.queryParams.subscribe(params => this.sendSearchRequest(params));
     this.subscribeToSearch();
 
     this.someWhereClickInLogin();
@@ -43,8 +44,8 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToSearch(): void {
-    this.searchService.searchTitle$.subscribe(string => {
-      this.searchTitle = string;
+    this.searchService.searchTitle$.subscribe(() => {
+      this.searchTitle = this.searchService.getSearch()
     });
   }
 
@@ -86,26 +87,21 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    if (this.searchTitle === this.route.snapshot.queryParams.search) {
-      this.sendSearchRequest(this.searchTitle);
-      return;
-    }
-    if (this.searchTitle !== '' && this.searchTitle) {
-      this.router.navigate(['/'], {queryParams: {search: this.searchTitle}});
-    } else {
-      this.router.navigate(['']);
-    }
+    this.searchService.setSearch(this.searchTitle);
+    const searchParams: SearchParams = this.searchService.getSearchParams();
+    this.router.navigate(['/'], {
+      queryParams: this.searchService.removeUnchangedValues(searchParams)
+    });
   }
 
-  private sendSearchRequest(searchString: string) {
-    this.searchService.searchTitleApply(searchString);
+  private sendSearchRequest(params) {
+    this.searchService.updateFromUrlParams(params);
+    this.searchService.pingSubscribers();
   }
 
   modifyLogOption(): void {
     this.subscription = this.userService.logOption$.subscribe(
-      logOption => {
-        this.logOption = logOption;
-      }
+      logOption => this.logOption = logOption
     )
   }
 }

@@ -15,11 +15,11 @@
       <table>
         <tr>
           <td>Minimum price:</td>
-          <td><input type="number" [(ngModel)]="minimumPrice"></td>
+          <td><input type="number" [(ngModel)]="minimumPrice" (change)="onMinPriceChange()"></td>
         </tr>
         <tr>
           <td>Maximum price:</td>
-          <td><input type="number" [(ngModel)]="maximumPrice"></td>
+          <td><input type="number" [(ngModel)]="maximumPrice" (change)="onMaxPriceChange()"></td>
         </tr>
       </table>
       <p *ngIf="priceError">{{ priceError }}</p>

@@ -2,10 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductService } from '../product.service';
 import { SearchService } from '../search.service';
 
-import { Product } from '../product';
+import { Product } from '../model/product';
 import { catchError } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
 import { Category } from '../model/category';
+import { SearchParams } from '../model/searchParams';
+import { ProductListDto } from '../model/productListDto';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -21,31 +24,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedCategoryId: string = '0';
   selectedCategoryName: string = 'All';
   minimumPrice: number = 0;
-  maximumPrice: number = 9999999999;
+  maximumPrice: number = 999999999;
   priceError: string;
   showCategories: boolean = false;
 
   constructor(
     private productService: ProductService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.subscribeSearch();
-    this.loadInitialProducts();
-    this.loadCategories();
+    this.getProducts();
+    this.searchService.setCategoryId(this.selectedCategoryId);
+    this.searchService.setMinimumPrice(this.minimumPrice.toString());
+    this.searchService.setMaximumPrice(this.maximumPrice.toString());
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  private loadCategories(): void {
-    this.productService.getAllCategories().pipe(
-      catchError(err => this.onCategoriesError(err))
-    ).subscribe(categories => {
-      this.categories = categories;
-    });
   }
 
   private onCategoriesError(err): Observable<any> {
@@ -53,20 +51,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     return of();
   }
 
-  private loadInitialProducts(): void {
-    const searchString = this.searchService.lastValue;
-    this.getSearchProducts(searchString);
-  }
-
-  getAllProducts(): void {
+  private getAllProducts(): void {
     this.productService.getProducts().pipe(
       catchError(err => this.onProductsError(err))
     ).subscribe(products => this.onProductsReceived(products));
   }
 
-  private onProductsReceived(products): void {
+  private onProductsReceived(productListDto: ProductListDto): void {
     this.errorMessage = null;
-    this.products = products;
+    this.products = productListDto.products;
+    this.categories = productListDto.categories;
+    this.updateValues();
   }
 
   private onProductsError(err): Observable<any> {
@@ -78,56 +73,100 @@ export class HomeComponent implements OnInit, OnDestroy {
     return of();
   }
 
-  subscribeSearch(): void {
+  private subscribeSearch(): void {
     this.subscription = this.searchService.searchTitle$.subscribe(
-      searchString => this.getSearchProducts(searchString)
+      () => this.getProducts()
     )
   }
 
-  getSearchProducts(searchString: string): void {
-    if (!searchString) {
-      searchString = '';
-    }
-    if (!this.checkIfPriceIsValid()) {
+  private getProducts(): void {
+    if (this.checkIfPriceIsValid()) {
       return;
     }
     this.priceError = null;
-    this.productService.search(
-      searchString,
-      this.selectedCategoryId,
-      this.minimumPrice.toString(),
-      this.maximumPrice.toString()
-    ).pipe(
+    const searchParams: SearchParams = this.searchService.getSearchParams();
+    this.productService.search(searchParams).pipe(
       catchError(err => this.onProductsError(err))
-    ).subscribe(products => this.onProductsReceived(products));
+    ).subscribe(productListDto => this.onProductsReceived(productListDto));
   }
 
-  private categoryFilter(): void {
-    this.productService.findAllByCategoryId(this.selectedCategoryId).pipe(
-      catchError(err => this.onProductsError(err))
-    ).subscribe(products => this.products = products);
+  private updateValues(): void {
+    this.searchService.updateFromUrlParams(this.route.snapshot.queryParams);
+    const searchParams = this.searchService.getSearchParams();
+    this.selectedCategoryId = searchParams.categoryId;
+    this.selectedCategoryName = this.findCategoryNameById(Number(this.selectedCategoryId));
+    this.minimumPrice = Number(searchParams.minimumPrice);
+    this.maximumPrice = Number(searchParams.maximumPrice);
+  }
+
+  private findCategoryNameById(id: number): string {
+    if (id === 0) {
+      return 'All';
+    }
+    for (let i = 0; i < this.categories.length; i++) {
+      const category: Category = this.categories[i];
+      if (category.id === id) {
+        return category.name;
+      }
+    }
   }
 
   private checkIfPriceIsValid(): boolean {
     if (this.minimumPrice < 0) {
       this.priceError = 'Minimum price must be bigger than 0!';
-      return false;
+      return true;
+    }
+    if (this.minimumPrice > 999999998) {
+      this.priceError = 'Minimum price is out of range!';
+      return true;
     }
     if (this.maximumPrice <= this.minimumPrice) {
       this.priceError = 'Maximum price must be bigger than minimum price!';
-      return false;
+      return true;
     }
-    return true;
+    if (this.maximumPrice > 999999999) {
+      this.priceError = 'Maximum price is out of range!';
+      return true;
+    }
+    return false;
   }
 
   private onCategoryClick(category: Category): void {
     if (!category) {
       this.selectedCategoryId = '0';
       this.selectedCategoryName = 'All';
+      this.searchService.setCategoryId(this.selectedCategoryId);
       return;
     }
     this.selectedCategoryId = category.id.toString();
     this.selectedCategoryName = category.name;
+    this.searchService.setCategoryId(this.selectedCategoryId);
+  }
+
+  private onMinPriceChange(): void {
+    if (!this.minimumPrice || this.minimumPrice >= this.maximumPrice) {
+      this.minimumPrice = this.maximumPrice - 1;
+    }
+    if (this.minimumPrice < 0) {
+      this.minimumPrice = 0;
+    }
+    if (this.minimumPrice > 999999998) {
+      this.minimumPrice = 999999998;
+    }
+    this.searchService.setMinimumPrice(this.minimumPrice.toString());
+  }
+
+  private onMaxPriceChange(): void {
+    if (!this.maximumPrice || this.maximumPrice < this.minimumPrice) {
+      this.maximumPrice = this.minimumPrice + 1;
+    }
+    if (this.maximumPrice < 1) {
+      this.maximumPrice = 1;
+    }
+    if (this.maximumPrice > 999999999) {
+      this.maximumPrice = 999999999;
+    }
+    this.searchService.setMaximumPrice(this.maximumPrice.toString());
   }
 
 }

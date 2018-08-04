@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../product.service';
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { Product } from '../product';
+import { Product } from '../model/product';
 import { UserService } from '../user.service';
 
 @Component({

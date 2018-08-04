@@ -1,20 +1,108 @@
 import { Injectable } from '@angular/core';
 import { Subject }    from 'rxjs';
+import { SearchParams } from './model/searchParams';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
 
-  private searchTitleInput = new Subject<string>();
-  public lastValue: string;
+  private searchTitleInput = new Subject<void>();
+  public searchTitle$ = this.searchTitleInput.asObservable();
+
+  private searchParams: SearchParams = new SearchParams();
 
   constructor() { }
 
-  searchTitle$ = this.searchTitleInput.asObservable();
+  pingSubscribers() {
+    this.searchTitleInput.next();
+  }
 
-  searchTitleApply(search: string) {
-    this.lastValue = search;
-    this.searchTitleInput.next(search);
+  public getSearch(): string {
+    return this.searchParams.search;
+  }
+
+  public getCategoryId(): string {
+    return this.searchParams.categoryId;
+  }
+
+  public getMinimumPrice(): string {
+    return this.searchParams.minimumPrice;
+  }
+
+  public getMaximumPrice(): string {
+    return this.searchParams.maximumPrice;
+  }
+
+  public setSearch(search: string): void {
+    if (!search) {
+      this.searchParams.search = '';
+      return;
+    }
+    this.searchParams.search = search;
+  }
+
+  public setCategoryId(categoryId: string): void {
+    if (!categoryId || categoryId === '') {
+      this.searchParams.categoryId = '0';
+      return;
+    }
+    this.searchParams.categoryId = categoryId;
+  }
+
+  public setMinimumPrice(minimumPrice: string): void {
+    if (!minimumPrice || minimumPrice === '') {
+      this.searchParams.minimumPrice = '0';
+      return;
+    }
+    this.searchParams.minimumPrice = minimumPrice;
+  }
+
+  public setMaximumPrice(maximumPrice: string): void {
+    if (!maximumPrice || maximumPrice === '') {
+      this.searchParams.maximumPrice = '999999999';
+      return;
+    }
+    this.searchParams.maximumPrice = maximumPrice;
+  }
+
+  public getSearchParams(): SearchParams {
+    return JSON.parse(JSON.stringify(this.searchParams));
+  }
+
+  public getHttpParams(params: SearchParams): HttpParams {
+    params = this.removeUnchangedValues(params);
+    let httpParams: HttpParams = new HttpParams();
+    if (params.search !== '' && params.search != null) {
+      httpParams = httpParams.append('search', params.search);
+    }
+    if (params.categoryId !== '' && params.categoryId != null) {
+      httpParams = httpParams.append('categoryId', params.categoryId);
+    }
+    if (params.minimumPrice !== '' && params.minimumPrice != null) {
+      httpParams = httpParams.append('minimumPrice', params.minimumPrice);
+    }
+    if (params.maximumPrice !== '' && params.maximumPrice != null) {
+      httpParams = httpParams.append('maximumPrice', params.maximumPrice);
+    }
+    return httpParams;
+  }
+
+  public removeUnchangedValues(searchParams: SearchParams): SearchParams {
+    const defaultParams = new SearchParams();
+    for (let key of Object.keys(defaultParams)) {
+      if (defaultParams[key] === searchParams[key]) {
+        delete searchParams[key];
+      }
+    }
+    return searchParams;
+  }
+
+  public updateFromUrlParams(params) {
+    this.setSearch(params.search);
+    this.setCategoryId(params.categoryId);
+    this.setMinimumPrice(params.minimumPrice);
+    this.setMaximumPrice(params.maximumPrice);
   }
 }
