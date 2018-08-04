@@ -45,4 +45,8 @@ export class ProductService {
     return this.http.get<ProductListDto>('/api/products/user/' + id);
   }
 
+  public getAllCategories(): Observable<any> {
+    return this.http.get('/api/categories');
+  }
+
 }
