@@ -3,11 +3,11 @@ import { Observable, throwError, of } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Product } from '../model/product';
 import { ProductService } from '../product.service';
-import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser'; 
-import { HttpClient } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { UserService } from '../user.service';
+import { ProductListDto } from '../model/productListDto';
 
 @Component({
   selector: 'app-myads',
@@ -23,35 +23,28 @@ import { HttpClient } from '@angular/common/http';
 }) 
 
 export class MyadsComponent implements OnInit {
-  public errorMessage: string;
-  products;
-  userId: String;
+  private errorMessage: string;
+  private products: Product[];
+  private userId: number;
 
   constructor(
-    private http: HttpClient,
-    private productService: ProductService) {}
+    private productService: ProductService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
-    this.getUser();
-    this.getProducts(this.userId)
+    this.userId = this.userService.getUserId();
+    this.getProducts();
   }
 
-  public getUser() {
-     
-    let userString = localStorage.getItem("user");
-    let userObject = JSON.parse(userString);
-    this.userId = userObject.id;
+  getProducts() {
+    this.productService.getUserProducts(this.userId).
+      pipe(catchError(err => this.onProductError(err))
+    ).subscribe(productListDto => this.onProductReceived(productListDto))
   }
 
-  getProducts(userId) {
-    this.productService.getUserProducts(userId).
-    pipe(catchError(err => this.onProductError(err))
-  ).subscribe(product => this.onProductReceived(product))
-  }
-
-  onProductReceived(product: Product) {
-    console.log(product);
-    this.products = product; 
+  onProductReceived(productListDto: ProductListDto) {
+    this.products = productListDto.products;
   }
 
   onProductError(err): Observable<any> {
