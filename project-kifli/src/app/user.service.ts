@@ -15,10 +15,17 @@ const httpOptions = {
 export class UserService {
 
   private logOptionSub = new Subject<string>();
+  public logOption$ = this.logOptionSub.asObservable();
 
-  constructor(private http: HttpClient) { }
+  private showLoginSub = new Subject<void>();
+  public showLogin$ = this.showLoginSub.asObservable();
 
-  logOption$ = this.logOptionSub.asObservable();
+  private didLoginSub = new Subject<void>();
+  public didLogin$ = this.didLoginSub.asObservable();
+
+  constructor(
+    private http: HttpClient
+  ) { }
 
   public register(
       userName: string,
@@ -44,13 +51,6 @@ export class UserService {
     return this.http.get(URL + 'users');
   }
 
-  public isLoggedIn(): boolean {
-    if (localStorage.getItem('user')) {
-      return true;
-    }
-    return false;
-  }
-
   public getUserId(): number {
     if (localStorage.getItem('user')) {
       const user = JSON.parse(localStorage.getItem('user'));
@@ -70,11 +70,43 @@ export class UserService {
     return this.http.get(URL + 'users/' + id);
   }
 
-  modifyLogOption(logOption: string) {
-    this.logOptionSub.next(logOption);
+  public modifyLogOption(isLoggedIn: boolean): void {
+    if (isLoggedIn) {
+      this.logOptionSub.next('Logout');
+    } else {
+      this.logOptionSub.next('Login');
+    }
+  }
+
+  public showLogin(): void {
+    this.showLoginSub.next();
+  }
+
+  public didLogin(): void {
+    this.didLoginSub.next();
+  }
+
+  public isLoggedIn(): boolean {
+    const user = localStorage.getItem('user');
+    if (user) {
+      return true;
+    }
+    return false;
   }
 
   public changePassword(newPassword1Value): Observable<any>{
-   return this.http.post(URL + 'users/change-password' , newPassword1Value);
+    return this.http.post(URL + 'users/change-password' , newPassword1Value);
+  }
+
+  public getLoggedInUser(): Observable<User> {
+    return this.http.get<User>('/api/users/current');
+  }
+
+  public stroreUser(user: User): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  public deleteUser(): void {
+    localStorage.removeItem('user');
   }
 }

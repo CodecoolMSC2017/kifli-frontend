@@ -6,6 +6,7 @@ import { of, Observable, Subscription } from 'rxjs';
 import { SearchService } from '../search.service';
 import { UserService } from '../user.service';
 import { SearchParams } from '../model/searchParams';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-top-menu-bar',
@@ -14,9 +15,10 @@ import { SearchParams } from '../model/searchParams';
 })
 export class TopMenuBarComponent implements OnInit, OnDestroy {
 
-  public logOption: string;
+  public logOption: string = 'Login';
   public searchTitle: string;
-  public subscription: Subscription;
+  private logOptionSubscription: Subscription;
+  private showLoginSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -27,20 +29,48 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if (this.authService.isLoggedIn()) {
-      this.logOption = 'Logout';
-    } else {
-      this.logOption = 'Login';
-    }
+    this.doSubscriptions();
+  }
+
+  private doSubscriptions(): void {
     this.route.queryParams.subscribe(params => this.sendSearchRequest(params));
     this.subscribeToSearch();
+    this.subscribeLogOption();
+    this.subscribeShowLogin();
 
     this.someWhereClickInLogin();
-    this.modifyLogOption();
+
+    this.userService.getLoggedInUser().pipe(
+      catchError(err => this.onGetUserError(err))
+    ).subscribe(user => this.onGetUserResponse(user));
+  }
+
+  private subscribeShowLogin(): void {
+    this.showLoginSubscription = this.userService.showLogin$.subscribe(
+      () => this.showLogin()
+    );
+  }
+
+  private onGetUserResponse(user: User): void {
+    if (user) {
+      this.userService.stroreUser(user);
+      this.logOption = 'Logout';
+    } else {
+      this.userService.deleteUser();
+    }
+  }
+
+  private onGetUserError(err): Observable<any> {
+    if (err.status === 401) {
+      this.userService.deleteUser();
+      this.logOption = 'Login';
+    }
+    return of();
   }
 
   ngOnDestroy() {
-
+    this.logOptionSubscription.unsubscribe();
+    this.showLoginSubscription.unsubscribe();
   }
 
   private subscribeToSearch(): void {
@@ -55,9 +85,13 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
         catchError(err => this.onLogoutError(err))
       ).subscribe(() => this.onLogoutResponse());
     } else if (this.logOption === 'Login') {
-      document.getElementById('id02').style.display='none';
-      document.getElementById('id01').style.display='block';
+      this.showLogin();
     }
+  }
+
+  private showLogin(): void {
+    document.getElementById('id02').style.display='none';
+    document.getElementById('id01').style.display='block';
   }
 
   private onLogoutError(err): Observable<any> {
@@ -99,8 +133,8 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     this.searchService.pingSubscribers();
   }
 
-  modifyLogOption(): void {
-    this.subscription = this.userService.logOption$.subscribe(
+  subscribeLogOption(): void {
+    this.logOptionSubscription = this.userService.logOption$.subscribe(
       logOption => this.logOption = logOption
     )
   }

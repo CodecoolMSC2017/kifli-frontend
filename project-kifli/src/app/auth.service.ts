@@ -24,11 +24,4 @@ export class AuthService {
       tap(() => localStorage.removeItem('user'))
     );
   }
-
-  public isLoggedIn(): boolean {
-    if (localStorage.getItem('user')) {
-      return true;
-    }
-    return false;
-  }
 }

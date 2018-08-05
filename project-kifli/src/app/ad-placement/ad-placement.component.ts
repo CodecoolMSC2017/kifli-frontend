@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductService } from '../product.service';
 import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { AuthService } from '../auth.service';
+import { Observable, of, Subscription } from 'rxjs';
 import { Category } from '../model/category';
 import { CategoryAttribute } from '../model/category-attribute';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-ad-placement',
   templateUrl: './ad-placement.component.html',
   styleUrls: ['./ad-placement.component.css']
 })
-export class AdPlacementComponent implements OnInit {
+export class AdPlacementComponent implements OnInit, OnDestroy {
+
+  private subscription: Subscription;
 
   private categories: Category[];
   private selectedCategory: Category;
@@ -26,15 +28,34 @@ export class AdPlacementComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private authService: AuthService
+    private userService: UserService
   ) { }
 
   ngOnInit() {
-    if (this.authService.isLoggedIn()) {
+    if (this.userService.isLoggedIn()) {
       this.getCategories();
     } else {
-      this.errorMessage = 'You must login first!';
+      this.onNotLoggedIn();
     }
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  private reloadPage(): void {
+    this.errorMessage = null;
+    this.ngOnInit();
+  }
+
+  private onNotLoggedIn(): void {
+    this.errorMessage = 'You must login first!';
+    this.userService.showLogin();
+    this.subscription = this.userService.didLogin$.subscribe(
+      () => this.reloadPage()
+    );
   }
 
   private getCategories(): void {
@@ -49,9 +70,7 @@ export class AdPlacementComponent implements OnInit {
 
   private onCategoriesError(err): Observable<any> {
     console.log(err);
-    if (err.status === 401) {
-      this.errorMessage = 'You must login first!';
-    } else if (err.status >= 500) {
+     if (err.status >= 500) {
       this.errorMessage = 'Server error, please try again later';
     }
     return of();
