@@ -84,8 +84,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     this.priceError = null;
-    const searchParams: SearchParams = this.searchService.getSearchParams();
-    this.productService.search(searchParams).pipe(
+    this.productService.search().pipe(
       catchError(err => this.onProductsError(err))
     ).subscribe(productListDto => this.onProductsReceived(productListDto));
   }

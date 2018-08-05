@@ -71,8 +71,8 @@ export class SearchService {
     return JSON.parse(JSON.stringify(this.searchParams));
   }
 
-  public getHttpParams(params: SearchParams): HttpParams {
-    params = this.removeUnchangedValues(params);
+  public getHttpParams(): HttpParams {
+    const params = this.removeDefaultValues(this.getSearchParams());
     let httpParams: HttpParams = new HttpParams();
     if (params.search !== '' && params.search != null) {
       httpParams = httpParams.append('search', params.search);
@@ -89,7 +89,7 @@ export class SearchService {
     return httpParams;
   }
 
-  public removeUnchangedValues(searchParams: SearchParams): SearchParams {
+  public removeDefaultValues(searchParams: SearchParams): SearchParams {
     const defaultParams = new SearchParams();
     for (let key of Object.keys(defaultParams)) {
       if (defaultParams[key] === searchParams[key]) {

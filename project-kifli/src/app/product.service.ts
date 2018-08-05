@@ -32,8 +32,8 @@ export class ProductService {
     return this.http.delete('/api/products/' + id);
   }
 
-  public search(params: SearchParams): Observable<ProductListDto> {
-    const httpParams: HttpParams = this.searchService.getHttpParams(params);
+  public search(): Observable<ProductListDto> {
+    const httpParams: HttpParams = this.searchService.getHttpParams();
     return this.http.get<ProductListDto>('/api/products', {params: httpParams});
   }
 

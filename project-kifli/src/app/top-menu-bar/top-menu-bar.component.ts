@@ -29,6 +29,7 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.setClickListenerForPopups();
     this.doSubscriptions();
   }
 
@@ -38,17 +39,14 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     this.subscribeLogOption();
     this.subscribeShowLogin();
 
-    this.someWhereClickInLogin();
-
     this.userService.getLoggedInUser().pipe(
       catchError(err => this.onGetUserError(err))
     ).subscribe(user => this.onGetUserResponse(user));
   }
 
   private subscribeShowLogin(): void {
-    this.showLoginSubscription = this.userService.showLogin$.subscribe(
-      () => this.showLogin()
-    );
+    this.showLoginSubscription = this.userService.showLogin$
+      .subscribe(() => this.showLogin());
   }
 
   private onGetUserResponse(user: User): void {
@@ -90,8 +88,8 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   }
 
   private showLogin(): void {
-    document.getElementById('id02').style.display='none';
-    document.getElementById('id01').style.display='block';
+    document.getElementById('register-container').style.display='none';
+    document.getElementById('login-container').style.display='block';
   }
 
   private onLogoutError(err): Observable<any> {
@@ -105,18 +103,16 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  private someWhereClickInLogin() {
-    // Get the modal
-    const logModal = document.getElementById('id01');
-    const regModal = document.getElementById('id02');
+  private setClickListenerForPopups() {
+    const loginContainer = document.getElementById('login-container');
+    const registerContainer = document.getElementById('register-container');
 
-    // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-        if (event.target == logModal) {         
-          logModal.style.display='none';
-        } else if(event.target == regModal) {
-          regModal.style.display='none';
-        }
+      if (event.target == loginContainer) {         
+        loginContainer.style.display='none';
+      } else if (event.target == registerContainer) {
+        registerContainer.style.display='none';
+      }
     }
   }
 
@@ -124,7 +120,7 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     this.searchService.setSearch(this.searchTitle);
     const searchParams: SearchParams = this.searchService.getSearchParams();
     this.router.navigate(['/'], {
-      queryParams: this.searchService.removeUnchangedValues(searchParams)
+      queryParams: this.searchService.removeDefaultValues(searchParams)
     });
   }
 
