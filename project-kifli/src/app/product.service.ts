@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from './model/product';
-import { SearchParams } from './model/searchParams';
 import { SearchService } from './search.service';
 import { ProductListDto } from './model/productListDto';
 
@@ -15,10 +14,6 @@ export class ProductService {
     private http: HttpClient,
     private searchService: SearchService
   ) { }
-
-  public getProducts(): Observable<ProductListDto> {
-    return this.http.get<ProductListDto>('/api/products');
-  }
 
   public getProductById(id): Observable<Product> {
     return this.http.get<Product>('/api/products/' + id);

@@ -51,12 +51,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     return of();
   }
 
-  private getAllProducts(): void {
-    this.productService.getProducts().pipe(
-      catchError(err => this.onProductsError(err))
-    ).subscribe(products => this.onProductsReceived(products));
-  }
-
   private onProductsReceived(productListDto: ProductListDto): void {
     this.errorMessage = null;
     this.products = productListDto.products;
