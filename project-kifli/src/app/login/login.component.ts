@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
 
   private onLoginResponse(user: User) {
     this.userService.stroreUser(user);
-    document.getElementById('id01').style.display='none';
+    document.getElementById('login-container').style.display='none';
     this.userService.modifyLogOption(true);
     this.userService.didLogin();
   }
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   private regStyle() {
-    document.getElementById('id01').style.display='none';
-    document.getElementById('id02').style.display='block';
+    document.getElementById('login-container').style.display='none';
+    document.getElementById('register-container').style.display='block';
   }
 }
