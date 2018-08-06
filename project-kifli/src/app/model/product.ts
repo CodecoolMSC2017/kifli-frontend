@@ -1,11 +1,17 @@
 export class Product {
     id: number;
-    ownerId: number;
     title: string;
     description: string;
     price: number;
     type: string;
     state: string;
     uploadDate: string;
-    attributes;
+    premiumExpirationDate: string;
+    pictureIds: Array<number>;
+    categoryName: string;
+    attributes: {};
+    ownerId: number;
+    ownerName: string;
+    ownerEmail: string;
+    ownerPhone: string;
 }
