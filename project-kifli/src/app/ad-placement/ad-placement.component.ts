@@ -13,7 +13,7 @@ import { UserService } from '../user.service';
 })
 export class AdPlacementComponent implements OnInit, OnDestroy {
 
-  private subscription: Subscription;
+  private loginSubscription: Subscription;
 
   private categories: Category[];
   private selectedCategory: Category;
@@ -41,8 +41,8 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.loginSubscription) {
+      this.loginSubscription.unsubscribe();
     }
   }
 
@@ -54,7 +54,7 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
   private onNotLoggedIn(): void {
     this.errorMessage = 'You must login first!';
     this.userService.showLogin();
-    this.subscription = this.userService.didLogin$.subscribe(
+    this.loginSubscription = this.userService.didLogin$.subscribe(
       () => this.reloadPage()
     );
   }
@@ -96,13 +96,12 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
   private placeAd(): void {
     if (this.checkBasicData()) {
       return;
-    } else {
-      this.inputErrorMessage = null;
     }
     const product: any = {};
     product.title = this.title;
     product.description = this.description;
     product.price = this.price;
+    product.type = this.getAdType();
     const attributes = this.getAttributes();
     if (attributes == null) {
       return;
@@ -110,8 +109,9 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
       this.categoryInputErrorMessage = null;
     }
     product.attributes = attributes;
-    product.categoryId = this.selectedCategory.id; 
+    product.categoryId = this.selectedCategory.id;
 
+    console.log('posting product:')
     console.log(product);
 
     this.productService.postProduct(product).pipe(
@@ -119,9 +119,22 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
     ).subscribe(() => this.message = 'Ad posted!');
   }
 
+  private getAdType(): string {
+    const div = document.getElementById('ad-type-input');
+    const inputNodes = div.querySelectorAll('input');
+    for (let i = 0; i < inputNodes.length; i++) {
+      const inputNode = inputNodes[i];
+      if (inputNode.checked) {
+        return inputNode.value;
+      }
+    }
+  }
+
   private onPostProductError(err) {
     if (err.status >= 500) {
       this.message = err.status + ': server error while adding this ad';
+    } else if (err.status === 401) {
+      this.onNotLoggedIn();
     } else {
       this.message = err.status + ': error adding this ad';
     }
@@ -147,6 +160,7 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
       this.inputErrorMessage = 'The price is not a valid number!';
       return true;
     }
+    this.inputErrorMessage = null;
     return false;
   }
 

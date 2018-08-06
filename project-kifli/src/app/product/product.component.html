@@ -1,19 +1,12 @@
-<p *ngIf="errorMessage" class="container">
-  {{ errorMessage }}
-</p>
-<button (click)="deleteProduct()" *ngIf="isAdmin && !isOwnProduct">Remove</button>
-<button (click)="editProduct()" *ngIf="isOwnProduct">Edit</button>
-<div *ngIf="product" class="container">
+<app-message *ngIf="errorMessage" [message]="errorMessage"></app-message>
+<div *ngIf="product && !errorMessage">
+  <button (click)="deleteProduct()" *ngIf="isAdmin && !isOwnProduct">Remove</button>
+  <button (click)="editProduct()" *ngIf="isOwnProduct">Edit</button>
+  <app-message *ngIf="message" [message]='message'></app-message>
   <div class="text-container">
-    <h2>
-      {{ product.title }}
-    </h2>
-    <h3>
-      ${{ product.price }}
-    </h3>
-    <p>
-      {{ product.description }}
-    </p>
+    <h2>{{ product.title }}</h2>
+    <h3>${{ product.price }}</h3>
+    <p>{{ product.description }}</p>
     <table>
       <tr *ngFor="let attribute of productAttributes">
         <td>{{ attribute }}:</td>
@@ -25,6 +18,7 @@
   <div>
     <button id="contact-button" (click)="contact()">{{ contactButtonText }} contact</button>
     <div class="contact-container" *ngIf="contactButtonText == 'Hide'">
+      <a href="/users/{{ product.ownerId }}">{{ product.ownerName }}</a>
       <p>E-mail: {{ product.ownerEmail }}</p>
       <p>Phone: {{ product.ownerPhone }}</p>
     </div>

@@ -19,6 +19,10 @@
   <p *ngIf="inputErrorMessage">
     {{ inputErrorMessage }}
   </p>
+  <div id="ad-type-input">
+    <input type="radio" name="ad-type" value="BUYOUT" checked>Buyout
+    <input type="radio" name="ad-type" value="AUCTION">Auction
+  </div>
   <p>
     Choose a category:
     <select [(ngModel)]="selectedCategoryString" (change)="setSelectedCategory()">
