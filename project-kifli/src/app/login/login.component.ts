@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   private onLoginResponse(user: User) {
-    this.userService.stroreUser(user);
+    this.userService.storeUser(user);
     document.getElementById('login-container').style.display='none';
     this.userService.modifyLogOption(true);
     this.userService.didLogin();

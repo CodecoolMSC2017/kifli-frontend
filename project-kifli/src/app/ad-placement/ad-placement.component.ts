@@ -19,6 +19,7 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
   private selectedCategory: Category;
   private selectedCategoryString: string;
   private errorMessage: string;
+  private message: string;
   private inputErrorMessage: string;
   private categoryInputErrorMessage: string;
 
@@ -60,20 +61,12 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
 
   private getCategories(): void {
     this.productService.getAllCategories().pipe(
-      catchError(err => this.onCategoriesError(err))
+      catchError(err => this.onError(err))
     ).subscribe(categories => this.onCategoriesReceived(categories));
   }
 
   private onCategoriesReceived(categories) {
     this.categories = categories;
-  }
-
-  private onCategoriesError(err): Observable<any> {
-    console.log(err);
-     if (err.status >= 500) {
-      this.errorMessage = 'Server error, please try again later';
-    }
-    return of();
   }
 
   private setSelectedCategory(): void {
@@ -123,11 +116,15 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
 
     this.productService.postProduct(product).pipe(
       catchError(err => this.onPostProductError(err))
-    ).subscribe();
+    ).subscribe(() => this.message = 'Ad posted!');
   }
 
-  private onPostProductError(err): Observable<any> {
-    console.log(err);
+  private onPostProductError(err) {
+    if (err.status >= 500) {
+      this.message = err.status + ': server error while adding this ad';
+    } else {
+      this.message = err.status + ': error adding this ad';
+    }
     return of();
   }
 
@@ -165,6 +162,15 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
       }
     }
     return false;
+  }
+
+  private onError(err): Observable<any> {
+    if (err.status >= 500) {
+      this.errorMessage = err.status + ': server error, try refreshing the page later';
+    } else {
+      this.errorMessage = err.status + ': something went wrong... try again later'
+    }
+    return of();
   }
 
 }

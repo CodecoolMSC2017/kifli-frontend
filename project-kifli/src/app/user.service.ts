@@ -102,7 +102,7 @@ export class UserService {
     return this.http.get<User>('/api/users/current');
   }
 
-  public stroreUser(user: User): void {
+  public storeUser(user: User): void {
     localStorage.setItem('user', JSON.stringify(user));
   }
 

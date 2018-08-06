@@ -1,5 +1,5 @@
 <div *ngIf="errorMessage">
-  {{ errorMessage }}
+  <app-message [message]="errorMessage"></app-message>
 </div>
 <div class="placeAd-table" *ngIf="!errorMessage">
   <table>
@@ -44,6 +44,7 @@
     <p *ngIf="categoryInputErrorMessage">
       {{ categoryInputErrorMessage }}
     </p>
+    <app-message *ngIf="message" [message]="message"></app-message>
     <button (click)="placeAd()">Place ad</button>
   </div>
 </div>

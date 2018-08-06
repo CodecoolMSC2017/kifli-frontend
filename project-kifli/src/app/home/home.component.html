@@ -1,7 +1,7 @@
 <div class="home">
-  <p *ngIf="errorMessage">
-    {{ errorMessage }}
-  </p>
+  <div *ngIf="errorMessage">
+    <app-message [message]='errorMessage'></app-message>
+  </div>
   <div *ngIf="!errorMessage">
     <div id="filter-inputs">
       <div id="category-selector" (click)="showCategories = !showCategories">
