@@ -115,6 +115,7 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     this.userService.deleteUser();
     this.message = null;
     this.logOption = 'Login';
+    this.userService.didLogout();
     this.router.navigate(['/']);
   }
 

@@ -6,9 +6,9 @@ import { Product } from '../model/product';
 import { catchError } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
 import { Category } from '../model/category';
-import { SearchParams } from '../model/searchParams';
 import { ProductListDto } from '../model/productListDto';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-home',
@@ -17,24 +17,36 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  products: Product[] = [];
-  errorMessage: string;
-  subscription: Subscription;
-  categories: Category[];
-  selectedCategoryId: string = '0';
-  selectedCategoryName: string = 'All';
-  minimumPrice: number = 0;
-  maximumPrice: number = 999999999;
-  priceError: string;
-  showCategories: boolean = false;
+  private products: Product[] = [];
+  private errorMessage: string;
+  private categories: Category[];
+  private selectedCategoryId: string = '0';
+  private selectedCategoryName: string = 'All';
+  private minimumPrice: number = 0;
+  private maximumPrice: number = 999999999;
+  private priceError: string;
+  private showCategories: boolean = false;
+
+  private searchSubscription: Subscription;
+  private loginSubscription: Subscription;
+  private logoutSubscription: Subscription;
+  private isAdmin: boolean;
 
   constructor(
     private productService: ProductService,
     private searchService: SearchService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
+    this.loginSubscription = this.userService.didLogin$.subscribe(
+      () => this.isAdmin = this.userService.isAdmin()
+    );
+    this.logoutSubscription = this.userService.didLogout$.subscribe(
+      () => this.isAdmin = this.userService.isAdmin()
+    );
+    this.isAdmin = this.userService.isAdmin();
     this.subscribeSearch();
     this.getProducts();
     this.searchService.setCategoryId(this.selectedCategoryId);
@@ -43,7 +55,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.searchSubscription.unsubscribe();
+    this.loginSubscription.unsubscribe();
   }
 
   private onCategoriesError(err): Observable<any> {
@@ -68,7 +81,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private subscribeSearch(): void {
-    this.subscription = this.searchService.searchTitle$.subscribe(
+    this.searchSubscription = this.searchService.searchTitle$.subscribe(
       () => this.getProducts()
     )
   }

@@ -23,6 +23,9 @@ export class UserService {
   private didLoginSub = new Subject<void>();
   public didLogin$ = this.didLoginSub.asObservable();
 
+  private didLogoutSub = new Subject<void>();
+  public didLogout$ = this.didLogoutSub.asObservable();
+
   constructor(
     private http: HttpClient
   ) { }
@@ -84,6 +87,10 @@ export class UserService {
 
   public didLogin(): void {
     this.didLoginSub.next();
+  }
+
+  public didLogout(): void {
+    this.didLogoutSub.next();
   }
 
   public isLoggedIn(): boolean {

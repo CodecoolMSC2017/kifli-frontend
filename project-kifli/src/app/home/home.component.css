@@ -1,35 +1,14 @@
-.products {
-    margin: auto;
-    width: 50%;
-    height: 150px;
-    border: 10px solid green;
-    padding: 25px;
-    margin-bottom: 30px;
-    margin-top: 30px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
-    transition: box-shadow 500ms, width 500ms, height 500ms;
-    transition: border 200ms;
-    border-radius: 5px;
-    background: white;
-}
-
-.products:hover {
-    border: 10px solid #2fbc50;
-    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
-}
-
-/*filter*/
-
 #filter-inputs {
     position: fixed;
     width: 20%;
+    z-index: 5;
 }
 
 input {
     max-width: 100px;
 }
 
-#category-selector {
+#category-selector, .category {
     background-color: rgb(56, 190, 3); 
     color: black;
     max-width: 200px;
@@ -38,27 +17,13 @@ input {
     transition-duration: 0.4s;
     padding: 5px 0 5px 0;
     text-align: center;
+}
+
+#category-selector {
     margin-bottom: 10px;
 }
 
-.category {
-    background-color: rgb(56, 190, 3); 
-    color: black;
-    max-width: 200px;
-    border: 1px solid rgb(198, 248, 185);
-    box-sizing: border-box;
-    transition-duration: 0.4s;
-    padding: 5px 0 5px 0;
-    text-align: center;
-}
-
-#category-selector:hover {
-    cursor: pointer;
-    background-color: rgb(83, 224, 88);
-    color: white;
-}
-
-.category:hover {
+#category-selector:hover, .category:hover {
     cursor: pointer;
     background-color: rgb(83, 224, 88);
     color: white;
