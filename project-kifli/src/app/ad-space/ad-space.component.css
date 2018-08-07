@@ -10,7 +10,7 @@
     transition: box-shadow 500ms, width 500ms, height 500ms;
     transition: border 200ms;
     border-radius: 5px;
-    background: white;
+    background: linear-gradient(to top left, rgb(178, 196, 222) 0%, rgb(247, 246, 246) 100%);
 }
 
 .product:hover {

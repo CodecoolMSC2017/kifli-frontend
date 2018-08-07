@@ -9,14 +9,15 @@ input {
 }
 
 #category-selector, .category {
-    background-color: rgb(56, 190, 3); 
+    background: linear-gradient(to top, #039b03 0%, #02cf09 100%);
     color: black;
     max-width: 200px;
-    border: 1px solid rgb(198, 248, 185);
+    border: none;
     box-sizing: border-box;
     transition-duration: 0.4s;
-    padding: 5px 0 5px 0;
+    padding: 12px 24px;
     text-align: center;
+    margin: 4px 4px;
 }
 
 #category-selector {
