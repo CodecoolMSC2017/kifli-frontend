@@ -4,6 +4,6 @@
     width: 50%;
     border: 3px solid green;
     padding: 10px;
-    background: white;
+    background: linear-gradient(to top left, rgb(178, 196, 222) 0%, rgb(247, 246, 246) 100%);
     text-align: center;
 }
