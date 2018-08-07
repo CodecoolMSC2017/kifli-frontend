@@ -68,7 +68,7 @@ button:hover {
 }
 
 .text-container {
-    background: white;
+    background: linear-gradient(to top left, rgb(178, 196, 222) 0%, rgb(247, 246, 246) 100%);
     margin: auto;
     width: 50%;
     border: 10px solid green;
@@ -77,7 +77,7 @@ button:hover {
 }
 
 .contact-container {
-    background: white;
+    background: linear-gradient(to top left, rgb(178, 196, 222) 0%, rgb(247, 246, 246) 100%);
     margin: auto;
     width: 30%;
     border: 5px solid green;
