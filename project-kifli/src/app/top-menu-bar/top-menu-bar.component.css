@@ -3,14 +3,31 @@
 .container {
     display: flex;
     border: 0px;
-    background: linear-gradient(to bottom, rgb(40, 132, 252) 0%, rgba(194, 189, 189, 0.452) 100%);
+    background: rgba(194, 189, 189, 0.3);
     overflow: visible;
-    position: sticky;
+    position: fixed;
+    width: 100%;
     top: 0px;
     left: 0px;
     height: 80px;
-    z-index: 20;
+    z-index: 30;
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px
+}
+
+#top-menu-bar-backgroud-picture {
+    position: fixed;
+    height: 80px;
+    width: 100%;
+    top: 0;
+    z-index: 29;
+}
+
+#top-menu-bar-backgroud-picture, #message-cover {
+    background-image: url('../../assets/img/backgroundfield.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 .left {
@@ -82,9 +99,8 @@ input {
 }
 
 hr {
-    position: absolute;
     border: 0;
-    background-color: black;
+    background: transparent;
     margin-top: 0;
     margin-bottom: 0;
     padding: 0;
@@ -139,10 +155,6 @@ hr {
 
 #message-cover {
     position: fixed;
-    background-image: url('../../assets/img/backgroundfield.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
     width: 100%;
     height: 100%;
     z-index: 100;
