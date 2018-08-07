@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Product } from './model/product';
 import { SearchService } from './search.service';
 import { ProductListDto } from './model/productListDto';
+import { Category } from './model/category';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,13 @@ export class ProductService {
     return this.http.get<ProductListDto>('/api/products/user/' + id);
   }
 
-  public getAllCategories(): Observable<any> {
-    return this.http.get('/api/categories');
+  public getAllCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>('/api/categories');
+  }
+
+  public addCategory(categoryName: string, attributes: {}): Observable<any> {
+    console.log({name: categoryName, attributes: attributes});
+    return this.http.post('/api/categories', {name: categoryName, attributes: attributes});
   }
 
 }

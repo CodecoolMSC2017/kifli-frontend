@@ -4,7 +4,7 @@
   </div>
   <div *ngIf="!errorMessage">
     <div id="filter-inputs">
-      <div class="category" *ngIf="isAdmin">
+      <div class="category" *ngIf="isAdmin" routerLink="categories">
         Add category
       </div>
       <div id="category-selector" (click)="showCategories = !showCategories">
