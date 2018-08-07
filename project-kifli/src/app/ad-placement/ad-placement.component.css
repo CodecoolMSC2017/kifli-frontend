@@ -1,21 +1,22 @@
 .placeAd-table {
-    background: white;
+    background: rgb(211, 208, 208);
     border-radius:3px;
     border-collapse: collapse;
     margin: auto;
     padding:5px;
     width: 60%;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
     animation: float 5s infinite;
   }
   
   .placeAd-table table {
       width: 100%;
+      box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
   }
   
   .placeAd-table td.first-td {
-    color:rgb(6, 8, 10);;
-    background:#3cd13c;
+    color:rgb(6, 8, 10);
+    background: linear-gradient(to top, #039b03 0%, #00ff08 100%);
     border-bottom:4px solid #9ea7af;
     border-right: 1px solid #343a45;
     font-size:20px;
@@ -49,11 +50,12 @@
   }
   
   .placeAd-table td.first-td {
+    border-top-left-radius:35px;
     border-bottom-left-radius:35px;
   }
   
   .placeAd-table td {
-    background:#FFFFFF;
+    background: rgb(211, 208, 208);
     padding:20px;
     text-align: center;
     vertical-align:middle;
