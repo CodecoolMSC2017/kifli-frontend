@@ -3,14 +3,14 @@
 .container {
     display: flex;
     border: 0px;
-    background: linear-gradient(to bottom right, rgb(2, 2, 105) 0%, rgba(194, 189, 189, 0.174) 100%);
+    background: linear-gradient(to bottom, rgb(40, 132, 252) 0%, rgba(194, 189, 189, 0.452) 100%);
     overflow: visible;
     position: sticky;
     top: 0px;
     left: 0px;
     height: 80px;
     z-index: 20;
-    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.5);
 }
 
 .left {
@@ -30,7 +30,7 @@
 }
 
 button {
-    background: linear-gradient(to top, #039b03 0%, #00ff08 100%);
+    background: linear-gradient(to top, #039b03 0%, #02cf09 100%);
     border: none;
     color: white;
     padding: 12px 24px;
