@@ -21,6 +21,12 @@
     border: 5px solid #2fbc50;
 }
 
+#pictures-spacer {
+    height: 150px;
+    width: 100%;
+    background: transparent;
+}
+
 #pictures-container {
     position: fixed;
     bottom: 0;
@@ -78,10 +84,9 @@ button:hover {
 
 .contact-container {
     background: linear-gradient(to top left, rgb(178, 196, 222) 0%, rgb(247, 246, 246) 100%);
-    margin: auto;
+    margin: 5px 0 10px 5px;
     width: 30%;
     border: 5px solid green;
     padding: 10px;
     border-radius: 5px;
-    float: right;
 }
