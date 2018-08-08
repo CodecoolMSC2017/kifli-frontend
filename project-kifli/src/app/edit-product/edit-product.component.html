@@ -1,0 +1,18 @@
+<app-message *ngIf="errorMessage" [message]="errorMessage"></app-message>
+<div *ngIf="!errorMessage && product">
+  <button (click)="deleteProduct()">Delete</button>
+  <table>
+    <tr>
+      <td class="first-td">Title:</td>
+      <td class="placeAd-row-input-td"><input class="placeAd-title-input" [(ngModel)]="product.title"></td>
+    </tr>
+    <tr>
+      <td class="first-td">Description:</td>
+      <td class="placeAd-row-input-td"><textarea class="placeAd-description-input" [(ngModel)]="product.description"></textarea></td>
+    </tr>
+    <tr>
+      <td class="first-td">Price:</td>
+      <td class="placeAd-row-input-td"><input class="placeAd-title-input" [(ngModel)]="product.price" type="number"></td>
+    </tr>
+  </table>
+</div>

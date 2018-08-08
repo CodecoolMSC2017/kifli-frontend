@@ -25,11 +25,7 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
   private inputErrorMessage: string;
   private categoryInputErrorMessage: string;
 
-  private title: string;
-  private description: string;
-  private price: number;
-
-  private product: Product;
+  private product: Product = new Product();
   private pictures: File[];
   private indexOfCurrentPicture: number = 0;
 
@@ -108,9 +104,9 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
       return;
     }
     const product: any = {};
-    product.title = this.title;
-    product.description = this.description;
-    product.price = this.price;
+    product.title = this.product.title;
+    product.description = this.product.description;
+    product.price = this.product.price;
     product.type = this.getAdType();
     const attributes = this.getAttributes();
     if (attributes == null) {
@@ -194,11 +190,11 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
   }
 
   private checkBasicData(): boolean {
-    if (!this.title) {
+    if (!this.product.title) {
       this.inputErrorMessage = 'You must give the ad a title!';
       return true;
     }
-    if (!this.price || typeof this.price !== 'number') {
+    if (!this.product.price || typeof this.product.price !== 'number') {
       this.inputErrorMessage = 'The price is not a valid number!';
       return true;
     }

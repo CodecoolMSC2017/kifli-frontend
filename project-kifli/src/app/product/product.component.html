@@ -1,7 +1,7 @@
 <app-message *ngIf="errorMessage" [message]="errorMessage"></app-message>
 <div *ngIf="product && !errorMessage">
   <button (click)="deleteProduct()" *ngIf="isAdmin && !isOwnProduct">Remove</button>
-  <button (click)="editProduct()" *ngIf="isOwnProduct">Edit</button>
+  <button routerLink="edit" *ngIf="isOwnProduct">Edit</button>
   <app-message *ngIf="message" [message]='message'></app-message>
   <div class="text-container">
     <h2>{{ product.title }}</h2>

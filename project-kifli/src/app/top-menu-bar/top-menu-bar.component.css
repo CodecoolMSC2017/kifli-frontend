@@ -59,9 +59,6 @@ button {
     -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
     cursor: pointer;
-}
-
-button {
     background-color: rgb(56, 190, 3); 
     color: black; 
 }

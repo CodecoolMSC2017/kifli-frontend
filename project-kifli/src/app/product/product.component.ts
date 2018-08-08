@@ -86,10 +86,6 @@ export class ProductComponent implements OnInit, OnDestroy {
     ).subscribe(() => this.router.navigate(['/']))
   }
 
-  private editProduct(): void {
-    console.log('edit button clicked');
-  }
-
   private onDeleteError(err): Observable<any> {
     if (err.status >= 500) {
       this.message = err.status + ': server error, try again later';

@@ -5,15 +5,15 @@
   <table>
     <tr>
       <td class="first-td">Title:</td>
-      <td class="placeAd-row-input-td"><input class="placeAd-title-input" [(ngModel)]="title"></td>
+      <td class="placeAd-row-input-td"><input class="placeAd-title-input" [(ngModel)]="product.title"></td>
     </tr>
     <tr>
       <td class="first-td">Description:</td>
-      <td class="placeAd-row-input-td"><textarea class="placeAd-description-input" [(ngModel)]="description"></textarea></td>
+      <td class="placeAd-row-input-td"><textarea class="placeAd-description-input" [(ngModel)]="product.description"></textarea></td>
     </tr>
     <tr>
       <td class="first-td">Price:</td>
-      <td class="placeAd-row-input-td"><input class="placeAd-title-input" [(ngModel)]="price" type="number"></td>
+      <td class="placeAd-row-input-td"><input class="placeAd-title-input" [(ngModel)]="product.price" type="number"></td>
     </tr>
   </table>
   <p *ngIf="inputErrorMessage">

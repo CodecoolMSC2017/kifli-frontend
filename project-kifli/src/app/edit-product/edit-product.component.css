@@ -1,0 +1,21 @@
+button {
+    background: linear-gradient(to top, #039b03 0%, #02cf09 100%);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 4px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: rgb(56, 190, 3); 
+    color: black; 
+}
+
+button:hover {
+    background-color: rgb(83, 224, 88);
+    color: white;
+}

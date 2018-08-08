@@ -18,6 +18,7 @@ import { AdPlacementComponent } from './ad-placement/ad-placement.component';
 import { MyadsComponent } from './myads/myads.component';
 import { MessageComponent } from './message/message.component';
 import { CategoriesComponent } from './categories/categories.component';
+import { EditProductComponent } from './edit-product/edit-product.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { CategoriesComponent } from './categories/categories.component';
     AdPlacementComponent,
     MyadsComponent,
     MessageComponent,
-    CategoriesComponent
+    CategoriesComponent,
+    EditProductComponent
   ],
   imports: [
     BrowserModule,
