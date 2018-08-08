@@ -5,6 +5,8 @@ import { Observable, of, Subscription } from 'rxjs';
 import { Category } from '../model/category';
 import { CategoryAttribute } from '../model/category-attribute';
 import { UserService } from '../user.service';
+import { Product } from '../model/product';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ad-placement',
@@ -27,9 +29,14 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
   private description: string;
   private price: number;
 
+  private product: Product;
+  private pictures: File[];
+  private indexOfCurrentPicture: number = 0;
+
   constructor(
     private productService: ProductService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -97,6 +104,9 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
     if (this.checkBasicData()) {
       return;
     }
+    if (this.checkFilesAmount()) {
+      return;
+    }
     const product: any = {};
     product.title = this.title;
     product.description = this.description;
@@ -111,12 +121,43 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
     product.attributes = attributes;
     product.categoryId = this.selectedCategory.id;
 
-    console.log('posting product:')
-    console.log(product);
-
+    this.message = 'Posting ad...';
     this.productService.postProduct(product).pipe(
       catchError(err => this.onPostProductError(err))
-    ).subscribe(() => this.message = 'Ad posted!');
+    ).subscribe(product => this.onPostProductResponse(product));
+  }
+
+  private onPostProductResponse(product: Product): void {
+    this.product = product;
+    const fileInputElement: any = document.getElementById('file-input');
+    const files: File[] = fileInputElement.files;
+    window.scrollTo(0, document.body.scrollHeight);
+    if (files.length > 0) {
+      this.uploadPictures(files);
+      return;
+    }
+    this.router.navigate(['/products/' + this.product.id]);
+  }
+
+  private uploadPictures(pictures: File[]): void {
+    this.pictures = pictures;
+    this.uploadNexPic();
+  }
+
+  private uploadNexPic(): void {
+    if (this.indexOfCurrentPicture === this.pictures.length) {
+      this.router.navigate(['/products/' + this.product.id]);
+      return;
+    }
+    this.message = 'Uploading picture ' + (this.indexOfCurrentPicture + 1)
+      + '/' + this.pictures.length;
+    this.productService.sendFile(this.pictures[this.indexOfCurrentPicture], this.product.id)
+      .pipe(catchError(err => this.onSendFileError(err)))
+      .subscribe(() => {
+        this.indexOfCurrentPicture++;
+        this.uploadNexPic();
+      }
+    );
   }
 
   private getAdType(): string {
@@ -130,7 +171,7 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private onPostProductError(err) {
+  private onPostProductError(err): Observable<Product> {
     if (err.status >= 500) {
       this.message = err.status + ': server error while adding this ad';
     } else if (err.status === 401) {
@@ -138,6 +179,7 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
     } else {
       this.message = err.status + ': error adding this ad';
     }
+    window.scrollTo(0, document.body.scrollHeight);
     return of();
   }
 
@@ -164,6 +206,16 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  private checkFilesAmount(): boolean {
+    const fileInputElement: any = document.getElementById('file-input');
+    const files: File[] = fileInputElement.files;
+    if (files.length > 8) {
+      this.inputErrorMessage = 'You can select maximum 8 pictures!';
+      return true;
+    }
+    return false;
+  }
+
   private checkAttribute(attribute: CategoryAttribute, value): boolean {
     if (!value) {
       this.categoryInputErrorMessage = 'You must fill all fields!';
@@ -184,6 +236,11 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
     } else {
       this.errorMessage = err.status + ': something went wrong... try again later'
     }
+    return of();
+  }
+
+  private onSendFileError(err): Observable<any> {
+    this.message = 'Error sending picture';
     return of();
   }
 

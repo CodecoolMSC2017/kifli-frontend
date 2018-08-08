@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from './model/product';
 import { SearchService } from './search.service';
@@ -33,8 +33,8 @@ export class ProductService {
     return this.http.get<ProductListDto>('/api/products', {params: httpParams});
   }
 
-  public postProduct(product: {}): Observable<any> {
-    return this.http.post('/api/products', product);
+  public postProduct(product: {}): Observable<Product> {
+    return this.http.post<Product>('/api/products', product);
   }
 
   public getUserProducts(id): Observable<ProductListDto> {
@@ -46,8 +46,13 @@ export class ProductService {
   }
 
   public addCategory(categoryName: string, attributes: {}): Observable<any> {
-    console.log({name: categoryName, attributes: attributes});
     return this.http.post('/api/categories', {name: categoryName, attributes: attributes});
+  }
+
+  public sendFile(file: File, productId: number): Observable<any> {
+    return this.http.post('/api/images', file,
+      {headers: {productId: productId.toString()}}
+    );
   }
 
 }

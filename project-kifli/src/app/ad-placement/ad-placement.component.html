@@ -23,6 +23,7 @@
     <input type="radio" name="ad-type" value="BUYOUT" checked>Buyout
     <input type="radio" name="ad-type" value="AUCTION">Auction
   </div>
+  <input type="file" id="file-input" accept=".jpg, .jpeg" multiple>
   <p>
     Choose a category:
     <select [(ngModel)]="selectedCategoryString" (change)="setSelectedCategory()">
@@ -49,6 +50,6 @@
       {{ categoryInputErrorMessage }}
     </p>
     <app-message *ngIf="message" [message]="message"></app-message>
-    <button (click)="placeAd()">Place ad</button>
+    <button id="place-ad-buttom" (click)="placeAd()">Place ad</button>
   </div>
 </div>
