@@ -118,26 +118,29 @@ button:hover {
     background-color: white;
     color: black;
     border: 2px solid #555555;
-    padding: 14px 20%;
+    padding: 10px 1%;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     margin: 0px;
-    cursor: auto; 
+    cursor: auto;
+    width: 70%;
 }
 
 .placeAd-description-input {
     background-color: white;
     color: black;
     border: 2px solid #555555;
-    padding: 40px 17%;
+    padding: 10px 1%;
     text-align: left;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     margin: 0px;
     cursor: auto;
+    width: 70%;
+    height: 100px;
 }
 
 .placeAd-row-input-td input:focus {
