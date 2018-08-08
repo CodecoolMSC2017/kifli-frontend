@@ -2,41 +2,45 @@
   <h2 class="center">
     My profile
   </h2>
-  <p>
-  Username: {{ userName }}
-  </p> 
 
-  <p>
-    Email:  {{ userEmail }}
-  </p>
-
-  <p>
-    Firstname:  {{ userFirstName }}
-  </p>
-
-  <p>
-    Lastname: {{ userLastName }}
-  </p>
-
-  <p>
-    Phone: {{ phone }}
-  </p>
-
-  <p>
-    Country: {{ country }}
-  </p>
-
-  <p>
-    State: {{ state }}
-  </p>
-
-  <p>
-    City: {{ city }}
-  </p>
-
-  <p>
-    Street: {{ street }}
-  </p>
+  <table>
+    <tr>
+      <td>Username:</td>
+      <td>{{ userName }}</td>
+    </tr>
+    <tr>
+      <td>Email:</td>
+      <td>{{ userEmail }}</td>
+    </tr>
+    <tr>
+      <td>Firstname:</td>
+      <td>{{ userFirstName }}</td>
+    </tr>
+    <tr>
+      <td>Lastname:</td>
+      <td>{{ userLastName }}</td>
+    </tr>
+    <tr>
+      <td>Phone:</td>
+      <td>{{ phone }}</td>
+    </tr>
+    <tr>
+      <td>Country:</td>
+      <td>{{ country }}</td>
+    </tr>
+    <tr>
+      <td>State:</td>
+      <td>{{ state }}</td>
+    </tr>
+    <tr>
+      <td>City:</td>
+      <td>{{ city }}</td>
+    </tr>
+    <tr>
+      <td>Street:</td>
+      <td>{{ street }}</td>
+    </tr>
+  </table>
 
   <h3>Change your password</h3>
   <input placeholder="new password 1" #newPassword1>
