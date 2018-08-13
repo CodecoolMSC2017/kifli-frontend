@@ -102,11 +102,6 @@ export class UserService {
   }
 
   public changePassword(newPassword1Value): Observable<any>{
-<<<<<<< HEAD
-    console.log(newPassword1Value);
-    this.http.post(URL + 'users/change-password' , newPassword1Value).subscribe(console.log);
-   return this.http.post(URL + 'users/change-password' , newPassword1Value);
-=======
     return this.http.post(URL + 'users/change-password' , newPassword1Value);
   }
 
@@ -120,6 +115,5 @@ export class UserService {
 
   public deleteUser(): void {
     localStorage.removeItem('user');
->>>>>>> 937d59acffdf4ff74df4e627c71c4d88e58415dd
   }
 }
