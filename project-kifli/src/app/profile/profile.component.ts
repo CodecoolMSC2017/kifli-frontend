@@ -37,6 +37,7 @@ export class ProfileComponent implements OnInit {
   city: String;
   street: String;
   newPassword: String;
+  private errorMessage: string;
 
   constructor(
     private http: HttpClient,
@@ -45,8 +46,22 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getUser();
-    console.log(this.newPassword);
+    if (this.userService.isLoggedIn()) {
+      this.getUser();
+    } else {
+      this.onNotLoggedIn();
+    }
+  }
+
+  private onNotLoggedIn(): void {
+    this.errorMessage = 'You must login first!';
+    this.userService.showLogin();
+    this.userService.didLogin$.subscribe(
+      () => {
+        this.errorMessage = undefined;
+        this.ngOnInit();
+      }
+    );
   }
 
   
@@ -67,18 +82,18 @@ export class ProfileComponent implements OnInit {
     this.street = credentials.street;
   }
 
-  submit(newPassword1, newPassword2) {
+  submit(oldPassword, newPassword1, newPassword2) {
     if(newPassword1.value === newPassword2.value) {  
     console.log("New PAss OK " + newPassword1.value);
-    this.changePassword(newPassword1.value, newPassword2.value);
+    this.changePassword(oldPassword.value, newPassword1.value, newPassword2.value);
     } else {
       console.log("New pass not the same")
     }
   }
 
-  changePassword(newPassword1Value1, newPassword1Value2) {
+  changePassword(oldPasswordValue, newPassword1Value1, newPassword1Value2) {
     const passwordJson: any = {};
-    passwordJson.oldPassword = "aa";
+    passwordJson.oldPassword = oldPasswordValue;
     passwordJson.newPassword = newPassword1Value1;
     passwordJson.confirmationPassword = newPassword1Value2;
     console.log("json password " + passwordJson)
