@@ -5,6 +5,8 @@ import { catchError } from 'rxjs/operators';
 import { of, Observable, Subscription } from 'rxjs';
 import { SearchService } from '../search.service';
 import { UserService } from '../user.service';
+import { SearchParams } from '../model/searchParams';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-top-menu-bar',
@@ -13,9 +15,11 @@ import { UserService } from '../user.service';
 })
 export class TopMenuBarComponent implements OnInit, OnDestroy {
 
-  public logOption: string;
-  public searchTitle: string;
-  public subscription: Subscription;
+  private logOption: string = 'Login';
+  private searchTitle: string;
+  private message: string = 'Loading...';
+  private logOptionSubscription: Subscription;
+  private showLoginSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -26,86 +30,124 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if (this.authService.isLoggedIn()) {
-      this.logOption = 'Logout';
-    } else {
-      this.logOption = 'Login';
-    }
-    this.route.queryParams.subscribe(params => this.sendSearchRequest(params.search));
-    this.subscribeToSearch();
-
-    this.someWhereClickInLogin();
-    this.modifyLogOption();
+    this.userService.deleteUser();
+    this.setClickListenerForPopups();
+    this.doSubscriptions();
   }
 
   ngOnDestroy() {
-
+    this.logOptionSubscription.unsubscribe();
+    this.showLoginSubscription.unsubscribe();
   }
 
-  private subscribeToSearch(): void {
-    this.searchService.searchTitle$.subscribe(string => {
-      this.searchTitle = string;
-    });
+  private doSubscriptions(): void {
+    this.route.queryParams.subscribe(params => this.sendSearchRequest(params));
+    this.subscribeToSearch();
+    this.subscribeLogOption();
+    this.subscribeShowLogin();
+
+    this.userService.getLoggedInUser().pipe(
+      catchError(err => this.onGetUserError(err))
+    ).subscribe(user => this.onGetUserResponse(user));
   }
 
-  public auth(): void {
-    if (this.logOption === 'Logout') {
-      this.authService.deleteAuth().pipe(
-        catchError(err => this.onLogoutError(err))
-      ).subscribe(() => this.onLogoutResponse());
-    } else if (this.logOption === 'Login') {
-      document.getElementById('id02').style.display='none';
-      document.getElementById('id01').style.display='block';
+  private subscribeShowLogin(): void {
+    this.showLoginSubscription = this.userService.showLogin$
+      .subscribe(() => this.showLogin());
+  }
+
+  private onGetUserResponse(user: User): void {
+    if (user) {
+      this.userService.storeUser(user);
+      this.userService.didLogin();
+      this.hidePopups();
+      this.logOption = 'Logout';
+    }
+    this.message = null;
+  }
+
+  private onGetUserError(err): Observable<any> {
+    if (err.status === 401) {
+      this.userService.deleteUser();
+      this.message = null;
+      return of();
+    } else {
+      return this.onError(err);
     }
   }
 
-  private onLogoutError(err): Observable<any> {
-    this.onLogoutResponse();
+  private subscribeToSearch(): void {
+    this.searchService.searchTitle$.subscribe(() => {
+      this.searchTitle = this.searchService.getSearch()
+    });
+  }
+
+  private auth(): void {
+    if (this.logOption === 'Logout') {
+      this.authService.deleteAuth().pipe(
+        catchError(err => this.onError(err))
+      ).subscribe(() => this.onLogoutResponse());
+    } else if (this.logOption === 'Login') {
+      this.showLogin();
+    }
+  }
+
+  private showLogin(): void {
+    document.getElementById('register-container').style.display='none';
+    document.getElementById('login-container').style.display='block';
+  }
+
+  private hidePopups(): void {
+    document.getElementById('register-container').style.display='none';
+    document.getElementById('login-container').style.display='none';
+  }
+
+  private onError(err): Observable<any> {
+    if (err.status >= 500) {
+      this.message = err.status + ': server error, try refreshing the page later';
+    } else {
+      this.message = err.status + ': something went wrong... try again later'
+    }
     return of();
   }
 
   private onLogoutResponse(): void {
-    localStorage.removeItem('user');
+    this.userService.deleteUser();
+    this.message = null;
     this.logOption = 'Login';
+    this.userService.didLogout();
     this.router.navigate(['/']);
   }
 
-  private someWhereClickInLogin() {
-    // Get the modal
-    const logModal = document.getElementById('id01');
-    const regModal = document.getElementById('id02');
+  private setClickListenerForPopups() {
+    const loginContainer = document.getElementById('login-container');
+    const registerContainer = document.getElementById('register-container');
 
-    // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-        if (event.target == logModal) {         
-          logModal.style.display='none';
-        } else if(event.target == regModal) {
-          regModal.style.display='none';
-        }
-    }
-  }
-
-  search() {
-    if (this.searchTitle === this.route.snapshot.queryParams.search) {
-      this.sendSearchRequest(this.searchTitle);
-      return;
-    }
-    if (this.searchTitle !== '' && this.searchTitle) {
-      this.router.navigate(['/'], {queryParams: {search: this.searchTitle}});
-    } else {
-      this.router.navigate(['']);
-    }
-  }
-
-  private sendSearchRequest(searchString: string) {
-    this.searchService.searchTitleApply(searchString);
-  }
-
-  modifyLogOption(): void {
-    this.subscription = this.userService.logOption$.subscribe(
-      logOption => {
-        this.logOption = logOption;
+      if (event.target == loginContainer) {         
+        loginContainer.style.display='none';
+      } else if (event.target == registerContainer) {
+        registerContainer.style.display='none';
       }
+    }
+  }
+
+  private search() {
+    this.searchService.setSearch(this.searchTitle);
+    const searchParams: SearchParams = this.searchService.getSearchParams();
+    this.router.navigate(['/'], {
+      queryParams: this.searchService.removeDefaultValues(searchParams)
+    });
+  }
+
+  private sendSearchRequest(params) {
+    this.searchService.updateFromUrlParams(params);
+    this.searchService.pingSubscribers();
+  }
+
+  private subscribeLogOption(): void {
+    this.logOptionSubscription = this.userService.logOption$.subscribe(
+      logOption => this.logOption = logOption
     )
   }
 }

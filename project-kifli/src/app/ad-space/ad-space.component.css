@@ -1,3 +1,23 @@
+.product {
+    margin: auto;
+    width: 50%;
+    height: 150px;
+    border: 10px solid green;
+    padding: 25px;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+    transition: box-shadow 500ms, width 500ms, height 500ms;
+    transition: border 200ms;
+    border-radius: 5px;
+    background: linear-gradient(to top left, rgb(178, 196, 222) 0%, rgb(247, 246, 246) 100%);
+}
+
+.product:hover {
+    border: 10px solid #2fbc50;
+    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
+}
+
 img {
     position: relative;
     max-width: 150px;

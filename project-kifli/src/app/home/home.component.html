@@ -1,29 +1,32 @@
 <div class="home">
-  <p *ngIf="errorMessage">
-    {{ errorMessage }}
-  </p>
+  <div *ngIf="errorMessage">
+    <app-message [message]="errorMessage"></app-message>
+  </div>
   <div *ngIf="!errorMessage">
     <div id="filter-inputs">
-      Category: 
-      <select *ngIf="categories" [(ngModel)]="selectedCategoryId">
-        <option value="0" selected>All</option>
-        <option *ngFor="let category of categories" value="{{ category.id }}">{{ category.name }}</option>
-      </select>
+      <div class="category" *ngIf="isAdmin" routerLink="categories">
+        Add category
+      </div>
+      <div id="category-selector" (click)="showCategories = !showCategories">
+        Category: {{ selectedCategoryName }}
+      </div>
+      <div *ngIf="showCategories" (click)="showCategories = !showCategories">
+        <div class="category" (click)="onCategoryClick(null)">All</div>
+        <div class="category" *ngFor="let category of categories" (click)="onCategoryClick(category)">{{ category.name }}</div>
+      </div>
       <hr>
       <table>
         <tr>
           <td>Minimum price:</td>
-          <td><input type="number" [(ngModel)]="minimumPrice"></td>
+          <td><input type="number" [(ngModel)]="minimumPrice" (change)="onMinPriceChange()"></td>
         </tr>
         <tr>
           <td>Maximum price:</td>
-          <td><input type="number" [(ngModel)]="maximumPrice"></td>
+          <td><input type="number" [(ngModel)]="maximumPrice" (change)="onMaxPriceChange()"></td>
         </tr>
       </table>
       <p *ngIf="priceError">{{ priceError }}</p>
     </div>
-    <div *ngFor="let product of products" class="products" routerLink="/products/{{ product.id }}">
-      <app-ad-space [product]="product"></app-ad-space>
-    </div>
+    <app-ad-space *ngFor="let product of products" [product]="product"></app-ad-space>
   </div>
 </div>

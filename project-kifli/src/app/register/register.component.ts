@@ -63,8 +63,8 @@ export class RegisterComponent implements OnInit {
   }
 
   private regStyle() {
-    document.getElementById('id02').style.display='none';
-    document.getElementById('id01').style.display='block';
+    document.getElementById('register-container').style.display='none';
+    document.getElementById('login-container').style.display='block';
     
   }
 }

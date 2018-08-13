@@ -1,64 +1,62 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-import { Product } from '../product';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, of, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Product } from '../model/product';
 import { ProductService } from '../product.service';
-import { HttpModule } from '@angular/http';
-import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser'; 
-import { HttpClient } from '@angular/common/http';
+import { UserService } from '../user.service';
+import { ProductListDto } from '../model/productListDto';
 
 @Component({
   selector: 'app-myads',
   templateUrl: './myads.component.html',
   styleUrls: ['./myads.component.css']
 })
+export class MyadsComponent implements OnInit, OnDestroy {
 
-@NgModule({
-  imports: [     
-    BrowserModule,
-    HttpClientModule,
-  ]
-}) 
-
-export class MyadsComponent implements OnInit {
-  public errorMessage: string;
-  products;
-  userId: String;
+  private errorMessage: string;
+  private products: Product[];
+  private loginSubscription: Subscription;
 
   constructor(
-    private http: HttpClient,
-    private productService: ProductService) {}
+    private productService: ProductService,
+    private userService: UserService
+  ) { }
 
   ngOnInit() {
-    this.getUser();
-    this.getProducts(this.userId)
+    this.getProducts();
   }
 
-  public getUser() {
-     
-    let userString = localStorage.getItem("user");
-    let userObject = JSON.parse(userString);
-    this.userId = userObject.id;
+  ngOnDestroy() {
+    if (this.loginSubscription) {
+      this.loginSubscription.unsubscribe();
+    }
   }
 
-  getProducts(userId) {
-    this.productService.getUserProducts(userId).
-    pipe(catchError(err => this.onProductError(err))
-  ).subscribe(product => this.onProductReceived(product))
+  private getProducts(): void {
+    if (!this.userService.isLoggedIn()) {
+      this.errorMessage = 'You must login first!';
+      this.userService.showLogin();
+      this.userService.didLogin$.subscribe(
+        () => this.getProducts()
+      );
+      return;
+    }
+    this.errorMessage = 'Loading...';
+    this.productService.getUserProducts(this.userService.getUserId()).
+      pipe(catchError(err => this.onProductError(err))
+    ).subscribe(productListDto => this.onProductReceived(productListDto))
   }
 
-  onProductReceived(product: Product) {
-    console.log(product);
-    this.products = product; 
+  private onProductReceived(productListDto: ProductListDto): void {
+    this.errorMessage = null;
+    this.products = productListDto.products;
   }
 
-  onProductError(err): Observable<any> {
-    if(err.status >= 500) {
-      this.errorMessage = 'Server error, please try again later';
+  private onProductError(err): Observable<any> {
+    if (err.status >= 500) {
+      this.errorMessage = err.status + ': server error, please try again later';
     } else {
-      this.errorMessage = 'Error loading page, please try again later';
+      this.errorMessage = err.status + ': error loading page, please try again later';
     }
     return of();
   }

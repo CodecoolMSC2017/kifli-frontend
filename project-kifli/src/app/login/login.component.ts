@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { UserService } from '../user.service';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-login',
@@ -31,10 +32,11 @@ export class LoginComponent implements OnInit {
     ).subscribe(user => this.onLoginResponse(user));
   }
 
-  private onLoginResponse(user) {
-    localStorage.setItem('user', JSON.stringify(user));
-    document.getElementById('id01').style.display='none';
-    this.userService.modifyLogOption('Logout');
+  private onLoginResponse(user: User) {
+    this.userService.storeUser(user);
+    document.getElementById('login-container').style.display='none';
+    this.userService.modifyLogOption(true);
+    this.userService.didLogin();
   }
 
   private onLoginError(err): Observable<any> {
@@ -48,7 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   private regStyle() {
-    document.getElementById('id01').style.display='none';
-    document.getElementById('id02').style.display='block';
+    document.getElementById('login-container').style.display='none';
+    document.getElementById('register-container').style.display='block';
   }
 }

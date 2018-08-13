@@ -9,15 +9,19 @@ import { ProfileComponent } from './profile/profile.component';
 
 import { AdPlacementComponent } from './ad-placement/ad-placement.component';
 import { MyadsComponent } from './myads/myads.component';
+import { CategoriesComponent } from './categories/categories.component';
+import { EditProductComponent } from './edit-product/edit-product.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '', component: HomeComponent },
   { path: 'products/:id', component: ProductComponent },
+  { path: 'products/:id/edit', component: EditProductComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'place-ad', component: AdPlacementComponent },
-  { path: 'myads', component: MyadsComponent }
+  { path: 'myads', component: MyadsComponent },
+  { path: 'categories', component: CategoriesComponent }
 ];
 
 @NgModule({

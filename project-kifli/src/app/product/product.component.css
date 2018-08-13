@@ -21,6 +21,12 @@
     border: 5px solid #2fbc50;
 }
 
+#pictures-spacer {
+    height: 150px;
+    width: 100%;
+    background: transparent;
+}
+
 #pictures-container {
     position: fixed;
     bottom: 0;
@@ -30,7 +36,7 @@
 #dark {
     position: absolute;
     top: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
     height: 100%;
     width: 100%;
     text-align: center;
@@ -65,4 +71,22 @@ button {
 button:hover {
     background-color: rgb(83, 224, 88);
     color: white;
+}
+
+.text-container {
+    background: linear-gradient(to top left, rgb(178, 196, 222) 0%, rgb(247, 246, 246) 100%);
+    margin: auto;
+    width: 50%;
+    border: 10px solid green;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.contact-container {
+    background: linear-gradient(to top left, rgb(178, 196, 222) 0%, rgb(247, 246, 246) 100%);
+    margin: 5px 0 10px 5px;
+    width: 30%;
+    border: 5px solid green;
+    padding: 10px;
+    border-radius: 5px;
 }

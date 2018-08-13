@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Credentials} from '../credentials';
+import { Credentials} from '../model/credentials';
 import { BrowserModule } from '@angular/platform-browser'; 
 import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';

@@ -2,10 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductService } from '../product.service';
 import { SearchService } from '../search.service';
 
-import { Product } from '../product';
+import { Product } from '../model/product';
 import { catchError } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
 import { Category } from '../model/category';
+import { ProductListDto } from '../model/productListDto';
+import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-home',
@@ -14,36 +17,46 @@ import { Category } from '../model/category';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  products: Product[] = [];
-  errorMessage: string;
-  subscription: Subscription;
-  categories: Category[];
-  selectedCategoryId: string = '0';
-  minimumPrice: number = 0;
-  maximumPrice: number = 9999999999;
-  priceError: string;
+  private products: Product[] = [];
+  private errorMessage: string;
+  private categories: Category[];
+  private selectedCategoryId: string = '0';
+  private selectedCategoryName: string = 'All';
+  private minimumPrice: number = 0;
+  private maximumPrice: number = 999999999;
+  private priceError: string;
+  private showCategories: boolean = false;
+
+  private searchSubscription: Subscription;
+  private loginSubscription: Subscription;
+  private logoutSubscription: Subscription;
+  private isAdmin: boolean;
 
   constructor(
     private productService: ProductService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private route: ActivatedRoute,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
+    this.loginSubscription = this.userService.didLogin$.subscribe(
+      () => this.isAdmin = this.userService.isAdmin()
+    );
+    this.logoutSubscription = this.userService.didLogout$.subscribe(
+      () => this.isAdmin = this.userService.isAdmin()
+    );
+    this.isAdmin = this.userService.isAdmin();
     this.subscribeSearch();
-    this.loadInitialProducts();
-    this.loadCategories();
+    this.getProducts();
+    this.searchService.setCategoryId(this.selectedCategoryId);
+    this.searchService.setMinimumPrice(this.minimumPrice.toString());
+    this.searchService.setMaximumPrice(this.maximumPrice.toString());
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  private loadCategories(): void {
-    this.productService.getAllCategories().pipe(
-      catchError(err => this.onCategoriesError(err))
-    ).subscribe(categories => {
-      this.categories = categories;
-    });
+    this.searchSubscription.unsubscribe();
+    this.loginSubscription.unsubscribe();
   }
 
   private onCategoriesError(err): Observable<any> {
@@ -51,20 +64,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     return of();
   }
 
-  private loadInitialProducts(): void {
-    const searchString = this.searchService.lastValue;
-    this.getSearchProducts(searchString);
-  }
-
-  getAllProducts(): void {
-    this.productService.getProducts().pipe(
-      catchError(err => this.onProductsError(err))
-    ).subscribe(products => this.onProductsReceived(products));
-  }
-
-  private onProductsReceived(products): void {
+  private onProductsReceived(productListDto: ProductListDto): void {
     this.errorMessage = null;
-    this.products = products;
+    this.products = productListDto.products;
+    this.categories = productListDto.categories;
+    this.updateValues();
   }
 
   private onProductsError(err): Observable<any> {
@@ -76,46 +80,99 @@ export class HomeComponent implements OnInit, OnDestroy {
     return of();
   }
 
-  subscribeSearch(): void {
-    this.subscription = this.searchService.searchTitle$.subscribe(
-      searchString => this.getSearchProducts(searchString)
+  private subscribeSearch(): void {
+    this.searchSubscription = this.searchService.searchTitle$.subscribe(
+      () => this.getProducts()
     )
   }
 
-  getSearchProducts(searchString: string): void {
-    if (!searchString) {
-      searchString = '';
-    }
-    if (!this.checkIfPriceIsValid()) {
+  private getProducts(): void {
+    if (this.checkIfPriceIsValid()) {
       return;
     }
     this.priceError = null;
-    this.productService.search(
-      searchString,
-      this.selectedCategoryId,
-      this.minimumPrice.toString(),
-      this.maximumPrice.toString()
-    ).pipe(
+    this.productService.search().pipe(
       catchError(err => this.onProductsError(err))
-    ).subscribe(products => this.onProductsReceived(products));
+    ).subscribe(productListDto => this.onProductsReceived(productListDto));
   }
 
-  private categoryFilter(): void {
-    this.productService.findAllByCategoryId(this.selectedCategoryId).pipe(
-      catchError(err => this.onProductsError(err))
-    ).subscribe(products => this.products = products);
+  private updateValues(): void {
+    this.searchService.updateFromUrlParams(this.route.snapshot.queryParams);
+    const searchParams = this.searchService.getSearchParams();
+    this.selectedCategoryId = searchParams.categoryId;
+    this.selectedCategoryName = this.findCategoryNameById(Number(this.selectedCategoryId));
+    this.minimumPrice = Number(searchParams.minimumPrice);
+    this.maximumPrice = Number(searchParams.maximumPrice);
+  }
+
+  private findCategoryNameById(id: number): string {
+    if (id === 0) {
+      return 'All';
+    }
+    for (let i = 0; i < this.categories.length; i++) {
+      const category: Category = this.categories[i];
+      if (category.id === id) {
+        return category.name;
+      }
+    }
   }
 
   private checkIfPriceIsValid(): boolean {
     if (this.minimumPrice < 0) {
       this.priceError = 'Minimum price must be bigger than 0!';
-      return false;
+      return true;
+    }
+    if (this.minimumPrice > 999999998) {
+      this.priceError = 'Minimum price is out of range!';
+      return true;
     }
     if (this.maximumPrice <= this.minimumPrice) {
       this.priceError = 'Maximum price must be bigger than minimum price!';
-      return false;
+      return true;
     }
-    return true;
+    if (this.maximumPrice > 999999999) {
+      this.priceError = 'Maximum price is out of range!';
+      return true;
+    }
+    return false;
+  }
+
+  private onCategoryClick(category: Category): void {
+    if (!category) {
+      this.selectedCategoryId = '0';
+      this.selectedCategoryName = 'All';
+      this.searchService.setCategoryId(this.selectedCategoryId);
+      return;
+    }
+    this.selectedCategoryId = category.id.toString();
+    this.selectedCategoryName = category.name;
+    this.searchService.setCategoryId(this.selectedCategoryId);
+  }
+
+  private onMinPriceChange(): void {
+    if (!this.minimumPrice || this.minimumPrice >= this.maximumPrice) {
+      this.minimumPrice = this.maximumPrice - 1;
+    }
+    if (this.minimumPrice < 0) {
+      this.minimumPrice = 0;
+    }
+    if (this.minimumPrice > 999999998) {
+      this.minimumPrice = 999999998;
+    }
+    this.searchService.setMinimumPrice(this.minimumPrice.toString());
+  }
+
+  private onMaxPriceChange(): void {
+    if (!this.maximumPrice || this.maximumPrice < this.minimumPrice) {
+      this.maximumPrice = this.minimumPrice + 1;
+    }
+    if (this.maximumPrice < 1) {
+      this.maximumPrice = 1;
+    }
+    if (this.maximumPrice > 999999999) {
+      this.maximumPrice = 999999999;
+    }
+    this.searchService.setMaximumPrice(this.maximumPrice.toString());
   }
 
 }

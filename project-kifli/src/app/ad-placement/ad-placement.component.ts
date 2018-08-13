@@ -1,60 +1,75 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductService } from '../product.service';
 import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { AuthService } from '../auth.service';
+import { Observable, of, Subscription } from 'rxjs';
 import { Category } from '../model/category';
 import { CategoryAttribute } from '../model/category-attribute';
+import { UserService } from '../user.service';
+import { Product } from '../model/product';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ad-placement',
   templateUrl: './ad-placement.component.html',
   styleUrls: ['./ad-placement.component.css']
 })
-export class AdPlacementComponent implements OnInit {
+export class AdPlacementComponent implements OnInit, OnDestroy {
+
+  private loginSubscription: Subscription;
 
   private categories: Category[];
   private selectedCategory: Category;
   private selectedCategoryString: string;
   private errorMessage: string;
+  private message: string;
   private inputErrorMessage: string;
   private categoryInputErrorMessage: string;
 
-  private title: string;
-  private description: string;
-  private price: number;
+  private product: Product = new Product();
+  private pictures: File[];
+  private indexOfCurrentPicture: number = 0;
 
   constructor(
     private productService: ProductService,
-    private authService: AuthService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    if (this.authService.isLoggedIn()) {
+    if (this.userService.isLoggedIn()) {
       this.getCategories();
     } else {
-      this.errorMessage = 'You must login first!';
+      this.onNotLoggedIn();
     }
+  }
+
+  ngOnDestroy() {
+    if (this.loginSubscription) {
+      this.loginSubscription.unsubscribe();
+    }
+  }
+
+  private reloadPage(): void {
+    this.errorMessage = null;
+    this.ngOnInit();
+  }
+
+  private onNotLoggedIn(): void {
+    this.errorMessage = 'You must login first!';
+    this.userService.showLogin();
+    this.loginSubscription = this.userService.didLogin$.subscribe(
+      () => this.reloadPage()
+    );
   }
 
   private getCategories(): void {
     this.productService.getAllCategories().pipe(
-      catchError(err => this.onCategoriesError(err))
+      catchError(err => this.onError(err))
     ).subscribe(categories => this.onCategoriesReceived(categories));
   }
 
   private onCategoriesReceived(categories) {
     this.categories = categories;
-  }
-
-  private onCategoriesError(err): Observable<any> {
-    console.log(err);
-    if (err.status === 401) {
-      this.errorMessage = 'You must login first!';
-    } else if (err.status >= 500) {
-      this.errorMessage = 'Server error, please try again later';
-    }
-    return of();
   }
 
   private setSelectedCategory(): void {
@@ -84,13 +99,15 @@ export class AdPlacementComponent implements OnInit {
   private placeAd(): void {
     if (this.checkBasicData()) {
       return;
-    } else {
-      this.inputErrorMessage = null;
+    }
+    if (this.checkFilesAmount()) {
+      return;
     }
     const product: any = {};
-    product.title = this.title;
-    product.description = this.description;
-    product.price = this.price;
+    product.title = this.product.title;
+    product.description = this.product.description;
+    product.price = this.product.price;
+    product.type = this.getAdType();
     const attributes = this.getAttributes();
     if (attributes == null) {
       return;
@@ -98,17 +115,67 @@ export class AdPlacementComponent implements OnInit {
       this.categoryInputErrorMessage = null;
     }
     product.attributes = attributes;
-    product.categoryId = this.selectedCategory.id; 
+    product.categoryId = this.selectedCategory.id;
 
-    console.log(product);
-
+    this.message = 'Posting ad...';
     this.productService.postProduct(product).pipe(
       catchError(err => this.onPostProductError(err))
-    ).subscribe();
+    ).subscribe(product => this.onPostProductResponse(product));
   }
 
-  private onPostProductError(err): Observable<any> {
-    console.log(err);
+  private onPostProductResponse(product: Product): void {
+    this.product = product;
+    const fileInputElement: any = document.getElementById('file-input');
+    const files: File[] = fileInputElement.files;
+    window.scrollTo(0, document.body.scrollHeight);
+    if (files.length > 0) {
+      this.uploadPictures(files);
+      return;
+    }
+    this.router.navigate(['/products/' + this.product.id]);
+  }
+
+  private uploadPictures(pictures: File[]): void {
+    this.pictures = pictures;
+    this.uploadNexPic();
+  }
+
+  private uploadNexPic(): void {
+    if (this.indexOfCurrentPicture === this.pictures.length) {
+      this.router.navigate(['/products/' + this.product.id]);
+      return;
+    }
+    this.message = 'Uploading picture ' + (this.indexOfCurrentPicture + 1)
+      + '/' + this.pictures.length;
+    this.productService.sendFile(this.pictures[this.indexOfCurrentPicture], this.product.id)
+      .pipe(catchError(err => this.onSendFileError(err)))
+      .subscribe(() => {
+        this.indexOfCurrentPicture++;
+        this.uploadNexPic();
+      }
+    );
+  }
+
+  private getAdType(): string {
+    const div = document.getElementById('ad-type-input');
+    const inputNodes = div.querySelectorAll('input');
+    for (let i = 0; i < inputNodes.length; i++) {
+      const inputNode = inputNodes[i];
+      if (inputNode.checked) {
+        return inputNode.value;
+      }
+    }
+  }
+
+  private onPostProductError(err): Observable<Product> {
+    if (err.status >= 500) {
+      this.message = err.status + ': server error while adding this ad';
+    } else if (err.status === 401) {
+      this.onNotLoggedIn();
+    } else {
+      this.message = err.status + ': error adding this ad';
+    }
+    window.scrollTo(0, document.body.scrollHeight);
     return of();
   }
 
@@ -123,12 +190,23 @@ export class AdPlacementComponent implements OnInit {
   }
 
   private checkBasicData(): boolean {
-    if (!this.title) {
+    if (!this.product.title) {
       this.inputErrorMessage = 'You must give the ad a title!';
       return true;
     }
-    if (!this.price || typeof this.price !== 'number') {
+    if (!this.product.price || typeof this.product.price !== 'number') {
       this.inputErrorMessage = 'The price is not a valid number!';
+      return true;
+    }
+    this.inputErrorMessage = null;
+    return false;
+  }
+
+  private checkFilesAmount(): boolean {
+    const fileInputElement: any = document.getElementById('file-input');
+    const files: File[] = fileInputElement.files;
+    if (files.length > 8) {
+      this.inputErrorMessage = 'You can select maximum 8 pictures!';
       return true;
     }
     return false;
@@ -146,6 +224,20 @@ export class AdPlacementComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  private onError(err): Observable<any> {
+    if (err.status >= 500) {
+      this.errorMessage = err.status + ': server error, try refreshing the page later';
+    } else {
+      this.errorMessage = err.status + ': something went wrong... try again later'
+    }
+    return of();
+  }
+
+  private onSendFileError(err): Observable<any> {
+    this.message = 'Error sending picture';
+    return of();
   }
 
 }

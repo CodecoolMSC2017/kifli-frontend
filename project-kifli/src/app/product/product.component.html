@@ -1,28 +1,24 @@
-<p *ngIf="errorMessage" class="container">
-  {{ errorMessage }}
-</p>
-<button (click)="deleteProduct()" *ngIf="isAdmin && !isOwnProduct">Remove</button>
-<button (click)="editProduct()" *ngIf="isOwnProduct">Edit</button>
-<div *ngIf="product" class="container">
-  <h2>
-    {{ product.title }}
-  </h2>
-  <h3>
-    ${{ product.price }}
-  </h3>
-  <p>
-    {{ product.description }}
-  </p>
-  <table>
-    <tr *ngFor="let attribute of productAttributes">
-      <td>{{ attribute }}:</td>
-      <td>{{ product.attributes[attribute] }}</td>
-    </tr>
-  </table>
+<app-message *ngIf="errorMessage" [message]="errorMessage"></app-message>
+<div *ngIf="product && !errorMessage">
+  <button (click)="deleteProduct()" *ngIf="isAdmin && !isOwnProduct">Remove</button>
+  <button routerLink="edit" *ngIf="isOwnProduct">Edit</button>
+  <app-message *ngIf="message" [message]='message'></app-message>
+  <div class="text-container">
+    <h2>{{ product.title }}</h2>
+    <h3>${{ product.price }}</h3>
+    <p>{{ product.description }}</p>
+    <table>
+      <tr *ngFor="let attribute of productAttributes">
+        <td>{{ attribute }}:</td>
+        <td>{{ product.attributes[attribute] }}</td>
+      </tr>
+    </table>
+  </div>
   <hr>
   <div>
     <button id="contact-button" (click)="contact()">{{ contactButtonText }} contact</button>
-    <div *ngIf="contactButtonText == 'Hide'">
+    <div class="contact-container" *ngIf="contactButtonText == 'Hide'">
+      <a href="/users/{{ product.ownerId }}">{{ product.ownerName }}</a>
       <p>E-mail: {{ product.ownerEmail }}</p>
       <p>Phone: {{ product.ownerPhone }}</p>
     </div>
@@ -31,6 +27,7 @@
     <p id="help-text">Click here to dismiss</p>
     <img id="large-picture" src="{{ selectedPictureSrc }}">
   </div>
+  <div id="pictures-spacer"></div>
   <div id="pictures-container">
     <div class="picture-frame"
         *ngFor="let id of product.pictureIds"

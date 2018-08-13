@@ -1,6 +1,8 @@
-<img *ngIf="pictureId" src="http://localhost:4200/api/images/{{ product.pictureIds[0] }}" alt="Image" class="image">
-<img *ngIf="noPictureUrl" src="{{ noPictureUrl }}">
-<h2>{{ product.title }}</h2>
-<h4>Price: ${{ product.price }}</h4>
-<h4>{{ product.type }}</h4>
-<p>{{ product.category }}</p>
+<div class="product" routerLink="/products/{{ product.id }}">
+    <img *ngIf="pictureId" src="http://localhost:4200/api/images/{{ product.pictureIds[0] }}" alt="Image" class="image">
+    <img *ngIf="noPictureUrl" src="{{ noPictureUrl }}">
+    <h2>{{ product.title }}</h2>
+    <h4>Price: ${{ product.price }}</h4>
+    <h4>{{ product.type }}</h4>
+    <p>{{ product.category }}</p>
+</div>

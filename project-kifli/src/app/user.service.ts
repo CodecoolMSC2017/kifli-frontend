@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { User } from './user';
+import { User } from './model/user';
 
 const URL = '/api/';
 
@@ -15,10 +15,20 @@ const httpOptions = {
 export class UserService {
 
   private logOptionSub = new Subject<string>();
+  public logOption$ = this.logOptionSub.asObservable();
 
-  constructor(private http: HttpClient) { }
+  private showLoginSub = new Subject<void>();
+  public showLogin$ = this.showLoginSub.asObservable();
 
-  logOption$ = this.logOptionSub.asObservable();
+  private didLoginSub = new Subject<void>();
+  public didLogin$ = this.didLoginSub.asObservable();
+
+  private didLogoutSub = new Subject<void>();
+  public didLogout$ = this.didLogoutSub.asObservable();
+
+  constructor(
+    private http: HttpClient
+  ) { }
 
   public register(
       userName: string,
@@ -44,13 +54,6 @@ export class UserService {
     return this.http.get(URL + 'users');
   }
 
-  public isLoggedIn(): boolean {
-    if (localStorage.getItem('user')) {
-      return true;
-    }
-    return false;
-  }
-
   public getUserId(): number {
     if (localStorage.getItem('user')) {
       const user = JSON.parse(localStorage.getItem('user'));
@@ -70,13 +73,53 @@ export class UserService {
     return this.http.get(URL + 'users/' + id);
   }
 
-  modifyLogOption(logOption: string) {
-    this.logOptionSub.next(logOption);
+  public modifyLogOption(isLoggedIn: boolean): void {
+    if (isLoggedIn) {
+      this.logOptionSub.next('Logout');
+    } else {
+      this.logOptionSub.next('Login');
+    }
+  }
+
+  public showLogin(): void {
+    this.showLoginSub.next();
+  }
+
+  public didLogin(): void {
+    this.didLoginSub.next();
+  }
+
+  public didLogout(): void {
+    this.didLogoutSub.next();
+  }
+
+  public isLoggedIn(): boolean {
+    const user = localStorage.getItem('user');
+    if (user) {
+      return true;
+    }
+    return false;
   }
 
   public changePassword(newPassword1Value): Observable<any>{
+<<<<<<< HEAD
     console.log(newPassword1Value);
     this.http.post(URL + 'users/change-password' , newPassword1Value).subscribe(console.log);
    return this.http.post(URL + 'users/change-password' , newPassword1Value);
+=======
+    return this.http.post(URL + 'users/change-password' , newPassword1Value);
+  }
+
+  public getLoggedInUser(): Observable<User> {
+    return this.http.get<User>('/api/users/current');
+  }
+
+  public storeUser(user: User): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  public deleteUser(): void {
+    localStorage.removeItem('user');
+>>>>>>> 937d59acffdf4ff74df4e627c71c4d88e58415dd
   }
 }

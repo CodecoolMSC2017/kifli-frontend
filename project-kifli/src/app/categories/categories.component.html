@@ -1,0 +1,27 @@
+<app-message *ngIf="errorMessage" [message]="errorMessage"></app-message>
+<div class="category-body" *ngIf="!errorMessage">
+  <app-message *ngIf="responseMessage" [message]="responseMessage"></app-message>
+  <input class="input-field" [(ngModel)]="categoryName" placeholder="Category name">
+  <table>
+    <tr>
+      <th>Attribute Name</th>
+      <th>Type</th>
+      <th>Remove</th>
+    </tr>
+    <tr *ngFor="let attribute of attributes">
+      <td class="first-td">{{ attribute.name }}</td>
+      <td class="type-td">{{ attribute.type }}</td>
+      <td class="last-td" (click)="removeAttribute(attribute)">Remove</td>
+    </tr>
+  </table>
+  <input class="input-field" [(ngModel)]="attributeName" placeholder="Attribute name">
+  <br>
+  <input type="radio" name="categoryType" value="Text" checked>Text
+  <input type="radio" name="categoryType" value="Number">Number
+  <input type="radio" name="categoryType" value="Yes/No">Yes/No
+  <p *ngIf="inputErrorMessage">{{ inputErrorMessage }}</p>
+  <br>
+  <button (click)="addAttribute()">Add attribute</button>
+  <br>
+  <button (click)="submit()">Add this category</button>
+</div>

@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from './product';
+import { Product } from './model/product';
+import { SearchService } from './search.service';
+import { ProductListDto } from './model/productListDto';
+import { Category } from './model/category';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  constructor(private http: HttpClient) { }
-
-  public getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>('/api/products');
-  }
+  constructor(
+    private http: HttpClient,
+    private searchService: SearchService
+  ) { }
 
   public getProductById(id): Observable<Product> {
     return this.http.get<Product>('/api/products/' + id);
@@ -26,39 +28,31 @@ export class ProductService {
     return this.http.delete('/api/products/' + id);
   }
 
-  public search(
-    searchTitle: string,
-    categoryId: string,
-    minimumPrice: string,
-    maximumPrice: string
-  ): Observable<Product[]> {
-    return this.http.get<Product[]>(
-      '/api/products/search',
-      {
-        params: {
-          search: searchTitle,
-          categoryId: categoryId,
-          minimumPrice: minimumPrice,
-          maximumPrice: maximumPrice
-        }
-      }
+  public search(): Observable<ProductListDto> {
+    const httpParams: HttpParams = this.searchService.getHttpParams();
+    return this.http.get<ProductListDto>('/api/products', {params: httpParams});
+  }
+
+  public postProduct(product: {}): Observable<Product> {
+    return this.http.post<Product>('/api/products', product);
+  }
+
+  public getUserProducts(id): Observable<ProductListDto> {
+    return this.http.get<ProductListDto>('/api/products/user/' + id);
+  }
+
+  public getAllCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>('/api/categories');
+  }
+
+  public addCategory(categoryName: string, attributes: {}): Observable<any> {
+    return this.http.post('/api/categories', {name: categoryName, attributes: attributes});
+  }
+
+  public sendFile(file: File, productId: number): Observable<any> {
+    return this.http.post('/api/images', file,
+      {headers: {productId: productId.toString()}}
     );
-  }
-
-  public getAllCategories(): Observable<any> {
-    return this.http.get('/api/categories');
-  }
-
-  public postProduct(product: {}): Observable<any> {
-    return this.http.post('/api/products', product);
-  }
-
-  public getUserProducts(id): Observable<Product[]> {
-    return this.http.get<Product[]>('/api/products/user/' + id);
-  }
-
-  public findAllByCategoryId(id): Observable<any> {
-    return this.http.get('/api/products/category/' + id);
   }
 
 }
