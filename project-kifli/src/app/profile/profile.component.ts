@@ -6,6 +6,8 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UserService } from '../user.service';
+import { AuthService } from '../auth.service';
 
 
 
@@ -37,7 +39,10 @@ export class ProfileComponent implements OnInit {
   newPassword: String;
 
   constructor(
-    private http: HttpClient) {}
+    private http: HttpClient,
+    private userService: UserService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.getUser();
@@ -65,9 +70,19 @@ export class ProfileComponent implements OnInit {
   submit(newPassword1, newPassword2) {
     if(newPassword1.value === newPassword2.value) {  
     console.log("New PAss OK " + newPassword1.value);
+    this.changePassword(newPassword1.value, newPassword2.value);
     } else {
       console.log("New pass not the same")
     }
+  }
+
+  changePassword(newPassword1Value1, newPassword1Value2) {
+    const passwordJson: any = {};
+    passwordJson.oldPassword = "aa";
+    passwordJson.newPassword = newPassword1Value1;
+    passwordJson.confirmationPassword = newPassword1Value2;
+    console.log("json password " + passwordJson)
+    this.userService.changePassword(passwordJson).subscribe();
   }
 
   /*addHero (hero: Hero): Observable<Hero> {

@@ -75,6 +75,8 @@ export class UserService {
   }
 
   public changePassword(newPassword1Value): Observable<any>{
+    console.log(newPassword1Value);
+    this.http.post(URL + 'users/change-password' , newPassword1Value).subscribe(console.log);
    return this.http.post(URL + 'users/change-password' , newPassword1Value);
   }
 }
