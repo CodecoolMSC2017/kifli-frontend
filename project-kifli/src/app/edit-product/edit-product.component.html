@@ -22,7 +22,7 @@
   <!--
     <input type="file" id="file-input" accept=".jpg, .jpeg" multiple>
   -->
-  <!-- visible editing existing product -->
+  <!-- visible when editing existing product -->
   <div *ngIf="!newProduct">
     Type: {{ product.type }}<br>
     Category: {{ product.categoryName }}
@@ -36,9 +36,9 @@
           <input [(ngModel)]="product.attributes[attribute.name]" type="number">
         </td>
         <td *ngIf="attribute.type === 'BOOL'">
-          <input name="{{ attribute.name }}" type="radio" value="true"
+          <input name="{{ attribute.id }}" type="radio" value="true"
             [attr.checked]="product.attributes[attribute.name] === 'true' ? true : null">Yes
-          <input name="{{ attribute.name }}" type="radio" value="false"
+          <input name="{{ attribute.id }}" type="radio" value="false"
             [attr.checked]="product.attributes[attribute.name] === 'false' ? true : null">No
         </td>
       </tr>

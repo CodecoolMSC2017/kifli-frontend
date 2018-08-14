@@ -1,1 +1,7 @@
-<app-edit-product *ngIf="product" [product]="product"></app-edit-product>
+<div *ngIf="errorMessage">
+    <app-message [message]="errorMessage"></app-message>
+</div>
+<div *ngIf="product && !errorMessage">
+    <app-edit-product [product]="product"></app-edit-product>
+    <button (click)="delete()">Delete</button>
+</div>

@@ -20,7 +20,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
   private categories: Category[];
   private selectedCategory: Category;
   private selectedCategoryString: string;
-  private errorMessage: string;
+  private errorMessage: string = 'Loading...';
   private message: string;
   private inputErrorMessage: string;
   private categoryInputErrorMessage: string;
@@ -39,7 +39,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.errorMessage = 'Loading...';
     if (this.userService.isLoggedIn()) {
       this.getCategories();
       if (this.product.id) {
@@ -133,7 +132,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     for (let attributeName of Object.keys(this.product.attributes)) {
       const attribute: CategoryAttribute = this.findAttributeByName(attributeName);
       if (attribute.type === 'BOOL') {
-        const inputNodes: NodeListOf<Element> = document.querySelectorAll('input[name=' + attribute.name + ']');
+        const inputNodes: NodeListOf<Element> = document.querySelectorAll('input[name=\'' + attribute.id + '\']');
         for (let i = 0; i < inputNodes.length; i++) {
           const node: any = inputNodes.item(i);
           if (node.checked) {

@@ -105,8 +105,10 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   private onError(err): Observable<any> {
     if (err.status >= 500) {
       this.message = err.status + ': server error, try refreshing the page later';
+    } else if (err.status === 401) {
+      this.onLogoutResponse();
     } else {
-      this.message = err.status + ': something went wrong... try again later'
+      this.message = err.status + ': something went wrong... try refreshing the page later';
     }
     return of();
   }
