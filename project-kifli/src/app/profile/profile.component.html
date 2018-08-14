@@ -43,9 +43,11 @@
   </table>
 
   <h3>Change your password</h3>
+  <input placeholder="old password" #oldPassword>
+  <br/>
   <input placeholder="new password 1" #newPassword1>
   <br/>
   <input placeholder="new password 2" #newPassword2>
-  <button (click)="submit(newPassword1, newPassword2)">Submmit</button>
+  <button (click)="submit(oldPassword, newPassword1, newPassword2)">Submmit</button>
 
 </div>

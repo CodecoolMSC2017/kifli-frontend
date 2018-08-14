@@ -102,7 +102,7 @@ export class UserService {
   }
 
   public changePassword(newPassword1Value): Observable<any>{
-    return this.http.post(URL + 'users/change-password' , newPassword1Value);
+    return this.http.post('api/users/change-password', newPassword1Value);
   }
 
   public getLoggedInUser(): Observable<User> {
