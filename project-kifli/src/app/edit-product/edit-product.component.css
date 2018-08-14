@@ -1,16 +1,109 @@
+.placeAd-table {
+    background: rgb(211, 208, 208);
+    border-radius:3px;
+    border-collapse: collapse;
+    margin: auto;
+    padding:5px;
+    width: 60%;
+    box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
+    animation: float 5s infinite;
+  }
+  
+  .placeAd-table table {
+      width: 100%;
+      box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
+  }
+  
+  .placeAd-table td.first-td {
+    color:rgb(6, 8, 10);
+    background: linear-gradient(to top, #039b03 0%, #00ff08 100%);
+    border-bottom:4px solid #9ea7af;
+    border-right: 1px solid #343a45;
+    font-size:20px;
+    font-weight: 100;
+    padding:20px;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    vertical-align:middle;
+  }
+  
+  .placeAd-table th:first-child {
+    border-top-left-radius:3px;
+  }
+  
+  .placeAd-table th:last-child {
+    border-top-right-radius:3px;
+    border-right:none;
+  }
+  
+  .placeAd-table tr {
+    border-top: 1px solid #C1C3D1;
+    border-bottom: 1px solid #C1C3D1;
+    color:#666B85;
+    font-size:16px;
+    font-weight:normal;
+    text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+  }
+  
+  .placeAd-table td {
+    background:#EBEBEB;
+  }
+  
+  .placeAd-table td.first-td {
+    border-top-left-radius:35px;
+    border-bottom-left-radius:35px;
+  }
+  
+  .placeAd-table td {
+    background: rgb(211, 208, 208);
+    padding:20px;
+    text-align: center;
+    vertical-align:middle;
+    font-weight:300;
+    font-size:18px;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #C1C3D1;
+  }
+  
+  .placeAd-table td.sched-counter-td {
+    border-left: 1px solid #C1C3D1;
+  }
+  
+  .placeAd-table td:last-child {
+      width: 52%;
+  }
+  
+  .placeAd-table td:first-child {
+      width: 8%;
+  }
+  
+  .placeAd-table tr:nth-child(odd) td:last-child {
+    background:#EBEBEB;
+  }
+  
+  .placeAd-table tr:nth-child(odd) td.change-button:hover {
+    background:#4E5066;
+  }
+
+
 button {
-    background: linear-gradient(to top, #039b03 0%, #02cf09 100%);
+    background-color: #4CAF50;
     border: none;
     color: white;
-    padding: 12px 24px;
+    padding: 14px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 4px;
+    margin: 8px 0;
     -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
     cursor: pointer;
+    width: 100%;
+    border-radius:5px;
+}
+
+button {
     background-color: rgb(56, 190, 3); 
     color: black; 
 }
@@ -18,4 +111,68 @@ button {
 button:hover {
     background-color: rgb(83, 224, 88);
     color: white;
+}
+
+/*prof-name-input*/
+.placeAd-title-input {
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+    padding: 10px 1%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0px;
+    cursor: auto;
+    width: 70%;
+}
+
+.placeAd-description-input {
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+    padding: 10px 1%;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0px;
+    cursor: auto;
+    width: 70%;
+    height: 100px;
+}
+
+.placeAd-row-input-td input:focus {
+    background-color: #3cd13c;
+    color: black;
+    transition-duration: 0.4s;
+}
+
+.placeAd-row-input-td input:focus::-webkit-input-placeholder {
+    color: #555555;
+    transition-duration: 0.4s;
+}
+
+.placeAd-row-input-td textarea:focus {
+    background-color: #3cd13c;
+    color: black;
+    transition-duration: 0.4s;
+}
+
+.placeAd-row-input-td textarea:focus::-webkit-textarea-placeholder {
+    color: #555555;
+    transition-duration: 0.4s;
+}
+
+.placeAd-row-input-td {
+    margin: 5px;
+    padding: 5px;
+    width: 90%;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }

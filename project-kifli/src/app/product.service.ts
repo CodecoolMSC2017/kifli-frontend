@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Product } from './model/product';
 import { SearchService } from './search.service';
 import { ProductListDto } from './model/productListDto';
@@ -10,6 +10,9 @@ import { Category } from './model/category';
   providedIn: 'root'
 })
 export class ProductService {
+
+  private editedProduct = new Subject<Product>();
+  public editedProduct$ = this.editedProduct.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -53,6 +56,14 @@ export class ProductService {
     return this.http.post('/api/images', file,
       {headers: {productId: productId.toString()}}
     );
+  }
+
+  public updateProduct(product: Product): Observable<any> {
+    return this.http.put('/api/products', product);
+  }
+
+  public productEdited(product: Product): void {
+    this.editedProduct.next(product);
   }
 
 }

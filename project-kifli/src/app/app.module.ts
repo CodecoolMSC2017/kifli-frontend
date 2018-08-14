@@ -19,6 +19,7 @@ import { MyadsComponent } from './myads/myads.component';
 import { MessageComponent } from './message/message.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
+import { EditProductWrapperComponent } from './edit-product-wrapper/edit-product-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { EditProductComponent } from './edit-product/edit-product.component';
     MyadsComponent,
     MessageComponent,
     CategoriesComponent,
-    EditProductComponent
+    EditProductComponent,
+    EditProductWrapperComponent
   ],
   imports: [
     BrowserModule,

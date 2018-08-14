@@ -8,6 +8,7 @@ export class Product {
     uploadDate: string;
     premiumExpirationDate: string;
     pictureIds: Array<number>;
+    categoryId: number;
     categoryName: string;
     attributes: {};
     ownerId: number;

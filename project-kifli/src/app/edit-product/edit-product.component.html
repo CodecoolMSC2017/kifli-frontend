@@ -1,6 +1,7 @@
-<app-message *ngIf="errorMessage" [message]="errorMessage"></app-message>
-<div *ngIf="!errorMessage && product">
-  <button (click)="deleteProduct()">Delete</button>
+<div *ngIf="errorMessage">
+  <app-message [message]="errorMessage"></app-message>
+</div>
+<div class="placeAd-table" *ngIf="!errorMessage">
   <table>
     <tr>
       <td class="first-td">Title:</td>
@@ -15,4 +16,67 @@
       <td class="placeAd-row-input-td"><input class="placeAd-title-input" [(ngModel)]="product.price" type="number"></td>
     </tr>
   </table>
+  <p *ngIf="inputErrorMessage">
+    {{ inputErrorMessage }}
+  </p>
+  <!--
+    <input type="file" id="file-input" accept=".jpg, .jpeg" multiple>
+  -->
+  <!-- visible editing existing product -->
+  <div *ngIf="!newProduct">
+    Type: {{ product.type }}<br>
+    Category: {{ product.categoryName }}
+    <table>
+      <tr *ngFor="let attribute of selectedCategory.attributes">
+        <td>{{ attribute.name }}</td>
+        <td *ngIf="attribute.type === 'STRING'">
+          <input [(ngModel)]="product.attributes[attribute.name]">
+        </td>
+        <td *ngIf="attribute.type === 'NUMBER'">
+          <input [(ngModel)]="product.attributes[attribute.name]" type="number">
+        </td>
+        <td *ngIf="attribute.type === 'BOOL'">
+          <input name="{{ attribute.name }}" type="radio" value="true"
+            [attr.checked]="product.attributes[attribute.name] === 'true' ? true : null">Yes
+          <input name="{{ attribute.name }}" type="radio" value="false"
+            [attr.checked]="product.attributes[attribute.name] === 'false' ? true : null">No
+        </td>
+      </tr>
+    </table>
+    <button (click)="updateProduct()">Save</button>
+  </div>
+  <!-- visible when adding new product -->
+  <div *ngIf="newProduct">
+    <div id="ad-type-input">
+      <input type="radio" name="ad-type" value="BUYOUT" checked>Buyout
+      <input type="radio" name="ad-type" value="AUCTION">Auction
+    </div>
+    <p>
+      Choose a category:
+      <select [(ngModel)]="selectedCategoryString" (change)="setSelectedCategory()">
+        <option *ngFor="let category of categories" value="{{ category | json }}">{{ category.name }}</option>
+      </select>
+    </p>
+    <div *ngIf="selectedCategory">
+      <table>
+        <tr *ngFor="let attribute of selectedCategory.attributes">
+          <td class="first-td">{{ attribute.name }}: </td>
+          <td class="placeAd-row-input-td" *ngIf="attribute.type === 'STRING'">
+            <input class="attribute-input placeAd-title-input">
+          </td>
+          <td class="placeAd-row-input-td" *ngIf="attribute.type === 'NUMBER'">
+            <input class="attribute-input placeAd-title-input" type="number">
+          </td>
+          <td *ngIf="attribute.type === 'BOOL'" class="attribute-input">
+            <input name="{{ attribute.name }}" type="radio" value="true" checked>Yes
+            <input name="{{ attribute.name }}" type="radio" value="false">No
+          </td>
+        </tr>
+      </table>
+      <p *ngIf="categoryInputErrorMessage">
+        {{ categoryInputErrorMessage }}
+      </p>
+      <button id="place-ad-buttom" (click)="save()">Place ad</button>
+    </div>
+  </div>
 </div>
