@@ -78,3 +78,7 @@ table td:last-child {
     border: 10px solid #2fbc50;
     box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.5);
 }
+
+#response {
+    color: red;
+}

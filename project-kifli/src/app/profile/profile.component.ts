@@ -38,6 +38,7 @@ export class ProfileComponent implements OnInit {
   street: String;
   newPassword: String;
   private errorMessage: string;
+  private response: string;
 
   constructor(
     private http: HttpClient,
@@ -97,7 +98,10 @@ export class ProfileComponent implements OnInit {
     passwordJson.newPassword = newPassword1Value1;
     passwordJson.confirmationPassword = newPassword1Value2;
     console.log("json password " + passwordJson)
-    this.userService.changePassword(passwordJson).subscribe();
+    this.userService.changePassword(passwordJson).subscribe(response => {
+      console.log(response)
+      this.response = response.message;
+    });
   }
 
   /*addHero (hero: Hero): Observable<Hero> {
