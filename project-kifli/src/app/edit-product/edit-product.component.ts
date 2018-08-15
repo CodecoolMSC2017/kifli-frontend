@@ -1,10 +1,8 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Product } from '../model/product';
 import { ProductService } from '../product.service';
-import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
-import { Observable, of, Subscription } from 'rxjs';
-import { UserService } from '../user.service';
+import { Observable, of } from 'rxjs';
 import { CategoryAttribute } from '../model/category-attribute';
 import { Category } from '../model/category';
 
@@ -13,15 +11,12 @@ import { Category } from '../model/category';
   templateUrl: './edit-product.component.html',
   styleUrls: ['./edit-product.component.css']
 })
-export class EditProductComponent implements OnInit, OnDestroy {
-
-  private loginSubscription: Subscription;
+export class EditProductComponent implements OnInit {
 
   private categories: Category[];
   private selectedCategory: Category;
   private selectedCategoryString: string;
   private errorMessage: string = 'Loading...';
-  private message: string;
   private inputErrorMessage: string;
   private categoryInputErrorMessage: string;
   private newProduct: boolean = true;
@@ -29,39 +24,17 @@ export class EditProductComponent implements OnInit, OnDestroy {
 
   @Input()
   private product: Product;
-  private pictures: File[];
-  private indexOfCurrentPicture: number = 0;
 
   constructor(
-    private productService: ProductService,
-    private userService: UserService,
-    private router: Router
+    private productService: ProductService
   ) { }
 
   ngOnInit() {
-    if (this.userService.isLoggedIn()) {
-      this.getCategories();
-      if (this.product.id) {
-        this.productAttributes = Object.keys(this.product.attributes);
-        this.newProduct = false;
-      }
-    } else {
-      this.onNotLoggedIn();
+    this.getCategories();
+    if (this.product.id) {
+      this.productAttributes = Object.keys(this.product.attributes);
+      this.newProduct = false;
     }
-  }
-
-  ngOnDestroy() {
-    if (this.loginSubscription) {
-      this.loginSubscription.unsubscribe();
-    }
-  }
-
-  private onNotLoggedIn(): void {
-    this.errorMessage = 'You must login first!';
-    this.userService.showLogin();
-    this.loginSubscription = this.userService.didLogin$.subscribe(
-      () => this.ngOnInit()
-    );
   }
 
   private getCategories(): void {
@@ -72,7 +45,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
 
   private onCategoriesReceived(categories: Category[]) {
     this.categories = categories;
-    if (this.product.id) {
+    if (!this.newProduct) {
       this.selectedCategory = this.findCategoryByName(this.product.categoryName);
     }
     this.errorMessage = undefined;
@@ -114,17 +87,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
     if (this.checkBasicData()) {
       return;
     }
-    /*
-    if (this.checkFilesAmount()) {
-      return;
-    }
-    */
-    this.product.title = this.product.title;
-    this.product.description = this.product.description;
-    this.product.price = this.product.price;
-
     this.setBooleanAttributes();
-
     this.productService.productEdited(this.product);
   }
 
@@ -155,14 +118,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
     if (this.checkBasicData()) {
       return;
     }
-    /*
-    if (this.checkFilesAmount()) {
-      return;
-    }
-    */
-    this.product.title = this.product.title;
-    this.product.description = this.product.description;
-    this.product.price = this.product.price;
 
     this.product.type = this.getAdType();
     const attributes = this.getAttributes();
@@ -173,6 +128,9 @@ export class EditProductComponent implements OnInit, OnDestroy {
     this.product.attributes = attributes;
     this.product.categoryId = this.selectedCategory.id;
 
+    if (this.checkFilesAmount()) {
+      return;
+    }
     this.productService.productEdited(this.product);
   }
 
@@ -198,7 +156,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
   }
 
   private checkBasicData(): boolean {
-    if (!this.product.title) {
+    if (!this.product.title || this.product.title.trim() === '') {
       this.inputErrorMessage = 'You must give the ad a title!';
       return true;
     }
@@ -206,7 +164,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
       this.inputErrorMessage = 'The price is not a valid number!';
       return true;
     }
-    this.inputErrorMessage = null;
+    this.inputErrorMessage = undefined;
     return false;
   }
 
@@ -233,8 +191,6 @@ export class EditProductComponent implements OnInit, OnDestroy {
     return of();
   }
 
-  /* Picture handling methods, will be refactored later
-
   private checkFilesAmount(): boolean {
     const fileInputElement: any = document.getElementById('file-input');
     const files: File[] = fileInputElement.files;
@@ -242,45 +198,7 @@ export class EditProductComponent implements OnInit, OnDestroy {
       this.inputErrorMessage = 'You can select maximum 8 pictures!';
       return true;
     }
-    this.inputErrorMessage = null;
+    this.productService.pictures = files;
     return false;
   }
-
-  private onPostProductResponse(product: Product): void {
-    const fileInputElement: any = document.getElementById('file-input');
-    const files: File[] = fileInputElement.files;
-    window.scrollTo(0, document.body.scrollHeight);
-    if (files.length > 0) {
-      this.uploadPictures(files);
-      return;
-    }
-    this.router.navigate(['/products/' + this.product.id]);
-  }
-
-  private uploadPictures(pictures: File[]): void {
-    this.pictures = pictures;
-    this.uploadNexPic();
-  }
-
-  private uploadNexPic(): void {
-    if (this.indexOfCurrentPicture === this.pictures.length) {
-      this.router.navigate(['/products/' + this.product.id]);
-      return;
-    }
-    this.message = 'Uploading picture ' + (this.indexOfCurrentPicture + 1)
-      + '/' + this.pictures.length;
-    this.productService.sendFile(this.pictures[this.indexOfCurrentPicture], this.product.id)
-      .pipe(catchError(err => this.onSendFileError(err)))
-      .subscribe(() => {
-        this.indexOfCurrentPicture++;
-        this.uploadNexPic();
-      }
-    );
-  }
-
-  private onSendFileError(err): Observable<any> {
-    this.message = 'Error sending picture';
-    return of();
-  }
-  */
 }

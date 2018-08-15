@@ -4,6 +4,7 @@ import { ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-edit-product-wrapper',
@@ -12,25 +13,42 @@ import { Observable, of, Subscription } from 'rxjs';
 })
 export class EditProductWrapperComponent implements OnInit, OnDestroy {
 
-  private errorMessage: string = 'Loading...';
+  private errorMessage: string;
   private productEditSub: Subscription;
+  private loginSub: Subscription;
   private product: Product;
 
   constructor(
     private productService: ProductService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.subscribeToProductSave();
-    this.getProduct();
+    this.errorMessage = 'Loading...';
+    if (this.userService.isLoggedIn()) {
+      this.getProduct();
+    } else {
+      this.onNotLoggedIn();
+    }
   }
 
   ngOnDestroy() {
+    if (this.loginSub) {
+      this.loginSub.unsubscribe();
+    }
     if (this.productEditSub) {
       this.productEditSub.unsubscribe();
     }
+  }
+
+  private onNotLoggedIn(): void {
+    this.errorMessage = 'You must login first!';
+    this.userService.showLogin();
+    this.loginSub = this.userService.didLogin$.subscribe(
+      () => this.ngOnInit()
+    );
   }
 
   private subscribeToProductSave(): void {
@@ -57,13 +75,22 @@ export class EditProductWrapperComponent implements OnInit, OnDestroy {
   }
 
   private onProductReceived(product: Product): void {
-    this.product = product;
-    this.errorMessage = undefined;
+    if (product.ownerId === this.userService.getUserId()) {
+      this.subscribeToProductSave();
+      this.product = product;
+      this.errorMessage = undefined;
+    } else {
+      this.errorMessage = 'You can only edit your own ad!';
+    }
   }
 
   private onProductError(err: XMLHttpRequest): Observable<any> {
     if (err.status >= 500) {
       this.errorMessage = err.status + ': server error, try again later';
+    } else if (err.status === 404) {
+      this.errorMessage = '404: ad not found';
+    } else if (err.status === 401) {
+      this.onNotLoggedIn();
     } else {
       this.errorMessage = err.status + ': error loading page, try again later'
     }

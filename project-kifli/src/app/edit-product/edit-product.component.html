@@ -19,9 +19,6 @@
   <p *ngIf="inputErrorMessage">
     {{ inputErrorMessage }}
   </p>
-  <!--
-    <input type="file" id="file-input" accept=".jpg, .jpeg" multiple>
-  -->
   <!-- visible when editing existing product -->
   <div *ngIf="!newProduct">
     Type: {{ product.type }}<br>
@@ -51,6 +48,7 @@
       <input type="radio" name="ad-type" value="BUYOUT" checked>Buyout
       <input type="radio" name="ad-type" value="AUCTION">Auction
     </div>
+    <input type="file" id="file-input" accept=".jpg, .jpeg" multiple>
     <p>
       Choose a category:
       <select [(ngModel)]="selectedCategoryString" (change)="setSelectedCategory()">

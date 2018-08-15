@@ -1,1 +1,7 @@
-<app-edit-product [product]="product"></app-edit-product>
+<div *ngIf="errorMessage">
+    <app-message [message]="errorMessage"></app-message>
+</div>
+<div *ngIf="!errorMessage && product">
+    <app-edit-product [product]="product"></app-edit-product>
+    <app-message *ngIf="message" [message]="message"></app-message>
+</div>
