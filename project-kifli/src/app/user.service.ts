@@ -116,4 +116,8 @@ export class UserService {
   public deleteUser(): void {
     localStorage.removeItem('user');
   }
+
+  public getStoredUser(): User {
+    return JSON.parse(localStorage.getItem('user'));
+  }
 }

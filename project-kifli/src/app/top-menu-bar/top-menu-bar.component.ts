@@ -152,4 +152,8 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
       logOption => this.logOption = logOption
     )
   }
+
+  private navigateToProfile(): void {
+    this.router.navigate(['users/' + this.userService.getUserId()]);
+  }
 }

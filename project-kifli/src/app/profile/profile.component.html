@@ -1,44 +1,44 @@
-<div id="profile-info" class="center">
+<app-message *ngIf="errorMessage" [message]="errorMessage"></app-message>
+<div *ngIf="!errorMessage" id="profile-info" class="center">
   <h2 class="center">
     My profile
   </h2>
-
-  <table>
+  <table *ngIf="user">
     <tr>
       <td>Username:</td>
-      <td>{{ userName }}</td>
+      <td>{{ user.username }}</td>
     </tr>
     <tr>
       <td>Email:</td>
-      <td>{{ userEmail }}</td>
+      <td>{{ user.email }}</td>
     </tr>
     <tr>
       <td>Firstname:</td>
-      <td>{{ userFirstName }}</td>
+      <td>{{ user.firstName }}</td>
     </tr>
     <tr>
       <td>Lastname:</td>
-      <td>{{ userLastName }}</td>
+      <td>{{ user.lastName }}</td>
     </tr>
     <tr>
       <td>Phone:</td>
-      <td>{{ phone }}</td>
+      <td>{{ user.credentials.phone }}</td>
     </tr>
     <tr>
       <td>Country:</td>
-      <td>{{ country }}</td>
+      <td>{{ user.credentials.country }}</td>
     </tr>
     <tr>
       <td>State:</td>
-      <td>{{ state }}</td>
+      <td>{{ user.credentials.state }}</td>
     </tr>
     <tr>
       <td>City:</td>
-      <td>{{ city }}</td>
+      <td>{{ user.credentials.city }}</td>
     </tr>
     <tr>
       <td>Street:</td>
-      <td>{{ street }}</td>
+      <td>{{ user.credentials.street }}</td>
     </tr>
   </table>
 

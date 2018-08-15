@@ -1,52 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Credentials} from '../model/credentials';
-import { BrowserModule } from '@angular/platform-browser'; 
-import { HttpModule } from '@angular/http';
-import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../user.service';
-import { AuthService } from '../auth.service';
-
-
+import { User } from '../model/user';
+import { Subscription, Observable, of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
+export class ProfileComponent implements OnInit, OnDestroy {
 
-@NgModule({
-    imports: [     
-      BrowserModule,
-      HttpClientModule,
-    ]
-  }) 
-
-export class ProfileComponent implements OnInit {
-  profile;
-  userId: String;
-  userName: String;
-  userEmail: String;
-  userFirstName: String;
-  userLastName: String;
-  phone: String;
-  country: String;
-  state: String;
-  city: String;
-  street: String;
-  newPassword: String;
+  private user: User;
+  private loginSub: Subscription;
+  private newPassword: String;
   private errorMessage: string;
   private response: string;
 
   constructor(
-    private http: HttpClient,
     private userService: UserService,
-    private authService: AuthService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.errorMessage = 'Loading...';
     if (this.userService.isLoggedIn()) {
       this.getUser();
     } else {
@@ -54,36 +32,46 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    if (this.loginSub) {
+      this.loginSub.unsubscribe();
+    }
+  }
+
+  private getUser(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.userService.getUserById(id).pipe(
+      catchError(err => this.onGetUserError(err))
+    ).subscribe(user => this.onUserResponse(user));
+  }
+
+  private onUserResponse(user: User): void {
+    this.errorMessage = undefined;
+    this.user = user;
+  }
+
+  private onGetUserError(err: XMLHttpRequest): Observable<any> {
+    if (err.status >= 500) {
+      this.errorMessage = err.status + ': server error, try again later...';
+    } else if (err.status === 401) {
+      this.onNotLoggedIn();
+    } else if (err.status === 404) {
+      this.errorMessage = err.status + ': user not found!';
+    } else {
+      this.errorMessage = err.status + ': error loading page, try again later...';
+    }
+    return of();
+  }
+
   private onNotLoggedIn(): void {
     this.errorMessage = 'You must login first!';
     this.userService.showLogin();
-    this.userService.didLogin$.subscribe(
-      () => {
-        this.errorMessage = undefined;
-        this.ngOnInit();
-      }
+    this.loginSub = this.userService.didLogin$.subscribe(
+      () => this.ngOnInit()
     );
   }
 
-  
-  public getUser() {
-     
-    let userString = localStorage.getItem("user");
-    let userObject = JSON.parse(userString);
-    this.userId = userObject.id;
-    this.userName = userObject.username;
-    this.userEmail = userObject.email;
-    this.userFirstName = userObject.firstName;
-    this.userLastName = userObject.lastName;
-    let credentials = userObject.credentials;
-    this.phone = credentials.phone;
-    this.country = credentials.country;
-    this.state = credentials.state;
-    this.city = credentials.city;
-    this.street = credentials.street;
-  }
-
-  submit(oldPassword, newPassword1, newPassword2) {
+  private submit(oldPassword, newPassword1, newPassword2) {
     if(newPassword1.value === newPassword2.value) {  
     console.log("New PAss OK " + newPassword1.value);
     this.changePassword(oldPassword.value, newPassword1.value, newPassword2.value);
@@ -92,7 +80,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  changePassword(oldPasswordValue, newPassword1Value1, newPassword1Value2) {
+  private changePassword(oldPasswordValue, newPassword1Value1, newPassword1Value2) {
     const passwordJson: any = {};
     passwordJson.oldPassword = oldPasswordValue;
     passwordJson.newPassword = newPassword1Value1;
@@ -103,18 +91,5 @@ export class ProfileComponent implements OnInit {
       this.response = response.message;
     });
   }
-
-  /*addHero (hero: Hero): Observable<Hero> {
-    return this.http.post<Hero>(this.heroesUrl, hero, httpOptions)
-      .pipe(
-        catchError(this.handleError('addHero', hero))
-      );
-  } */
-
-  /*doPOST() {
-    console.log("POST");
-    let url = `api/change-password`;
-    this.http.post(url, {moo:"foo",goo:"loo"}).subscribe(res);
-  }*/
 
 }
