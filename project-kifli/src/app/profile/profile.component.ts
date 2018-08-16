@@ -4,6 +4,7 @@ import { User } from '../model/user';
 import { Subscription, Observable, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { catchError } from 'rxjs/operators';
+import { PasswordChangeData } from '../model/password-change-data';
 
 @Component({
   selector: 'app-profile',
@@ -13,10 +14,14 @@ import { catchError } from 'rxjs/operators';
 export class ProfileComponent implements OnInit, OnDestroy {
 
   private user: User;
+  private userCopy: User;
   private loginSub: Subscription;
-  private newPassword: String;
   private errorMessage: string;
-  private response: string;
+  private isOwnProfile: boolean;
+  private editProfile: boolean;
+  private changingPassword: boolean = false;
+  private passwordChangeData: PasswordChangeData;
+  private passwordChangeMessage: string;
 
   constructor(
     private userService: UserService,
@@ -40,6 +45,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   private getUser(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    this.isOwnProfile = Number(id) === this.userService.getUserId();
     this.userService.getUserById(id).pipe(
       catchError(err => this.onGetUserError(err))
     ).subscribe(user => this.onUserResponse(user));
@@ -71,25 +77,78 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
   }
 
-  private submit(oldPassword, newPassword1, newPassword2) {
-    if(newPassword1.value === newPassword2.value) {  
-    console.log("New PAss OK " + newPassword1.value);
-    this.changePassword(oldPassword.value, newPassword1.value, newPassword2.value);
-    } else {
-      console.log("New pass not the same")
+  private edit(): void {
+    if (!this.editProfile) {
+      this.copyUser();
     }
+    this.editProfile = !this.editProfile;
   }
 
-  private changePassword(oldPasswordValue, newPassword1Value1, newPassword1Value2) {
-    const passwordJson: any = {};
-    passwordJson.oldPassword = oldPasswordValue;
-    passwordJson.newPassword = newPassword1Value1;
-    passwordJson.confirmationPassword = newPassword1Value2;
-    console.log("json password " + passwordJson)
-    this.userService.changePassword(passwordJson).subscribe(response => {
-      console.log(response)
-      this.response = response.message;
-    });
+  private copyUser(): void {
+    this.userCopy = JSON.parse(JSON.stringify(this.user));
+  }
+
+  private changePassword(): void {
+    if (this.checkPasswords()) {
+      return;
+    }
+    this.userService.changePassword(this.passwordChangeData).pipe(
+      catchError(err => this.onPasswordChangeError(err))
+    ).subscribe(() => this.onPasswordChanged());
+  }
+
+  private checkPasswords(): boolean {
+    if (!this.passwordChangeData.oldPassword || !this.passwordChangeData.oldPassword.trim()) {
+      this.passwordChangeMessage = 'Old password can\'t be empty!';
+      return true;
+    }
+    if (!this.passwordChangeData.newPassword || !this.passwordChangeData.newPassword.trim()) {
+      this.passwordChangeMessage = 'New password can\'t be empty!';
+      return true;
+    }
+    if (this.passwordChangeData.confirmationPassword !== this.passwordChangeData.newPassword) {
+      this.passwordChangeMessage = 'Confirmation password does not match new password!';
+      return true;
+    }
+    return false;
+  }
+
+  private onPasswordChanged(): void {
+    this.passwordChangeMessage = 'Password changed!';
+  }
+
+  private onPasswordChangeError(err: XMLHttpRequest): Observable<any> {
+    if (err.status >= 500) {
+      this.passwordChangeMessage = err.status + ': server error';
+    } else if (err.status === 400) {
+      this.passwordChangeMessage = 'Incorrect password!';
+    } else {
+      this.passwordChangeMessage = err.status + ': error';
+    }
+    return of();
+  }
+
+  private onChangePasswordClicked(): void {
+    this.passwordChangeData = new PasswordChangeData();
+    this.passwordChangeMessage = undefined;
+    this.changingPassword = true;
+  }
+
+  private saveProfile(): void {
+    this.userService.updateUser(this.userCopy).pipe(
+      catchError(err => this.onUpdateUserError(err))
+    ).subscribe(user => this.onUserUpdated(user));
+  }
+
+  private onUserUpdated(user: User): void {
+    this.userService.storeUser(user);
+    this.user = user;
+    this.editProfile = false;
+  }
+
+  private onUpdateUserError(err: XMLHttpRequest): Observable<any> {
+    console.log(err);
+    return of();
   }
 
 }

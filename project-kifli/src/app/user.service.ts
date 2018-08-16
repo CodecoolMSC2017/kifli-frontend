@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from './model/user';
+import { PasswordChangeData } from './model/password-change-data';
 
 const URL = '/api/';
 
@@ -101,8 +102,8 @@ export class UserService {
     return false;
   }
 
-  public changePassword(newPassword1Value): Observable<any>{
-    return this.http.post('api/users/change-password', newPassword1Value);
+  public changePassword(passwordChangeData: PasswordChangeData): Observable<any> {
+    return this.http.post('api/users/change-password', passwordChangeData);
   }
 
   public getLoggedInUser(): Observable<User> {
@@ -119,5 +120,9 @@ export class UserService {
 
   public getStoredUser(): User {
     return JSON.parse(localStorage.getItem('user'));
+  }
+
+  public updateUser(user: User): Observable<User> {
+    return this.http.put<User>('/api/users', user);
   }
 }
