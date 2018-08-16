@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,6 +22,27 @@ import { CategoriesComponent } from './categories/categories.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { EditProductWrapperComponent } from './edit-product-wrapper/edit-product-wrapper.component';
 
+import {
+  GoogleApiModule, 
+  GoogleApiService, 
+  GoogleAuthService, 
+  NgGapiClientConfig, 
+  NG_GAPI_CONFIG,
+  GoogleApiConfig
+} from 'ng-gapi';
+
+let gapiClientConfig: NgGapiClientConfig = {
+  client_id: "222157294364-s0r226g6ue92bp6n78iaqcthjbohi3pp.apps.googleusercontent.com",
+  discoveryDocs: ["https://analyticsreporting.googleapis.com/$discovery/rest?version=v4"],
+  scope: [
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/drive.readonly",
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/spreadsheets.readonly"
+  ].join(" ")
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,9 +62,14 @@ import { EditProductWrapperComponent } from './edit-product-wrapper/edit-product
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    GoogleApiModule.forRoot({
+      provide: NG_GAPI_CONFIG,
+      useValue: gapiClientConfig
+    }),
   ],
   providers: [
     httpInterceptorProviders

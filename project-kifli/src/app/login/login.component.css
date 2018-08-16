@@ -23,6 +23,20 @@
     opacity: 0.8;
 }
 
+.google-login-button {
+    background-color: #4D90FE;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: 1px solid #3079ED;
+    cursor: pointer;
+    width: 100%;
+}
+
+.google-login-button:hover {
+    opacity: 0.8;
+}
+
 .login-span {
     background-color: #4CAF50;
     color: white;

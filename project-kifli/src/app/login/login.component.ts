@@ -5,6 +5,8 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { UserService } from '../user.service';
 import { User } from '../model/user';
+import { GoogleAuthService } from 'ng-gapi';
+import { GoogleApiService } from 'ng-gapi';
 
 @Component({
   selector: 'app-login',
@@ -16,12 +18,20 @@ export class LoginComponent implements OnInit {
   public userName: string;
   public password: string;
   public errorMessage: string;
+  
+  /*public sheetId: string;
+  public sheet: any;
+  public soundSheet: any;*/
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private googleAuthService: GoogleAuthService,
+    private gapiService: GoogleApiService
+  ) {
+    this.gapiService.onLoad().subscribe();
+  }
 
   ngOnInit() {
   }
@@ -52,5 +62,27 @@ export class LoginComponent implements OnInit {
   private regStyle() {
     document.getElementById('login-container').style.display='none';
     document.getElementById('register-container').style.display='block';
+  }
+
+  /*public isLoggedIn(): boolean {
+    return this.userService.isUserSignedIn();
+  }*/
+
+  /*public signIn() {
+    this.googleAuthService.getAuth().subscribe((auth) => {
+      if (auth.isSignedIn.get()) {
+        console.log(auth.currentUser.get().getBasicProfile())
+      } else {
+        auth.signIn().then((response) => {
+          console.log(response.getBasicProfile());
+        })
+      }
+    })
+  }*/
+
+  public signIn() {
+    this.authService.getGoogleAuth().pipe(
+      catchError(err => this.onLoginError(err))
+    ).subscribe(user => this.onLoginResponse(user));
   }
 }
