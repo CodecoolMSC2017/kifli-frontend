@@ -39,7 +39,7 @@ table tr {
 
 table td.first-td {
     color:rgb(6, 8, 10);
-    background: linear-gradient(to top, #039b03 0%, #00ff08 100%);
+    background: linear-gradient(to top, black 0,1%, #039b03 25%, #00ff08 100%);
     border-bottom:4px solid #9ea7af;
     border-right: 1px solid #343a45;
     font-size:20px;

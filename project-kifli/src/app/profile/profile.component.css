@@ -34,7 +34,7 @@ table tr {
 
 table td:first-child {
     color:rgb(6, 8, 10);
-    background: linear-gradient(to top, #039b03 0%, #00ff08 100%);
+    background: linear-gradient(to top, black 0,1%, #039b03 25%, #00ff08 100%);
     border-bottom:4px solid #9ea7af;
     border-right: 1px solid #343a45;
     font-size:20px;
@@ -81,4 +81,76 @@ table td:last-child {
 
 #response {
     color: red;
+}
+
+button {
+    background: linear-gradient(to top, #039b03 0%, #02cf09 100%);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 4px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: rgb(56, 190, 3); 
+    color: black; 
+}
+
+button:hover {
+    background-color: rgb(83, 224, 88);
+    color: white;
+}
+
+.edit-input {
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+    padding: 10px 1%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0px;
+    cursor: auto;
+    width: 70%;
+}
+
+.change-password {
+    color:rgb(6, 8, 10);
+    background: rgb(211, 208, 208);
+    border-bottom:4px solid #9ea7af;
+    border-right: 1px solid #343a45;
+    font-size:20px;
+    font-weight: 100;
+    padding:10px;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    vertical-align:middle;
+    width: 60%;
+}
+
+.change-password input:focus {
+    background-color: #3cd13c;
+    color: black;
+    transition-duration: 0.4s;
+}
+
+.change-password input:focus::-webkit-input-placeholder {
+    color: #555555;
+    transition-duration: 0.4s;
+}
+
+.edit-profile-td input:focus {
+    background-color: #3cd13c;
+    color: black;
+    transition-duration: 0.4s;
+}
+
+.edit-profile-td input:focus::-webkit-input-placeholder {
+    color: #555555;
+    transition-duration: 0.4s;
 }
