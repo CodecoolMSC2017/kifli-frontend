@@ -128,7 +128,6 @@ export class UserService {
     localStorage.removeItem('user');
   }
 
-<<<<<<< HEAD
   /*public setGoogleUser(gUser: GoogleUser): void {
     this.gUser = gUser;
   }
@@ -178,7 +177,7 @@ export class UserService {
   private signInErrorHandler(err) {
     console.warn(err);
   }*/
-=======
+  
   public getStoredUser(): User {
     return JSON.parse(localStorage.getItem('user'));
   }
@@ -186,5 +185,4 @@ export class UserService {
   public updateUser(user: User): Observable<User> {
     return this.http.put<User>('/api/users', user);
   }
->>>>>>> 91bda6f44135e10f6d4763e800a11c4e6cf0abad
 }
