@@ -1,53 +1,82 @@
-<div id="profile-info" class="center">
+<app-message *ngIf="errorMessage" [message]="errorMessage"></app-message>
+<div *ngIf="!errorMessage && !changingPassword" id="profile-info" class="center">
   <h2 class="center">
-    My profile
+    Profile of {{ user.firstName }} {{ user.lastName }}
   </h2>
-
-  <table>
+  <table *ngIf="user">
     <tr>
       <td>Username:</td>
-      <td>{{ userName }}</td>
+      <td>{{ user.username }}</td>
     </tr>
     <tr>
       <td>Email:</td>
-      <td>{{ userEmail }}</td>
+      <td *ngIf="!editProfile">{{ user.email }}</td>
+      <td *ngIf="editProfile">
+        <input [(ngModel)]="userCopy.email">
+      </td>
     </tr>
     <tr>
       <td>Firstname:</td>
-      <td>{{ userFirstName }}</td>
+      <td *ngIf="!editProfile">{{ user.firstName }}</td>
+      <td *ngIf="editProfile">
+        <input [(ngModel)]="userCopy.firstName">
+      </td>
     </tr>
     <tr>
       <td>Lastname:</td>
-      <td>{{ userLastName }}</td>
+      <td *ngIf="!editProfile">{{ user.lastName }}</td>
+      <td *ngIf="editProfile">
+        <input [(ngModel)]="userCopy.lastName">
+      </td>
     </tr>
     <tr>
       <td>Phone:</td>
-      <td>{{ phone }}</td>
+      <td *ngIf="!editProfile">{{ user.credentials.phone }}</td>
+      <td *ngIf="editProfile">
+        <input [(ngModel)]="userCopy.credentials.phone">
+      </td>
     </tr>
     <tr>
       <td>Country:</td>
-      <td>{{ country }}</td>
+      <td *ngIf="!editProfile">{{ user.credentials.country }}</td>
+      <td *ngIf="editProfile">
+        <input [(ngModel)]="userCopy.credentials.country">
+      </td>
     </tr>
     <tr>
       <td>State:</td>
-      <td>{{ state }}</td>
+      <td *ngIf="!editProfile">{{ user.credentials.state }}</td>
+      <td *ngIf="editProfile">
+        <input [(ngModel)]="userCopy.credentials.state">
+      </td>
     </tr>
     <tr>
       <td>City:</td>
-      <td>{{ city }}</td>
+      <td *ngIf="!editProfile">{{ user.credentials.city }}</td>
+      <td *ngIf="editProfile">
+        <input [(ngModel)]="userCopy.credentials.city">
+      </td>
     </tr>
     <tr>
       <td>Street:</td>
-      <td>{{ street }}</td>
+      <td *ngIf="!editProfile">{{ user.credentials.street }}</td>
+      <td *ngIf="editProfile">
+        <input [(ngModel)]="userCopy.credentials.street">
+      </td>
     </tr>
   </table>
-
-  <h3>Change your password</h3>
-  <input placeholder="old password" #oldPassword>
-  <br/>
-  <input placeholder="new password 1" #newPassword1>
-  <br/>
-  <input placeholder="new password 2" #newPassword2>
-  <button (click)="submit(oldPassword, newPassword1, newPassword2)">Submmit</button>
-
+  <div *ngIf="isOwnProfile">
+    <button *ngIf="!editProfile" (click)="edit()">Edit profile</button>
+    <button *ngIf="!editProfile" (click)="onChangePasswordClicked()">Change password</button>
+    <button *ngIf="editProfile" (click)="saveProfile()">Save</button>
+    <button *ngIf="editProfile" (click)="edit()">Back</button>
+  </div>
+</div>
+<div *ngIf="!errorMessage && changingPassword"  class="center">
+  <input placeholder="Old password" [(ngModel)]="passwordChangeData.oldPassword">
+  <input placeholder="New password" [(ngModel)]="passwordChangeData.newPassword">
+  <input placeholder="Confirm new password" [(ngModel)]="passwordChangeData.confirmationPassword">
+  <button (click)="changePassword()">Save</button>
+  <button (click)="changingPassword = false">Back</button>
+  <p *ngIf="passwordChangeMessage">{{ passwordChangeMessage }}</p>
 </div>

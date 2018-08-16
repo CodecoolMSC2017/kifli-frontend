@@ -87,9 +87,9 @@
 
 
 button {
-    background-color: #4CAF50;
+    background-color: rgb(56, 190, 3);
     border: none;
-    color: white;
+    color: black;
     padding: 14px 20px;
     text-align: center;
     text-decoration: none;
@@ -101,11 +101,6 @@ button {
     cursor: pointer;
     width: 100%;
     border-radius:5px;
-}
-
-button {
-    background-color: rgb(56, 190, 3); 
-    color: black; 
 }
 
 button:hover {

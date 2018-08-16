@@ -20,6 +20,7 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   private message: string = 'Loading...';
   private logOptionSubscription: Subscription;
   private showLoginSubscription: Subscription;
+  private loginSub: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -38,6 +39,9 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.logOptionSubscription.unsubscribe();
     this.showLoginSubscription.unsubscribe();
+    if (this.loginSub) {
+      this.loginSub.unsubscribe();
+    }
   }
 
   private doSubscriptions(): void {
@@ -125,11 +129,14 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     const loginContainer = document.getElementById('login-container');
     const registerContainer = document.getElementById('register-container');
 
-    window.onclick = function(event) {
+    window.onclick = event => {
       if (event.target == loginContainer) {         
-        loginContainer.style.display='none';
+        loginContainer.style.display = 'none';
+        if (this.loginSub) {
+          this.loginSub.unsubscribe();
+        }
       } else if (event.target == registerContainer) {
-        registerContainer.style.display='none';
+        registerContainer.style.display = 'none';
       }
     }
   }
@@ -151,5 +158,16 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     this.logOptionSubscription = this.userService.logOption$.subscribe(
       logOption => this.logOption = logOption
     )
+  }
+
+  private navigateToProfile(): void {
+    if (this.userService.isLoggedIn()) {
+      this.router.navigate(['users/' + this.userService.getUserId()]);
+    } else {
+      this.showLogin();
+      this.loginSub = this.userService.didLogin$.subscribe(
+        () => this.navigateToProfile()
+      );
+    }
   }
 }

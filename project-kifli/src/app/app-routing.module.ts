@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products/:id', component: ProductComponent },
   { path: 'products/:id/edit', component: EditProductWrapperComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'users/:id', component: ProfileComponent },
   { path: 'place-ad', component: AdPlacementComponent },
   { path: 'myads', component: MyadsComponent },
   { path: 'categories', component: CategoriesComponent }

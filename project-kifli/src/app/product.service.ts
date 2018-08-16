@@ -13,6 +13,7 @@ export class ProductService {
 
   private editedProduct = new Subject<Product>();
   public editedProduct$ = this.editedProduct.asObservable();
+  public pictures: File[];
 
   constructor(
     private http: HttpClient,

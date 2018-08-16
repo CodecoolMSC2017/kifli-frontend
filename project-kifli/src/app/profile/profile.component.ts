@@ -1,51 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Credentials} from '../model/credentials';
-import { BrowserModule } from '@angular/platform-browser'; 
-import { HttpModule } from '@angular/http';
-import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../user.service';
-import { AuthService } from '../auth.service';
-
-
+import { User } from '../model/user';
+import { Subscription, Observable, of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { catchError } from 'rxjs/operators';
+import { PasswordChangeData } from '../model/password-change-data';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
+export class ProfileComponent implements OnInit, OnDestroy {
 
-@NgModule({
-    imports: [     
-      BrowserModule,
-      HttpClientModule,
-    ]
-  }) 
-
-export class ProfileComponent implements OnInit {
-  profile;
-  userId: String;
-  userName: String;
-  userEmail: String;
-  userFirstName: String;
-  userLastName: String;
-  phone: String;
-  country: String;
-  state: String;
-  city: String;
-  street: String;
-  newPassword: String;
+  private user: User;
+  private userCopy: User;
+  private loginSub: Subscription;
   private errorMessage: string;
+  private isOwnProfile: boolean;
+  private editProfile: boolean;
+  private changingPassword: boolean = false;
+  private passwordChangeData: PasswordChangeData;
+  private passwordChangeMessage: string;
 
   constructor(
-    private http: HttpClient,
     private userService: UserService,
-    private authService: AuthService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.errorMessage = 'Loading...';
     if (this.userService.isLoggedIn()) {
       this.getUser();
     } else {
@@ -53,64 +37,118 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  private onNotLoggedIn(): void {
-    this.errorMessage = 'You must login first!';
-    this.userService.showLogin();
-    this.userService.didLogin$.subscribe(
-      () => {
-        this.errorMessage = undefined;
-        this.ngOnInit();
-      }
-    );
-  }
-
-  
-  public getUser() {
-     
-    let userString = localStorage.getItem("user");
-    let userObject = JSON.parse(userString);
-    this.userId = userObject.id;
-    this.userName = userObject.username;
-    this.userEmail = userObject.email;
-    this.userFirstName = userObject.firstName;
-    this.userLastName = userObject.lastName;
-    let credentials = userObject.credentials;
-    this.phone = credentials.phone;
-    this.country = credentials.country;
-    this.state = credentials.state;
-    this.city = credentials.city;
-    this.street = credentials.street;
-  }
-
-  submit(oldPassword, newPassword1, newPassword2) {
-    if(newPassword1.value === newPassword2.value) {  
-    console.log("New PAss OK " + newPassword1.value);
-    this.changePassword(oldPassword.value, newPassword1.value, newPassword2.value);
-    } else {
-      console.log("New pass not the same")
+  ngOnDestroy() {
+    if (this.loginSub) {
+      this.loginSub.unsubscribe();
     }
   }
 
-  changePassword(oldPasswordValue, newPassword1Value1, newPassword1Value2) {
-    const passwordJson: any = {};
-    passwordJson.oldPassword = oldPasswordValue;
-    passwordJson.newPassword = newPassword1Value1;
-    passwordJson.confirmationPassword = newPassword1Value2;
-    console.log("json password " + passwordJson)
-    this.userService.changePassword(passwordJson).subscribe();
+  private getUser(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.isOwnProfile = Number(id) === this.userService.getUserId();
+    this.userService.getUserById(id).pipe(
+      catchError(err => this.onGetUserError(err))
+    ).subscribe(user => this.onUserResponse(user));
   }
 
-  /*addHero (hero: Hero): Observable<Hero> {
-    return this.http.post<Hero>(this.heroesUrl, hero, httpOptions)
-      .pipe(
-        catchError(this.handleError('addHero', hero))
-      );
-  } */
+  private onUserResponse(user: User): void {
+    this.errorMessage = undefined;
+    this.user = user;
+  }
 
-  /*doPOST() {
-    console.log("POST");
-    let url = `api/change-password`;
-    this.http.post(url, {moo:"foo",goo:"loo"}).subscribe(res);
-  }*/
+  private onGetUserError(err: XMLHttpRequest): Observable<any> {
+    if (err.status >= 500) {
+      this.errorMessage = err.status + ': server error, try again later...';
+    } else if (err.status === 401) {
+      this.onNotLoggedIn();
+    } else if (err.status === 404) {
+      this.errorMessage = err.status + ': user not found!';
+    } else {
+      this.errorMessage = err.status + ': error loading page, try again later...';
+    }
+    return of();
+  }
+
+  private onNotLoggedIn(): void {
+    this.errorMessage = 'You must login first!';
+    this.userService.showLogin();
+    this.loginSub = this.userService.didLogin$.subscribe(
+      () => this.ngOnInit()
+    );
+  }
+
+  private edit(): void {
+    if (!this.editProfile) {
+      this.copyUser();
+    }
+    this.editProfile = !this.editProfile;
+  }
+
+  private copyUser(): void {
+    this.userCopy = JSON.parse(JSON.stringify(this.user));
+  }
+
+  private changePassword(): void {
+    if (this.checkPasswords()) {
+      return;
+    }
+    this.userService.changePassword(this.passwordChangeData).pipe(
+      catchError(err => this.onPasswordChangeError(err))
+    ).subscribe(() => this.onPasswordChanged());
+  }
+
+  private checkPasswords(): boolean {
+    if (!this.passwordChangeData.oldPassword || !this.passwordChangeData.oldPassword.trim()) {
+      this.passwordChangeMessage = 'Old password can\'t be empty!';
+      return true;
+    }
+    if (!this.passwordChangeData.newPassword || !this.passwordChangeData.newPassword.trim()) {
+      this.passwordChangeMessage = 'New password can\'t be empty!';
+      return true;
+    }
+    if (this.passwordChangeData.confirmationPassword !== this.passwordChangeData.newPassword) {
+      this.passwordChangeMessage = 'Confirmation password does not match new password!';
+      return true;
+    }
+    return false;
+  }
+
+  private onPasswordChanged(): void {
+    this.passwordChangeMessage = 'Password changed!';
+  }
+
+  private onPasswordChangeError(err: XMLHttpRequest): Observable<any> {
+    if (err.status >= 500) {
+      this.passwordChangeMessage = err.status + ': server error';
+    } else if (err.status === 400) {
+      this.passwordChangeMessage = 'Incorrect password!';
+    } else {
+      this.passwordChangeMessage = err.status + ': error';
+    }
+    return of();
+  }
+
+  private onChangePasswordClicked(): void {
+    this.passwordChangeData = new PasswordChangeData();
+    this.passwordChangeMessage = undefined;
+    this.changingPassword = true;
+  }
+
+  private saveProfile(): void {
+    this.userService.updateUser(this.userCopy).pipe(
+      catchError(err => this.onUpdateUserError(err))
+    ).subscribe(user => this.onUserUpdated(user));
+  }
+
+  private onUserUpdated(user: User): void {
+    this.userService.storeUser(user);
+    this.user = user;
+    this.editProfile = false;
+  }
+
+  private onUpdateUserError(err: XMLHttpRequest): Observable<any> {
+    console.log(err);
+    return of();
+  }
 
 }
