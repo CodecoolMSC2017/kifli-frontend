@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
 import { Product } from '../model/product';
 import { UserService } from '../user.service';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-product',
@@ -70,12 +71,11 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   private onError(err): Observable<any> {
-    if (err.status === 404) {
-      this.errorMessage = err.status + ': ad not found!';
-    } else if (err.status >= 500) {
-      this.errorMessage = 'Server error, please try again later';
+    const responseMessage = err.headers.get('error');
+    if (responseMessage) {
+      this.errorMessage = err.status + ': ' + responseMessage;
     } else {
-      this.errorMessage = 'Error loading page, please try again later';
+      this.errorMessage = err.status + ': Error loading page, please try again later';
     }
     return of();
   }

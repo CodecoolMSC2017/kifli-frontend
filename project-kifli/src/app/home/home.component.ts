@@ -65,6 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private onProductsReceived(productListDto: ProductListDto): void {
+    console.log(productListDto);
     this.errorMessage = null;
     this.products = productListDto.products;
     this.categories = productListDto.categories;

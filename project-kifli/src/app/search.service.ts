@@ -35,6 +35,10 @@ export class SearchService {
     return this.searchParams.maximumPrice;
   }
 
+  public getPage(): string {
+    return this.searchParams.page;
+  }
+
   public setSearch(search: string): void {
     if (!search) {
       this.searchParams.search = '';
@@ -67,6 +71,14 @@ export class SearchService {
     this.searchParams.maximumPrice = maximumPrice;
   }
 
+  public setPage(page: string): void {
+    if (!page || page === '') {
+      this.searchParams.page = '1';
+      return;
+    }
+    this.searchParams.page = page;
+  }
+
   public getSearchParams(): SearchParams {
     return JSON.parse(JSON.stringify(this.searchParams));
   }
@@ -86,6 +98,9 @@ export class SearchService {
     if (params.maximumPrice !== '' && params.maximumPrice != null) {
       httpParams = httpParams.append('maximumPrice', params.maximumPrice);
     }
+    if (params.page !== '' && params.page != null) {
+      httpParams = httpParams.append('page', params.page);
+    }
     return httpParams;
   }
 
@@ -104,5 +119,6 @@ export class SearchService {
     this.setCategoryId(params.categoryId);
     this.setMinimumPrice(params.minimumPrice);
     this.setMaximumPrice(params.maximumPrice);
+    this.setPage(params.page);
   }
 }
