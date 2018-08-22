@@ -29,3 +29,7 @@ input {
     background-color: rgb(83, 224, 88);
     color: white;
 }
+
+button[selected] {
+    background-color: red;
+}

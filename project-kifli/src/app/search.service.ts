@@ -20,23 +20,23 @@ export class SearchService {
   }
 
   public getSearch(): string {
-    return this.searchParams.search;
+    return this.getSearchParams().search;
   }
 
   public getCategoryId(): string {
-    return this.searchParams.categoryId;
+    return this.getSearchParams().categoryId;
   }
 
   public getMinimumPrice(): string {
-    return this.searchParams.minimumPrice;
+    return this.getSearchParams().minimumPrice;
   }
 
   public getMaximumPrice(): string {
-    return this.searchParams.maximumPrice;
+    return this.getSearchParams().maximumPrice;
   }
 
   public getPage(): string {
-    return this.searchParams.page;
+    return this.getSearchParams().page;
   }
 
   public setSearch(search: string): void {
@@ -47,36 +47,37 @@ export class SearchService {
     this.searchParams.search = search;
   }
 
-  public setCategoryId(categoryId: string): void {
-    if (!categoryId || categoryId === '') {
-      this.searchParams.categoryId = '0';
-      return;
+  public setCategoryId(categoryId: number): void {
+    if (!categoryId || categoryId < 0) {
+      categoryId = 0;
     }
-    this.searchParams.categoryId = categoryId;
+    this.searchParams.categoryId = categoryId.toString();
   }
 
-  public setMinimumPrice(minimumPrice: string): void {
-    if (!minimumPrice || minimumPrice === '') {
-      this.searchParams.minimumPrice = '0';
-      return;
+  public setMinimumPrice(minimumPrice: number): void {
+    if (!minimumPrice || minimumPrice < 0) {
+      minimumPrice = 0;
     }
-    this.searchParams.minimumPrice = minimumPrice;
+    this.searchParams.minimumPrice = minimumPrice.toString();
   }
 
-  public setMaximumPrice(maximumPrice: string): void {
-    if (!maximumPrice || maximumPrice === '') {
-      this.searchParams.maximumPrice = '999999999';
-      return;
+  public setMaximumPrice(maximumPrice: number): void {
+    if (!maximumPrice || maximumPrice < 1) {
+      maximumPrice = 9999999999;
+    } else {
+      const minimumPrice = Number(this.searchParams.minimumPrice);
+      if (maximumPrice <= minimumPrice) {
+        maximumPrice = minimumPrice + 1;
+      }
     }
-    this.searchParams.maximumPrice = maximumPrice;
+    this.searchParams.maximumPrice = maximumPrice.toString();
   }
 
-  public setPage(page: string): void {
-    if (!page || page === '') {
-      this.searchParams.page = '1';
-      return;
+  public setPage(page: number): void {
+    if (!page || page < 1) {
+      page = 1;
     }
-    this.searchParams.page = page;
+    this.searchParams.page = page.toString();
   }
 
   public getSearchParams(): SearchParams {

@@ -143,6 +143,7 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
 
   private search() {
     this.searchService.setSearch(this.searchTitle);
+    this.searchService.setPage(1);
     const searchParams: SearchParams = this.searchService.getSearchParams();
     this.router.navigate(['/'], {
       queryParams: this.searchService.removeDefaultValues(searchParams)

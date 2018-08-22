@@ -10,6 +10,8 @@ import { ProductListDto } from '../model/productListDto';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../user.service';
 
+const MAXIMUM_PRICE = 9999999999;
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -20,10 +22,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   private products: Product[] = [];
   private errorMessage: string;
   private categories: Category[];
-  private selectedCategoryId: string = '0';
+  private selectedCategoryId: number = 0;
   private selectedCategoryName: string = 'All';
   private minimumPrice: number = 0;
-  private maximumPrice: number = 999999999;
+  private maximumPrice: number = MAXIMUM_PRICE;
   private priceError: string;
   private showCategories: boolean = false;
 
@@ -31,6 +33,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   private loginSubscription: Subscription;
   private logoutSubscription: Subscription;
   private isAdmin: boolean;
+
+  private pages: Array<number>;
+  private selectedPage: number;
 
   constructor(
     private productService: ProductService,
@@ -49,9 +54,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isAdmin = this.userService.isAdmin();
     this.subscribeSearch();
     this.getProducts();
-    this.searchService.setCategoryId(this.selectedCategoryId);
-    this.searchService.setMinimumPrice(this.minimumPrice.toString());
-    this.searchService.setMaximumPrice(this.maximumPrice.toString());
+    this.searchService.setCategoryId(Number(this.selectedCategoryId));
+    this.searchService.setMinimumPrice(this.minimumPrice);
+    this.searchService.setMaximumPrice(this.maximumPrice);
   }
 
   ngOnDestroy(): void {
@@ -59,17 +64,27 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loginSubscription.unsubscribe();
   }
 
-  private onCategoriesError(err): Observable<any> {
-    console.log(err);
-    return of();
-  }
-
   private onProductsReceived(productListDto: ProductListDto): void {
-    console.log(productListDto);
-    this.errorMessage = null;
     this.products = productListDto.products;
     this.categories = productListDto.categories;
     this.updateValues();
+    this.setPageInfo(productListDto);
+    this.errorMessage = null;
+  }
+
+  private setPageInfo(productListDto: ProductListDto): void {
+    this.pages = [];
+    let counter = 1;
+    while (counter <= Number(productListDto.totalPages)) {
+      this.pages.push(counter);
+      counter++;
+    }
+    this.selectedPage = productListDto.page;
+  }
+
+  private navigateToPage(page: number): void {
+    this.searchService.setPage(page);
+    this.getProducts();
   }
 
   private onProductsError(err): Observable<any> {
@@ -100,8 +115,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   private updateValues(): void {
     this.searchService.updateFromUrlParams(this.route.snapshot.queryParams);
     const searchParams = this.searchService.getSearchParams();
-    this.selectedCategoryId = searchParams.categoryId;
-    this.selectedCategoryName = this.findCategoryNameById(Number(this.selectedCategoryId));
+    this.selectedCategoryId = Number(searchParams.categoryId);
+    this.selectedCategoryName = this.findCategoryNameById(this.selectedCategoryId);
     this.minimumPrice = Number(searchParams.minimumPrice);
     this.maximumPrice = Number(searchParams.maximumPrice);
   }
@@ -123,7 +138,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.priceError = 'Minimum price must be bigger than 0!';
       return true;
     }
-    if (this.minimumPrice > 999999998) {
+    if (this.minimumPrice > MAXIMUM_PRICE - 1) {
       this.priceError = 'Minimum price is out of range!';
       return true;
     }
@@ -131,7 +146,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.priceError = 'Maximum price must be bigger than minimum price!';
       return true;
     }
-    if (this.maximumPrice > 999999999) {
+    if (this.maximumPrice > MAXIMUM_PRICE) {
       this.priceError = 'Maximum price is out of range!';
       return true;
     }
@@ -140,12 +155,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private onCategoryClick(category: Category): void {
     if (!category) {
-      this.selectedCategoryId = '0';
+      this.selectedCategoryId = 0;
       this.selectedCategoryName = 'All';
       this.searchService.setCategoryId(this.selectedCategoryId);
       return;
     }
-    this.selectedCategoryId = category.id.toString();
+    this.selectedCategoryId = category.id;
     this.selectedCategoryName = category.name;
     this.searchService.setCategoryId(this.selectedCategoryId);
   }
@@ -157,10 +172,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.minimumPrice < 0) {
       this.minimumPrice = 0;
     }
-    if (this.minimumPrice > 999999998) {
-      this.minimumPrice = 999999998;
+    if (this.minimumPrice > MAXIMUM_PRICE - 1) {
+      this.minimumPrice = MAXIMUM_PRICE - 1;
     }
-    this.searchService.setMinimumPrice(this.minimumPrice.toString());
+    this.searchService.setMinimumPrice(this.minimumPrice);
   }
 
   private onMaxPriceChange(): void {
@@ -170,10 +185,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.maximumPrice < 1) {
       this.maximumPrice = 1;
     }
-    if (this.maximumPrice > 999999999) {
-      this.maximumPrice = 999999999;
+    if (this.maximumPrice > MAXIMUM_PRICE) {
+      this.maximumPrice = MAXIMUM_PRICE;
     }
-    this.searchService.setMaximumPrice(this.maximumPrice.toString());
+    this.searchService.setMaximumPrice(this.maximumPrice);
   }
 
 }
