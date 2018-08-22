@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
 import { Category } from '../model/category';
 import { ProductListDto } from '../model/productListDto';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
 
 const MAXIMUM_PRICE = 9999999999;
@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private searchService: SearchService,
     private route: ActivatedRoute,
+    private router: Router,
     private userService: UserService
   ) { }
 
@@ -83,8 +84,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private navigateToPage(page: number): void {
-    this.searchService.setPage(page);
-    this.getProducts();
+    const params = JSON.parse(JSON.stringify(this.route.snapshot.queryParams));
+    params.page = page;
+    this.router.navigate([''], {queryParams: params});
   }
 
   private onProductsError(err): Observable<any> {
@@ -166,7 +168,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private onMinPriceChange(): void {
-    if (!this.minimumPrice || this.minimumPrice >= this.maximumPrice) {
+    if (this.minimumPrice >= this.maximumPrice) {
       this.minimumPrice = this.maximumPrice - 1;
     }
     if (this.minimumPrice < 0) {
