@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
     document.getElementById('login-container').style.display='none';
     this.userService.modifyLogOption(true);
     this.userService.didLogin();
+    console.log(user);
   }
 
   private onLoginError(err): Observable<any> {
@@ -55,6 +56,8 @@ export class LoginComponent implements OnInit {
     } else if (err.status === 401) {
       this.password = '';
       this.errorMessage = 'Invalid username or password!';
+    } else if (err.status === 404) {
+      console.log('nem jóóóóóó');
     }
     return of();
   }

@@ -34,7 +34,7 @@ export class AuthService {
       .flatMap(googleAuth => from(googleAuth.signIn()))
       .flatMap(googleUser => {
         console.log(googleUser.getAuthResponse().id_token);
-        return this.http.post<User>(URL + 'auth', {idToken: googleUser.getAuthResponse().id_token});
+        return this.http.post<User>('/api/auth', {idToken: googleUser.getAuthResponse().id_token});
       });
   }
 
