@@ -74,6 +74,7 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
       this.userService.storeUser(user);
       this.userService.didLogin();
       this.logOption = 'Logout';
+      this.shouldShowLogin = false;
     }
     this.message = null;
   }

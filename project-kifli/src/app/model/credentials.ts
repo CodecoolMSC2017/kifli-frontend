@@ -1,5 +1,5 @@
 export class Credentials {
-    userId: String;
+    userId: number;
     phone: String;
     country: String;
     state: String;

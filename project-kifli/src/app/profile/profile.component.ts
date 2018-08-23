@@ -5,6 +5,7 @@ import { Subscription, Observable, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { PasswordChangeData } from '../model/password-change-data';
+import { Credentials } from '../model/credentials';
 
 @Component({
   selector: 'app-profile',
@@ -53,6 +54,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   private onUserResponse(user: User): void {
     this.errorMessage = undefined;
+    if (!user.credentials) {
+      user.credentials = new Credentials();
+      user.credentials.userId = user.id;
+    }
     this.user = user;
   }
 
