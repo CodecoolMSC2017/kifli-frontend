@@ -17,6 +17,7 @@
       <div class="dropdown-content">
         <a (click)="navigateToProfile()">My Profile</a>
         <a routerLink="/myads">My ads</a>
+        <a *ngIf="userService.isAdmin()" (click)="navigateToAdminInterface()">Admin Interface</a>
       </div>
     </div> 
     <button (click)="auth()">{{ logOption }}</button>

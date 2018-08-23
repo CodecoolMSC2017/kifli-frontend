@@ -162,4 +162,8 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
       );
     }
   }
+
+  private navigateToAdminInterface(): void {
+    this.router.navigate(['admin/' + this.userService.getUserId()]);
+  }
 }

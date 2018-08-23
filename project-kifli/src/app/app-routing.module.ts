@@ -11,6 +11,7 @@ import { AdPlacementComponent } from './ad-placement/ad-placement.component';
 import { MyadsComponent } from './myads/myads.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { EditProductWrapperComponent } from './edit-product-wrapper/edit-product-wrapper.component';
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'users/:id', component: ProfileComponent },
   { path: 'place-ad', component: AdPlacementComponent },
   { path: 'myads', component: MyadsComponent },
-  { path: 'categories', component: CategoriesComponent }
+  { path: 'categories', component: CategoriesComponent },
+  { path: 'admin/:id', component: AdminComponent}
 ];
 
 @NgModule({

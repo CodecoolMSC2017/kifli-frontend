@@ -30,6 +30,7 @@ import {
   NG_GAPI_CONFIG,
   GoogleApiConfig
 } from 'ng-gapi';
+import { AdminComponent } from './admin/admin.component';
 
 let gapiClientConfig: NgGapiClientConfig = {
   client_id: "222157294364-s0r226g6ue92bp6n78iaqcthjbohi3pp.apps.googleusercontent.com",
@@ -58,7 +59,8 @@ let gapiClientConfig: NgGapiClientConfig = {
     MessageComponent,
     CategoriesComponent,
     EditProductComponent,
-    EditProductWrapperComponent
+    EditProductWrapperComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
