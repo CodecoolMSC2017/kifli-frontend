@@ -37,7 +37,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
       }
     } else {
       this.errorMessage = 'You must login first!';
-      this.userService.showLogin();
+      this.userService.showLogin(true);
       this.loginSubscription = this.userService.didLogin$.subscribe(
         () => this.ngOnInit()
       );

@@ -50,7 +50,7 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
 
   private onNotLoggedIn(): void {
     this.errorMessage = 'You must login first!';
-    this.userService.showLogin();
+    this.userService.showLogin(true);
     this.loginSubscription = this.userService.didLogin$.subscribe(
       () => this.ngOnInit()
     );

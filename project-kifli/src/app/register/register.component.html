@@ -1,6 +1,7 @@
 <div id='register-container' class='modal'>
   <div class="modal-content animate" action="/action_page.php">
     <div class='container'> 
+      <button (click)="hide()" type="button">X</button>
       
       <input [(ngModel)]="userName" placeholder="Account name" type='userName'/>
       <input [(ngModel)]="email" placeholder="E-mail" type='email'/>  
@@ -18,10 +19,8 @@
       <p *ngIf="message">
         {{ message }}
       </p>
-      
       <button (click)="register()">Register</button>
-      <button (click)="regStyle()" type="button">Back</button>
-      
+      <button (click)="showLogin()" type="button">Back</button>
     </div>
   </div>
 </div>

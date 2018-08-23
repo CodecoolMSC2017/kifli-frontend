@@ -1,5 +1,6 @@
 <div id='login-container' class='modal'>
     <form  class="modal-content animate" (submit)="login()">
+        <button (click)="hide()" type="button">X</button>
         <div class="imgcontainer">
             <img src="assets/img/avatar.jpeg" alt="Avatar" class="avatar">
         </div>
@@ -8,7 +9,7 @@
             <input class="login-input" [(ngModel)]="password" name="password" placeholder="Password" type="password"/>
             <p *ngIf="errorMessage">{{ errorMessage }}</p>
             <button class="login-button" type="submit">Login</button>
-            <button class="login-span" type="button" (click)="regStyle()">Register</button>
+            <button class="login-span" type="button" (click)="showRegister()">Register</button>
             <button class="google-login-button" type="button" (click)="signIn()">Sign in with Google</button>
         </div>
     </form>

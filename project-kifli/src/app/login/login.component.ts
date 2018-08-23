@@ -1,8 +1,8 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { UserService } from '../user.service';
 import { User } from '../model/user';
 import { GoogleAuthService } from 'ng-gapi';
@@ -14,6 +14,8 @@ import { GoogleApiService } from 'ng-gapi';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
+  private gapiSub: Subscription;
 
   public userName: string;
   public password: string;
@@ -28,12 +30,12 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private googleAuthService: GoogleAuthService,
-    private gapiService: GoogleApiService
-  ) {
-    this.gapiService.onLoad().subscribe();
-  }
+    private gapiService: GoogleApiService,
+    private ngZone: NgZone
+  ) { }
 
   ngOnInit() {
+    this.gapiSub = this.gapiService.onLoad().subscribe();
   }
 
   login(): void {
@@ -44,7 +46,7 @@ export class LoginComponent implements OnInit {
 
   private onLoginResponse(user: User) {
     this.userService.storeUser(user);
-    document.getElementById('login-container').style.display='none';
+    this.userService.showLogin(false);
     this.userService.modifyLogOption(true);
     this.userService.didLogin();
     console.log(user);
@@ -56,15 +58,10 @@ export class LoginComponent implements OnInit {
     } else if (err.status === 401) {
       this.password = '';
       this.errorMessage = 'Invalid username or password!';
-    } else if (err.status === 404) {
-      console.log('nem jóóóóóó');
+    } else {
+      this.errorMessage = err.status + ': error :(';
     }
     return of();
-  }
-
-  private regStyle() {
-    document.getElementById('login-container').style.display='none';
-    document.getElementById('register-container').style.display='block';
   }
 
   /*public isLoggedIn(): boolean {
@@ -86,6 +83,16 @@ export class LoginComponent implements OnInit {
   public signIn() {
     this.authService.getGoogleAuth().pipe(
       catchError(err => this.onLoginError(err))
-    ).subscribe(user => this.onLoginResponse(user));
+    ).subscribe(user => this.ngZone.run(
+      () => this.onLoginResponse(user)));
+  }
+
+  private hide(): void {
+    this.userService.showLogin(false);
+  }
+
+  private showRegister(): void {
+    this.userService.showLogin(false);
+    this.userService.showRegister(true);
   }
 }

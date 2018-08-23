@@ -27,5 +27,5 @@
 <div id="message-cover" *ngIf="message">
   <app-message [message]="message"></app-message>
 </div>
-<app-login></app-login>
-<app-register></app-register>
+<app-login *ngIf="shouldShowLogin"></app-login>
+<app-register *ngIf="shouldShowRegister"></app-register>

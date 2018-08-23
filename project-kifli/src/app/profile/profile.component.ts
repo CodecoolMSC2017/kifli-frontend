@@ -71,7 +71,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   private onNotLoggedIn(): void {
     this.errorMessage = 'You must login first!';
-    this.userService.showLogin();
+    this.userService.showLogin(true);
     this.loginSub = this.userService.didLogin$.subscribe(
       () => this.ngOnInit()
     );

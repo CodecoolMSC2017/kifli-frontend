@@ -62,9 +62,12 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/'])
   }
 
-  private regStyle() {
-    document.getElementById('register-container').style.display='none';
-    document.getElementById('login-container').style.display='block';
-    
+  private showLogin(): void {
+    this.userService.showLogin(true);
+    this.userService.showRegister(false);
+  }
+
+  private hide(): void {
+    this.userService.showRegister(false);
   }
 }

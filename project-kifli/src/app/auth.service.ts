@@ -33,7 +33,6 @@ export class AuthService {
     return this.googleAuthService.getAuth()
       .flatMap(googleAuth => from(googleAuth.signIn()))
       .flatMap(googleUser => {
-        console.log(googleUser.getAuthResponse().id_token);
         return this.http.post<User>('/api/auth', {idToken: googleUser.getAuthResponse().id_token});
       });
   }

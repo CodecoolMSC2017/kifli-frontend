@@ -35,7 +35,7 @@ export class MyadsComponent implements OnInit, OnDestroy {
   private getProducts(): void {
     if (!this.userService.isLoggedIn()) {
       this.errorMessage = 'You must login first!';
-      this.userService.showLogin();
+      this.userService.showLogin(true);
       this.userService.didLogin$.subscribe(
         () => this.getProducts()
       );

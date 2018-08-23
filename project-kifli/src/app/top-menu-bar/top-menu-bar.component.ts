@@ -15,11 +15,15 @@ import { User } from '../model/user';
 })
 export class TopMenuBarComponent implements OnInit, OnDestroy {
 
+  private shouldShowLogin: boolean = false;
+  private shouldShowRegister: boolean = false;
+
   private logOption: string = 'Login';
   private searchTitle: string;
   private message: string = 'Loading...';
   private logOptionSubscription: Subscription;
   private showLoginSubscription: Subscription;
+  private showRegisterSubscription: Subscription;
   private loginSub: Subscription;
 
   constructor(
@@ -32,7 +36,6 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.userService.deleteUser();
-    this.setClickListenerForPopups();
     this.doSubscriptions();
   }
 
@@ -49,6 +52,7 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     this.subscribeToSearch();
     this.subscribeLogOption();
     this.subscribeShowLogin();
+    this.subscribeShowRegister();
 
     this.userService.getLoggedInUser().pipe(
       catchError(err => this.onGetUserError(err))
@@ -57,14 +61,18 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
 
   private subscribeShowLogin(): void {
     this.showLoginSubscription = this.userService.showLogin$
-      .subscribe(() => this.showLogin());
+      .subscribe(show => this.shouldShowLogin = show);
+  }
+
+  private subscribeShowRegister(): void {
+    this.showRegisterSubscription = this.userService.showRegister$
+      .subscribe(show => this.shouldShowRegister = show);
   }
 
   private onGetUserResponse(user: User): void {
     if (user) {
       this.userService.storeUser(user);
       this.userService.didLogin();
-      this.hidePopups();
       this.logOption = 'Logout';
     }
     this.message = null;
@@ -97,13 +105,8 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
   }
 
   private showLogin(): void {
-    document.getElementById('register-container').style.display='none';
-    document.getElementById('login-container').style.display='block';
-  }
-
-  private hidePopups(): void {
-    document.getElementById('register-container').style.display='none';
-    document.getElementById('login-container').style.display='none';
+    this.shouldShowLogin = true;
+    this.shouldShowRegister = false;
   }
 
   private onError(err): Observable<any> {
@@ -123,22 +126,6 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     this.logOption = 'Login';
     this.userService.didLogout();
     this.router.navigate(['/']);
-  }
-
-  private setClickListenerForPopups() {
-    const loginContainer = document.getElementById('login-container');
-    const registerContainer = document.getElementById('register-container');
-
-    window.onclick = event => {
-      if (event.target == loginContainer) {         
-        loginContainer.style.display = 'none';
-        if (this.loginSub) {
-          this.loginSub.unsubscribe();
-        }
-      } else if (event.target == registerContainer) {
-        registerContainer.style.display = 'none';
-      }
-    }
   }
 
   private search() {
@@ -167,7 +154,10 @@ export class TopMenuBarComponent implements OnInit, OnDestroy {
     } else {
       this.showLogin();
       this.loginSub = this.userService.didLogin$.subscribe(
-        () => this.navigateToProfile()
+        () => {
+          this.loginSub.unsubscribe();
+          this.navigateToProfile();
+        }
       );
     }
   }

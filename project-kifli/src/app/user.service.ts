@@ -26,7 +26,7 @@ export class UserService {
   private logOptionSub = new Subject<string>();
   public logOption$ = this.logOptionSub.asObservable();
 
-  private showLoginSub = new Subject<void>();
+  private showLoginSub = new Subject<boolean>();
   public showLogin$ = this.showLoginSub.asObservable();
 
   private didLoginSub = new Subject<void>();
@@ -34,6 +34,12 @@ export class UserService {
 
   private didLogoutSub = new Subject<void>();
   public didLogout$ = this.didLogoutSub.asObservable();
+
+  private showRegisterSub = new Subject<boolean>();
+  public showRegister$ = this.showRegisterSub.asObservable();
+
+  private didRegisterSub = new Subject<void>();
+  public didRegister$ = this.didRegisterSub.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -92,8 +98,8 @@ export class UserService {
     }
   }
 
-  public showLogin(): void {
-    this.showLoginSub.next();
+  public showLogin(show: boolean): void {
+    this.showLoginSub.next(show);
   }
 
   public didLogin(): void {
@@ -102,6 +108,14 @@ export class UserService {
 
   public didLogout(): void {
     this.didLogoutSub.next();
+  }
+
+  public showRegister(show: boolean): void {
+    this.showRegisterSub.next(show);
+  }
+
+  public didRegister(): void {
+    this.didRegisterSub.next();
   }
 
   public isLoggedIn(): boolean {
