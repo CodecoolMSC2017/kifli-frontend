@@ -65,6 +65,7 @@
       </td>
     </tr>
   </table>
+  <div *ngIf="inputErrorMessage">{{ inputErrorMessage }}</div>
   <div *ngIf="isOwnProfile">
     <button *ngIf="!editProfile" (click)="edit()">Edit profile</button>
     <button *ngIf="!editProfile" (click)="onChangePasswordClicked()">Change password</button>

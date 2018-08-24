@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private userCopy: User;
   private loginSub: Subscription;
   private errorMessage: string;
+  private inputErrorMessage: string;
   private isOwnProfile: boolean;
   private editProfile: boolean;
   private changingPassword: boolean = false;
@@ -149,10 +150,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userService.storeUser(user);
     this.user = user;
     this.editProfile = false;
+    this.inputErrorMessage = undefined;
   }
 
-  private onUpdateUserError(err: XMLHttpRequest): Observable<any> {
-    console.log(err);
+  private onUpdateUserError(err): Observable<any> {
+    this.inputErrorMessage = err.headers.get('errorMessage');
     return of();
   }
 
