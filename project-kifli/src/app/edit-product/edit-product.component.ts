@@ -127,6 +127,7 @@ export class EditProductComponent implements OnInit {
     this.categoryInputErrorMessage = null;
     this.product.attributes = attributes;
     this.product.categoryId = this.selectedCategory.id;
+    this.product.activation = false;
 
     if (this.checkFilesAmount()) {
       return;

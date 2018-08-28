@@ -15,4 +15,5 @@ export class Product {
     ownerName: string;
     ownerEmail: string;
     ownerPhone: string;
+    activation: boolean;
 }
