@@ -90,6 +90,10 @@ export class UserService {
     return this.http.get(URL + 'users/' + id);
   }
 
+  public getAllUsers(): Observable<any> {
+    return this.http.get(URL + 'users/all');
+  }
+
   public modifyLogOption(isLoggedIn: boolean): void {
     if (isLoggedIn) {
       this.logOptionSub.next('Logout');
