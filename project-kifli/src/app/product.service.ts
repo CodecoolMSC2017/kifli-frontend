@@ -67,4 +67,8 @@ export class ProductService {
     this.editedProduct.next(product);
   }
 
+  public getInactiveProducts(): Observable<ProductListDto> {
+    return this.http.get<ProductListDto>('/api/products/admin');
+  }
+
 }

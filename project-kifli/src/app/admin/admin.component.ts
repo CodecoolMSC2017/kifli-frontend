@@ -1,15 +1,66 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Observable, of, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Product } from '../model/product';
+import { ProductService } from '../product.service';
+import { UserService } from '../user.service';
+import { ProductListDto } from '../model/productListDto';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy{
 
-  constructor() { }
+  private errorMessage: string;
+  private products: Product[];
+  private loginSubscription: Subscription;
+
+  pictureId: string;
+  noPictureUrl: string;
+
+  constructor(
+    private productService: ProductService,
+    private userService: UserService
+  ) { }
 
   ngOnInit() {
+    this.getProducts();
   }
 
+  ngOnDestroy() {
+    if (this.loginSubscription) {
+      this.loginSubscription.unsubscribe();
+    }
+  }
+
+  private getProducts(): void {
+    if (!this.userService.isLoggedIn()) {
+      this.errorMessage = 'You must login first!';
+      this.userService.showLogin(true);
+      this.userService.didLogin$.subscribe(
+        () => this.getProducts()
+      );
+      return;
+    }
+    this.errorMessage = 'Loading...';
+    this.productService.getInactiveProducts().
+      pipe(catchError(err => this.onProductError(err))
+    ).subscribe(productListDto => this.onProductReceived(productListDto))
+  }
+
+  private onProductReceived(productListDto: ProductListDto): void {
+    this.errorMessage = null;
+    this.products = productListDto.products;
+  }
+
+  private onProductError(err): Observable<any> {
+    if (err.status >= 500) {
+      this.errorMessage = err.status + ': server error, please try again later';
+    } else {
+      this.errorMessage = err.status + ': error loading page, please try again later';
+    }
+    return of();
+  }
 }

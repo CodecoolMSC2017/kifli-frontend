@@ -1,3 +1,7 @@
-<p>
-  admin works!
-</p>
+<div *ngIf="errorMessage">
+  <app-message [message]="errorMessage"></app-message>
+</div>
+<div *ngIf="!errorMessage">
+  <h2 class="center">Inactive Products</h2>
+  <app-ad-space *ngFor="let product of products" [product]="product"></app-ad-space>
+</div>
