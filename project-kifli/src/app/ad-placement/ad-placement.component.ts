@@ -29,6 +29,10 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.userService.isLoggedIn()) {
+      if (!this.userService.getStoredUser().credentials) {
+        this.onMissingCredentials();
+        return;
+      }
       this.editedProductSub = this.productService.editedProduct$.subscribe(
         product => this.onProductEdited(product)
       );
@@ -46,6 +50,10 @@ export class AdPlacementComponent implements OnInit, OnDestroy {
     if (this.editedProductSub) {
       this.editedProductSub.unsubscribe();
     }
+  }
+
+  private onMissingCredentials(): void {
+    this.errorMessage = 'You must provide your credentials first! Navigate to your profile to do so.';
   }
 
   private onNotLoggedIn(): void {
