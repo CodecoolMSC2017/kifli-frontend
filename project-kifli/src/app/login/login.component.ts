@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit {
     this.userService.showLogin(false);
     this.userService.modifyLogOption(true);
     this.userService.didLogin();
-    console.log(user);
   }
 
   private onLoginError(err): Observable<any> {

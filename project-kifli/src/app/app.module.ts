@@ -31,6 +31,7 @@ import {
   GoogleApiConfig
 } from 'ng-gapi';
 import { AdminComponent } from './admin/admin.component';
+import { UsersListingComponent } from './users-listing/users-listing.component';
 
 let gapiClientConfig: NgGapiClientConfig = {
   client_id: "222157294364-s0r226g6ue92bp6n78iaqcthjbohi3pp.apps.googleusercontent.com",
@@ -60,7 +61,8 @@ let gapiClientConfig: NgGapiClientConfig = {
     CategoriesComponent,
     EditProductComponent,
     EditProductWrapperComponent,
-    AdminComponent
+    AdminComponent,
+    UsersListingComponent
   ],
   imports: [
     BrowserModule,
