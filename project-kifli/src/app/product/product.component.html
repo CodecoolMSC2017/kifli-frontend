@@ -2,7 +2,7 @@
 <div *ngIf="product && !errorMessage">
   <button (click)="deleteProduct()" *ngIf="isAdmin && !isOwnProduct">Remove</button>
   <button (click)="setActivation()" *ngIf="isAdmin && product.activation">Deactivation</button>
-  <button (click)="setActivation()" *ngIf="isAdmin && !product.activation">Activation</button>{{product | json}}
+  <button (click)="setActivation()" *ngIf="isAdmin && !product.activation">Activation</button>
   <button routerLink="edit" *ngIf="isOwnProduct">Edit</button>
   <app-message *ngIf="message" [message]='message'></app-message>
   <div class="text-container">
