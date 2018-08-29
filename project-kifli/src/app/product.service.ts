@@ -71,4 +71,8 @@ export class ProductService {
     return this.http.get<ProductListDto>('/api/products/admin');
   }
 
+  public setActivation(product: Product, productId: number): Observable<any> {
+    return this.http.put('/api/products/' + productId, product, {headers: {productId: productId.toString()}});
+  }
+
 }

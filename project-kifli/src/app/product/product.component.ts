@@ -103,4 +103,18 @@ export class ProductComponent implements OnInit, OnDestroy {
     }
   }
 
+  private setActivation(): void {
+    if (this.product.activation) {
+      this.product.activation = false;
+      this.productService.setActivation(this.product, this.product.id).pipe(
+        catchError(err => this.onDeleteError(err))
+      ).subscribe(() => this.router.navigate(['/admin/' + this.userService.getUserId()]));
+    } else if (!this.product.activation) {
+      this.product.activation = true;
+      this.productService.setActivation(this.product, this.product.id).pipe(
+        catchError(err => this.onDeleteError(err))
+      ).subscribe(() => this.router.navigate(['/admin/' + this.userService.getUserId()]));
+    }
+  }
+
 }
