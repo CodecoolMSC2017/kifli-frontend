@@ -30,6 +30,18 @@ input {
     color: white;
 }
 
+button {
+    margin: 4px 4px;
+    padding: 10px 16px;
+    font-size: 16px;
+}
+
 button[selected] {
-    background-color: red;
+    background: linear-gradient(to top, black 0,1%, rgb(133, 31, 31) 25%, rgb(179, 98, 98) 100%);
+    margin: 4px 4px;
+    padding: 15px 21px;
+}
+
+.pages {
+    text-align: center;
 }
